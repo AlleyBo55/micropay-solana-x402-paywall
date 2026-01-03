@@ -164,6 +164,37 @@ Add these variables in your Vercel project settings:
 | `NEXT_PUBLIC_RPC_URL` | Your RPC URL (Tatum, Helius, etc.) |
 | `CREATOR_WALLET_ADDRESS` | Your Solana wallet |
 | `SESSION_SECRET` | Random 32+ char string |
+| `SESSION_DURATION_HOURS` | `24` (default) |
+| `DEFAULT_ARTICLE_PRICE_LAMPORTS` | `10000000` (0.01 SOL) |
+
+## 📁 Project Structure
+
+```
+solanapaywall/
+├── src/
+│   ├── app/
+│   │   ├── api/
+│   │   │   ├── payment/verify/    # Payment verification endpoint
+│   │   │   └── session/validate/  # Session validation endpoint
+│   │   ├── article/[slug]/        # Dynamic article pages
+│   │   ├── dashboard/             # Creator dashboard
+│   │   ├── layout.tsx             # Root layout with providers
+│   │   └── page.tsx               # Landing page
+│   ├── components/
+│   │   ├── article/               # Article content renderer
+│   │   ├── paywall/               # Paywall overlay & modal
+│   │   └── providers/             # Wallet provider context
+│   ├── config/
+│   │   └── articles.ts            # Demo article configuration
+│   ├── lib/
+│   │   ├── session/               # JWT session management
+│   │   ├── solana/                # Solana client & verification
+│   │   └── x402/                  # x402 protocol helpers
+│   └── types/                     # TypeScript type definitions
+├── .env.example                   # Environment template
+├── vercel.json                    # Vercel deployment config
+└── README.md                      # This file
+```
 
 ## 🔒 Security Architecture
 
