@@ -80,8 +80,13 @@ function WalletContextProvider({ children }: { children: React.ReactNode }) {
         recipient: string,
         lamports: bigint
     ): Promise<{ signature: string } | { error: string }> => {
+
         if (!publicKey || !connected) {
             return { error: 'Wallet not connected' };
+        }
+
+        if (!recipient) {
+            return { error: 'Recipient address is missing' };
         }
 
         try {

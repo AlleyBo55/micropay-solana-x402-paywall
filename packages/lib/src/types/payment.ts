@@ -86,6 +86,8 @@ export interface VerificationResponse {
     invalidReason?: string;
     /** Whether the transaction is settled on-chain */
     settled?: boolean;
+    /** Sender wallet address (payer) */
+    from?: string;
     /** Transaction details */
     transaction?: {
         signature: string;

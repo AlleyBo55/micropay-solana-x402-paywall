@@ -1,10 +1,13 @@
 import type { NextConfig } from "next";
 
+import path from "path";
+
 const nextConfig: NextConfig = {
   // Use Turbopack (Next.js 16 default)
-  turbopack: {
-    // Empty config to acknowledge Turbopack
-  },
+  // Use Turbopack (Next.js 16 default)
+  // turbopack: {
+  //   root: path.resolve(__dirname, '../../'),
+  // },
 
   // Environment variable validation
   env: {

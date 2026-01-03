@@ -21,6 +21,8 @@ const LightningIcon = ZapIcon;
 
 const sections = [
     { id: 'intro', title: 'Introduction' },
+    { id: 'demo-features', title: 'Features Demonstrated' },
+
     { id: 'installation', title: 'Installation' },
     { id: 'quick-start', title: 'Quick Start' },
     { id: 'configuration', title: 'Configuration' },
@@ -35,6 +37,7 @@ const sections = [
     { id: 'client-helpers', title: 'Client Helpers' },
     { id: 'retry-logic', title: 'Retry Logic' },
     { id: 'api-reference', title: 'Full API Reference' },
+    { id: 'roadmap', title: 'Roadmap & Future' },
 ];
 
 function CodeBlock({ code, language = 'typescript' }: { code: string; language?: string }) {
@@ -44,16 +47,93 @@ function CodeBlock({ code, language = 'typescript' }: { code: string; language?:
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
     };
+
+    // Syntax highlighting for JS/TS
+    const highlightCode = (source: string) => {
+        const tokens: { type: string; value: string }[] = [];
+        let remaining = source;
+
+        const patterns: [RegExp, string][] = [
+            // Comments
+            [/^(\/\/[^\n]*)/, 'comment'],
+            [/^(\/\*[\s\S]*?\*\/)/, 'comment'],
+            // Strings
+            [/^('(?:[^'\\]|\\.)*')/, 'string'],
+            [/^("(?:[^"\\]|\\.)*")/, 'string'],
+            [/^(`(?:[^`\\]|\\.)*`)/, 'string'],
+            // Keywords
+            [/^(import|export|from|const|let|var|function|async|await|return|if|else|for|while|class|extends|new|try|catch|throw|typeof|interface|type|enum|namespace|declare|readonly|public|private|protected|static|get|set|implements|abstract|as|is|in|of|default|case|switch|break|continue|yield|void|null|undefined|true|false)\b/, 'keyword'],
+            // Types (capitalized words, common TS types)
+            [/^(string|number|boolean|any|unknown|never|object|Promise|Array|Record|Partial|Required|Pick|Omit|Readonly|Map|Set|Date|Error|Response|Request|Headers)\b/, 'type'],
+            // Decorators / @ symbols
+            [/^(@\w+)/, 'decorator'],
+            // Numbers
+            [/^(\d+(?:_\d+)*(?:\.\d+)?(?:n)?(?:e[+-]?\d+)?)/, 'number'],
+            // Functions (word followed by paren)
+            [/^(\w+)(?=\s*\()/, 'function'],
+            // Properties (word followed by colon or .)
+            [/^(\w+)(?=\s*:)/, 'property'],
+            // Variables/identifiers
+            [/^(\w+)/, 'variable'],
+            // Operators and punctuation
+            [/^([{}[\]();:,.=><!?+\-*/%&|^~@#]+)/, 'punctuation'],
+            // Whitespace
+            [/^(\s+)/, 'whitespace'],
+        ];
+
+        while (remaining.length > 0) {
+            let matched = false;
+            for (const [pattern, type] of patterns) {
+                const match = remaining.match(pattern);
+                if (match) {
+                    tokens.push({ type, value: match[1] });
+                    remaining = remaining.slice(match[0].length);
+                    matched = true;
+                    break;
+                }
+            }
+            if (!matched) {
+                tokens.push({ type: 'plain', value: remaining[0] });
+                remaining = remaining.slice(1);
+            }
+        }
+
+        return tokens;
+    };
+
+    const colorMap: Record<string, string> = {
+        keyword: 'text-purple-400',
+        string: 'text-green-400',
+        comment: 'text-gray-500 italic',
+        number: 'text-orange-400',
+        function: 'text-blue-400',
+        type: 'text-cyan-400',
+        decorator: 'text-yellow-400',
+        property: 'text-sky-300',
+        variable: 'text-gray-200',
+        punctuation: 'text-gray-400',
+        whitespace: '',
+        plain: 'text-gray-300',
+    };
+
+    const tokens = highlightCode(code);
+
     return (
         <div className="relative group">
             <button
                 onClick={copy}
-                className="absolute top-3 right-3 p-2 rounded-lg bg-white/10 hover:bg-white/20 transition-colors opacity-0 group-hover:opacity-100"
+                className="absolute top-3 right-3 z-10 p-2 rounded-lg bg-white/10 hover:bg-white/20 transition-colors opacity-0 group-hover:opacity-100"
             >
                 {copied ? <CheckmarkCircle01Icon size={16} className="text-green-400" /> : <Copy01Icon size={16} className="text-gray-400" />}
             </button>
-            <div className="bg-[#0D0D0D] text-gray-300 rounded-xl p-5 font-mono text-sm overflow-x-auto shadow-xl ring-1 ring-white/10">
-                <pre className="whitespace-pre-wrap">{code}</pre>
+            <div className="bg-[#0D0D0D] rounded-xl p-5 font-mono text-sm overflow-x-auto shadow-xl ring-1 ring-white/10">
+                <pre className="whitespace-pre-wrap">
+                    {tokens.map((token, i) => (
+                        <span key={i} className={colorMap[token.type] || 'text-gray-300'}>
+                            {token.value}
+                        </span>
+                    ))}
+                </pre>
             </div>
         </div>
     );
@@ -166,6 +246,61 @@ export default function DocsPage() {
                                 <div className="text-2xl mb-2">⚡</div>
                                 <div className="font-bold">Zero Boilerplate</div>
                                 <div className="text-sm text-gray-500">Express & Next.js ready</div>
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* Demo Features Checklist */}
+                    <section id="demo-features" className="mb-20 scroll-mt-24">
+                        <div className="flex items-center gap-3 mb-6">
+                            <div className="p-2 bg-indigo-100 text-indigo-600 rounded-lg"><CheckmarkCircle01Icon size={20} /></div>
+                            <h2 className="text-2xl font-bold text-[#1D1D1F]">Features Demonstrated</h2>
+                        </div>
+                        <p className="text-gray-600 mb-6">
+                            This demo application showcases the full capabilities of the x402 paywall library in a production-ready Next.js environment:
+                        </p>
+
+                        <div className="grid md:grid-cols-2 gap-4">
+                            <div className="bg-white p-5 rounded-2xl border border-black/5 shadow-sm">
+                                <h3 className="font-bold text-[#1D1D1F] mb-3 flex items-center gap-2">
+                                    <span className="w-6 h-6 rounded-full bg-green-100 text-green-600 flex items-center justify-center text-xs">✓</span>
+                                    Core Payments
+                                </h3>
+                                <ul className="space-y-2 text-sm text-gray-600">
+                                    <li className="flex items-start gap-2">
+                                        <span className="w-1.5 h-1.5 rounded-full bg-gray-300 mt-1.5"></span>
+                                        Article unlocking via SOL micro-transactions
+                                    </li>
+                                    <li className="flex items-start gap-2">
+                                        <span className="w-1.5 h-1.5 rounded-full bg-gray-300 mt-1.5"></span>
+                                        Real-time on-chain payment verification
+                                    </li>
+                                    <li className="flex items-start gap-2">
+                                        <span className="w-1.5 h-1.5 rounded-full bg-gray-300 mt-1.5"></span>
+                                        QR code generation for mobile wallet support
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div className="bg-white p-5 rounded-2xl border border-black/5 shadow-sm">
+                                <h3 className="font-bold text-[#1D1D1F] mb-3 flex items-center gap-2">
+                                    <span className="w-6 h-6 rounded-full bg-green-100 text-green-600 flex items-center justify-center text-xs">✓</span>
+                                    Advanced Features
+                                </h3>
+                                <ul className="space-y-2 text-sm text-gray-600">
+                                    <li className="flex items-start gap-2">
+                                        <span className="w-1.5 h-1.5 rounded-full bg-gray-300 mt-1.5"></span>
+                                        <strong>JWT Session Management</strong> (24-hour access)
+                                    </li>
+                                    <li className="flex items-start gap-2">
+                                        <span className="w-1.5 h-1.5 rounded-full bg-gray-300 mt-1.5"></span>
+                                        <strong>RPC Fallback</strong> reliability system
+                                    </li>
+                                    <li className="flex items-start gap-2">
+                                        <span className="w-1.5 h-1.5 rounded-full bg-gray-300 mt-1.5"></span>
+                                        Environment-based configuration (Devnet/Mainnet)
+                                    </li>
+                                </ul>
                             </div>
                         </div>
                     </section>
@@ -415,27 +550,101 @@ await connection.confirmTransaction({
                         </div>
                     </section>
 
-                    {/* Payment Flow */}
+                    {/* Visual Payment Flow Diagram */}
                     <section id="payment-flow" className="mb-20 scroll-mt-24">
-                        <div className="flex items-center gap-3 mb-6">
-                            <div className="p-2 bg-green-100 text-green-600 rounded-lg"><CreditCardValidationIcon size={20} /></div>
-                            <h2 className="text-2xl font-bold text-[#1D1D1F]">The x402 Flow</h2>
-                        </div>
-
-                        <div className="relative border-l-2 border-gray-200 ml-4 space-y-10">
-                            {[
-                                { num: '1', title: 'Resource Request', desc: 'Client requests a protected resource.', color: 'purple' },
-                                { num: '2', title: '402 Payment Required', desc: 'Server responds with price, recipient wallet, and network.', color: 'gray' },
-                                { num: '3', title: 'User Pays', desc: 'Client signs and sends SOL/USDC transaction via wallet.', color: 'gray' },
-                                { num: '4', title: 'Submit Signature', desc: 'Client sends transaction signature to verify endpoint.', color: 'gray' },
-                                { num: '5', title: 'On-Chain Verification', desc: 'Server verifies transaction on Solana blockchain.', color: 'green' },
-                            ].map((step) => (
-                                <div key={step.num} className="relative pl-8">
-                                    <span className={`absolute -left-[9px] top-2 w-4 h-4 rounded-full bg-white border-2 border-${step.color}-500 shadow-sm`}></span>
-                                    <h3 className="font-bold text-lg">{step.num}. {step.title}</h3>
-                                    <p className="text-gray-500 mt-1">{step.desc}</p>
+                        <div className="bg-white border border-black/5 rounded-2xl p-8 shadow-sm overflow-x-auto">
+                            <div className="min-w-[600px] flex flex-col items-center">
+                                {/* Diagram Header */}
+                                <div className="flex w-full justify-between px-12 mb-8 text-sm font-bold text-gray-400 uppercase tracking-wider">
+                                    <div className="flex flex-col items-center gap-2">
+                                        <div className="w-10 h-10 bg-indigo-50 text-indigo-600 rounded-lg flex items-center justify-center">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-laptop"><path d="M20 16V7a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v9m16 0H4m16 0 1.28 2.55a1 1 0 0 1-.9 1.45H3.62a1 1 0 0 1-.9-1.45L4 16" /></svg>
+                                        </div>
+                                        <span>Client</span>
+                                    </div>
+                                    <div className="flex flex-col items-center gap-2">
+                                        <div className="w-10 h-10 bg-black text-white rounded-lg flex items-center justify-center">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-server"><rect width="20" height="8" x="2" y="2" rx="2" ry="2" /><rect width="20" height="8" x="2" y="14" rx="2" ry="2" /><line x1="6" x2="6.01" y1="6" y2="6" /><line x1="6" x2="6.01" y1="18" y2="18" /></svg>
+                                        </div>
+                                        <span>Server (x402)</span>
+                                    </div>
+                                    <div className="flex flex-col items-center gap-2">
+                                        <div className="w-10 h-10 bg-green-50 text-green-600 rounded-lg flex items-center justify-center">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-cuboid"><path d="m21.12 6.4-6.05-4.06a2 2 0 0 0-2.17-.05L2.95 8.41a2 2 0 0 0-.95 1.7v5.36a2 2 0 0 0 .95 1.7l9.95 6.12a2 2 0 0 0 2.17-.05l9.1-6.12a2 2 0 0 0 .95-1.7v-5.36a2 2 0 0 0-.95-1.7z" /></svg>
+                                        </div>
+                                        <span>Solana</span>
+                                    </div>
                                 </div>
-                            ))}
+
+                                {/* Flow Lines */}
+                                <div className="relative w-full space-y-8 text-xs font-medium text-gray-600">
+                                    {/* Step 1: Request */}
+                                    <div className="relative flex items-center">
+                                        <div className="absolute left-[12%] right-[50%] h-px bg-gray-200"></div>
+                                        <div className="relative z-10 w-full flex justify-center text-center">
+                                            <span className="bg-white px-3 py-1 border border-gray-200 rounded-full shadow-sm text-gray-900">
+                                                1. Request content
+                                            </span>
+                                        </div>
+                                        <div className="absolute right-[50%] -mt-1 w-2 h-2 border-t border-r border-gray-200 rotate-45 transform translate-x-1/2"></div>
+                                    </div>
+
+                                    {/* Step 2: 402 Response */}
+                                    <div className="relative flex items-center">
+                                        <div className="absolute left-[12%] right-[50%] h-px bg-gray-200 border-t border-dashed border-gray-300"></div>
+                                        <div className="relative z-10 w-full flex justify-center text-center">
+                                            <span className="bg-white px-3 py-1 border border-gray-200 rounded-full shadow-sm text-red-600 bg-red-50/50">
+                                                2. 402 Payment Required
+                                            </span>
+                                        </div>
+                                        <div className="absolute left-[12%] -mt-1 w-2 h-2 border-l border-b border-gray-300 rotate-45 transform -translate-x-1/2"></div>
+                                    </div>
+
+                                    {/* Step 3: Transaction */}
+                                    <div className="relative flex items-center">
+                                        <div className="absolute left-[12%] right-[12%] h-px bg-green-200"></div>
+                                        <div className="relative z-10 w-full flex justify-center text-center">
+                                            <span className="bg-white px-3 py-1 border border-green-200 rounded-full shadow-sm text-green-700 bg-green-50">
+                                                3. Sign & Send Transaction
+                                            </span>
+                                        </div>
+                                        <div className="absolute right-[12%] -mt-1 w-2 h-2 border-t border-r border-green-300 rotate-45 transform translate-x-1/2"></div>
+                                    </div>
+
+                                    {/* Step 4: Verify */}
+                                    <div className="relative flex items-center">
+                                        <div className="absolute left-[12%] right-[50%] h-px bg-gray-200"></div>
+                                        <div className="relative z-10 w-full flex justify-center text-center">
+                                            <span className="bg-white px-3 py-1 border border-gray-200 rounded-full shadow-sm">
+                                                4. POST /verify &#123;signature&#125;
+                                            </span>
+                                        </div>
+                                        <div className="absolute right-[50%] -mt-1 w-2 h-2 border-t border-r border-gray-200 rotate-45 transform translate-x-1/2"></div>
+                                    </div>
+
+                                    {/* Step 5: On-Chain Check */}
+                                    <div className="relative flex items-center">
+                                        <div className="absolute left-[50%] right-[12%] h-px bg-purple-200 border-t border-dashed border-purple-300"></div>
+                                        <div className="relative z-10 w-full flex justify-center pl-[38%] text-center">
+                                            <span className="bg-white px-3 py-1 border border-purple-200 rounded-full shadow-sm text-purple-700 bg-purple-50">
+                                                5. Verify Tx
+                                            </span>
+                                        </div>
+                                        <div className="absolute left-[50%] -mt-1 w-2 h-2 border-l border-b border-purple-300 rotate-45 transform -translate-x-1/2"></div>
+                                    </div>
+
+                                    {/* Step 6: Session */}
+                                    <div className="relative flex items-center">
+                                        <div className="absolute left-[12%] right-[50%] h-px bg-gray-200 border-t border-dashed border-gray-300"></div>
+                                        <div className="relative z-10 w-full flex justify-center text-center">
+                                            <span className="bg-white px-3 py-1 border border-gray-200 rounded-full shadow-sm text-indigo-600 bg-indigo-50/50">
+                                                6. 200 OK + Set-Cookie (JWT)
+                                            </span>
+                                        </div>
+                                        <div className="absolute left-[12%] -mt-1 w-2 h-2 border-l border-b border-gray-300 rotate-45 transform -translate-x-1/2"></div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </section>
 
@@ -828,6 +1037,63 @@ const result = await withRetry(
                         </div>
                     </section>
 
+                    {/* Roadmap */}
+                    <section id="roadmap" className="mb-20 scroll-mt-24">
+                        <div className="flex items-center gap-3 mb-6">
+                            <div className="p-2 bg-pink-100 text-pink-600 rounded-lg"><LightningIcon size={20} /></div>
+                            <h2 className="text-2xl font-bold text-[#1D1D1F]">Roadmap & Future</h2>
+                        </div>
+                        <p className="text-gray-600 mb-6">
+                            The following features are <strong>available in the core library</strong> but are not yet demonstrated in this example app. We plan to add UI demos for these soon:
+                        </p>
+
+                        <div className="grid md:grid-cols-2 gap-4">
+                            <div className="bg-white p-5 rounded-2xl border border-black/5 shadow-sm">
+                                <h3 className="font-bold text-[#1D1D1F] mb-3 flex items-center gap-2">
+                                    <span className="w-2 h-2 rounded-full bg-blue-400"></span>
+                                    Redis Signature Store
+                                </h3>
+                                <p className="text-sm text-gray-600 mb-3">
+                                    Production-grade anti-replay protection using Redis.
+                                </p>
+                                <code className="text-xs bg-gray-100 px-2 py-1 rounded block w-fit">import &#123; createRedisStore &#125; from '.../store'</code>
+                            </div>
+
+                            <div className="bg-white p-5 rounded-2xl border border-black/5 shadow-sm">
+                                <h3 className="font-bold text-[#1D1D1F] mb-3 flex items-center gap-2">
+                                    <span className="w-2 h-2 rounded-full bg-blue-400"></span>
+                                    Express & Fastify Middleware
+                                </h3>
+                                <p className="text-sm text-gray-600 mb-3">
+                                    Drop-in middleware for Node.js backend frameworks.
+                                </p>
+                                <code className="text-xs bg-gray-100 px-2 py-1 rounded block w-fit">import &#123; createExpressMiddleware &#125; from '.../middleware'</code>
+                            </div>
+
+                            <div className="bg-white p-5 rounded-2xl border border-black/5 shadow-sm">
+                                <h3 className="font-bold text-[#1D1D1F] mb-3 flex items-center gap-2">
+                                    <span className="w-2 h-2 rounded-full bg-blue-400"></span>
+                                    Advanced Priority Fees UI
+                                </h3>
+                                <p className="text-sm text-gray-600 mb-3">
+                                    User-configurable priority fees in the payment modal.
+                                </p>
+                                <code className="text-xs bg-gray-100 px-2 py-1 rounded block w-fit">PriorityFeeConfig</code>
+                            </div>
+
+                            <div className="bg-white p-5 rounded-2xl border border-black/5 shadow-sm">
+                                <h3 className="font-bold text-[#1D1D1F] mb-3 flex items-center gap-2">
+                                    <span className="w-2 h-2 rounded-full bg-blue-400"></span>
+                                    Custom SPL Tokens
+                                </h3>
+                                <p className="text-sm text-gray-600 mb-3">
+                                    UI for paying with any SPL token mint (e.g., BONK, WIF).
+                                </p>
+                                <code className="text-xs bg-gray-100 px-2 py-1 rounded block w-fit">verifySPLPayment</code>
+                            </div>
+                        </div>
+                    </section>
+
                     {/* Footer */}
                     <footer className="text-center py-12 border-t border-black/5">
                         <p className="text-gray-400 text-sm">
@@ -841,6 +1107,6 @@ const result = await withRetry(
 
                 </main>
             </div>
-        </div>
+        </div >
     );
 }

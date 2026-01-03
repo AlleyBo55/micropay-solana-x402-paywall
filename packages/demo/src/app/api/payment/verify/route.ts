@@ -57,7 +57,14 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        const senderAddress = verification.transaction?.signature ? 'verified-user' : 'anonymous';
+        // Use the actual sender address from the verified transaction
+        const senderAddress = verification.from;
+        if (!senderAddress) {
+            return NextResponse.json(
+                { error: 'Could not determine sender wallet from transaction' },
+                { status: 500 }
+            );
+        }
         const { session } = await createSession(senderAddress, articleId);
 
         return NextResponse.json({
@@ -72,7 +79,7 @@ export async function POST(request: NextRequest) {
     } catch (error) {
         console.error('Payment verification error:', error);
         return NextResponse.json(
-            { error: 'Internal server error', message: error instanceof Error ? error.message : 'Unknown error' },
+            { error: error instanceof Error ? error.message : 'Unknown error', stack: error instanceof Error ? error.stack : undefined },
             { status: 500 }
         );
     }

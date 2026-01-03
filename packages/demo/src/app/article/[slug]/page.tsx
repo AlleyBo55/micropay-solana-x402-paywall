@@ -93,54 +93,88 @@ export default function ArticlePage() {
     }
 
     return (
-        <div className="min-h-screen bg-[#FAFAFA] text-[#1D1D1F] font-sans selection:bg-black selection:text-white antialiased">
-            {/* Minimal Header */}
-            <nav className="border-b border-black/5 sticky top-0 bg-[#FAFAFA]/80 backdrop-blur-md z-40 transition-all">
-                <div className="max-w-screen-xl mx-auto px-6 h-16 flex items-center justify-between">
+        <div className="min-h-screen bg-white text-[#1D1D1F] font-sans selection:bg-black selection:text-white antialiased">
+            {/* Apple-style Header */}
+            <nav className="border-b border-black/5 sticky top-0 bg-white/80 backdrop-blur-xl z-50 transition-all">
+                <div className="max-w-screen-xl mx-auto px-6 h-14 flex items-center justify-between">
                     <div className="flex items-center gap-4">
-                        <Link href="/" className="group flex items-center gap-2 font-bold text-lg hover:opacity-70 transition-opacity">
-                            <div className="w-8 h-8 bg-black rounded-lg flex items-center justify-center text-white shadow-sm">
-                                <LightningIcon className="w-5 h-5 text-white fill-current" />
-                            </div>
-                            <span className="tracking-tight hidden sm:block">Micropay</span>
+                        <Link href="/" className="group flex items-center gap-2 hover:opacity-70 transition-opacity">
+                            <ArrowLeft01Icon size={20} className="text-gray-500 group-hover:text-black transition-colors" />
+                            <span className="font-semibold text-sm hidden sm:block">All Articles</span>
                         </Link>
+                    </div>
+
+                    <div className="absolute left-1/2 transform -translate-x-1/2 flex items-center gap-2 opacity-100 transition-opacity">
+                        <div className="w-6 h-6 bg-black rounded-md flex items-center justify-center text-white shadow-sm">
+                            <LightningIcon className="w-3.5 h-3.5 text-white fill-current" />
+                        </div>
+                        <span className="font-bold tracking-tight text-sm">Micropay</span>
                     </div>
 
                     <div className="flex items-center gap-4">
                         {!isLoading && (
                             isLocked ? (
-                                <span className="px-3 py-1.5 text-xs font-semibold rounded-full bg-black/5 text-[#1D1D1F] border border-black/5 flex items-center gap-1.5">
+                                <button className="px-3 py-1.5 text-xs font-medium rounded-full bg-black text-white hover:bg-gray-800 transition-colors flex items-center gap-1.5">
                                     <LockPasswordIcon size={12} />
-                                    Premium
-                                </span>
+                                    Unlock
+                                </button>
                             ) : (
-                                <span className="px-3 py-1.5 text-xs font-semibold rounded-full bg-green-100 text-green-700 border border-green-200 flex items-center gap-1.5">
+                                <span className="px-3 py-1.5 text-xs font-semibold rounded-full bg-green-50 text-green-700 border border-green-100 flex items-center gap-1.5">
                                     <Tick01Icon size={12} />
                                     Unlocked
                                 </span>
                             )
                         )}
-                        {/* Avatar/Profile placeholder */}
-                        <div className="w-8 h-8 rounded-full bg-gray-200 border border-white shadow-sm" />
+                        <div className="w-8 h-8 rounded-full bg-gray-100 border border-gray-200" />
                     </div>
                 </div>
             </nav>
 
-            <div className="max-w-3xl mx-auto px-6 pt-12 pb-20">
-                {/* Back Link */}
-                <div className="mb-8">
-                    <Link href="/" className="inline-flex items-center gap-2 text-gray-500 hover:text-[#1D1D1F] transition-colors text-sm font-medium group">
-                        <ArrowLeft01Icon className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-                        Back to home
-                    </Link>
-                </div>
+            <div className="w-full max-w-3xl mx-auto px-6 pt-16 pb-24">
+                {/* Hero Section */}
+                <header className="mb-12 text-center md:text-left">
+                    {/* Tags */}
+                    {article.tags && article.tags.length > 0 && (
+                        <div className="flex flex-wrap gap-3 justify-center md:justify-start mb-6">
+                            {article.tags.map(tag => (
+                                <span key={tag} className="text-[10px] uppercase tracking-widest font-bold text-gray-500">
+                                    {tag}
+                                </span>
+                            ))}
+                        </div>
+                    )}
+
+                    {/* Title */}
+                    <h1 className="text-4xl md:text-6xl font-serif font-bold text-gray-900 mb-6 leading-[1.1] tracking-tight">
+                        {article.title}
+                    </h1>
+
+                    {/* Excerpt */}
+                    <p className="text-xl md:text-2xl text-gray-500 leading-relaxed font-light mb-8 max-w-2xl">
+                        {article.excerpt}
+                    </p>
+
+                    {/* Author Meta */}
+                    <div className="flex items-center justify-center md:justify-start gap-3 border-t border-b border-gray-100 py-6">
+                        <div className="w-10 h-10 rounded-full bg-gray-200 overflow-hidden">
+                            {article.author.avatar && (
+                                <img src={article.author.avatar} alt={article.author.name} className="w-full h-full object-cover" />
+                            )}
+                        </div>
+                        <div className="text-left">
+                            <div className="font-bold text-sm text-gray-900">{article.author.name}</div>
+                            <div className="text-xs text-gray-500 font-medium">
+                                {new Date(article.publishedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })} · {article.readingTime}
+                            </div>
+                        </div>
+                    </div>
+                </header>
 
                 {/* Article Content */}
-                <main className="bg-white rounded-[2rem] p-8 md:p-12 shadow-sm border border-black/5">
+                <main className="relative">
                     {isLoading ? (
                         <div className="flex flex-col items-center justify-center py-32 gap-4">
-                            <div className="animate-spin w-6 h-6 border-2 border-black border-t-transparent rounded-full" />
-                            <p className="text-gray-400 text-sm font-medium animate-pulse">Loading story...</p>
+                            <div className="animate-spin w-5 h-5 border-2 border-black border-t-transparent rounded-full" />
                         </div>
                     ) : (
                         <PaywallOverlay
@@ -155,13 +189,6 @@ export default function ArticlePage() {
                         </PaywallOverlay>
                     )}
                 </main>
-
-                {/* Footer */}
-                <footer className="mt-12 text-center">
-                    <p className="text-gray-400 text-sm font-medium">
-                        Powered by <span className="text-[#1D1D1F]">x402 Protocol</span> on Solana
-                    </p>
-                </footer>
             </div>
         </div>
     );

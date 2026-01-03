@@ -2,8 +2,9 @@
 // Zero-boilerplate integration for protected routes
 
 import type { SignatureStore } from '../store';
-import type { SessionData } from '../types';
+import type { SessionData, PaymentRequirement } from '../types';
 import { validateSession } from '../session';
+import { encodePaymentRequirement } from '../x402';
 
 /**
  * Configuration for paywall middleware
@@ -17,7 +18,9 @@ export interface PaywallMiddlewareConfig {
     cookieName?: string;
     /** Optional signature store for anti-replay */
     signatureStore?: SignatureStore;
-    /** Custom 402 response body */
+    /** Payment requirement for 402 responses (enables x402 headers) */
+    paymentRequirement?: PaymentRequirement | ((path: string) => PaymentRequirement);
+    /** Custom 402 response body (deprecated, use paymentRequirement) */
     custom402Response?: (path: string) => object;
 }
 
@@ -130,20 +133,31 @@ export function createPaywallMiddleware(config: PaywallMiddlewareConfig) {
         const result = await checkPaywallAccess(path, sessionToken, config);
 
         if (!result.allowed && result.requiresPayment) {
-            // Return 402 Payment Required
+            // Build x402-compliant 402 response
+            const headers: Record<string, string> = {
+                'Content-Type': 'application/json',
+            };
+
+            // Add X-Payment-Required header if paymentRequirement is configured
+            if (config.paymentRequirement) {
+                const requirement = typeof config.paymentRequirement === 'function'
+                    ? config.paymentRequirement(path)
+                    : config.paymentRequirement;
+                headers['X-Payment-Required'] = encodePaymentRequirement(requirement);
+            }
+
             const body = config.custom402Response
                 ? config.custom402Response(path)
                 : {
                     error: 'Payment Required',
                     message: 'This resource requires payment to access',
+                    x402Version: 1,
                     path,
                 };
 
             return new Response(JSON.stringify(body), {
                 status: 402,
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                headers,
             });
         }
 

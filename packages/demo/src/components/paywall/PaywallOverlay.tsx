@@ -47,76 +47,62 @@ export function PaywallOverlay({
     return (
         <div className="relative">
             {/* Blurred content preview */}
-            <div className="relative overflow-hidden">
+            <div className="relative overflow-hidden cursor-not-allowed select-none">
                 {/* The actual content, blurred */}
-                <div className="blur-md select-none pointer-events-none opacity-40 max-h-[600px] overflow-hidden bg-white">
+                <div className="blur-xl pointer-events-none opacity-40 max-h-[500px] overflow-hidden bg-white grayscale-[0.5] transition-all duration-700">
                     {children}
                 </div>
 
-                {/* Gradient fade overlay - Fade to White */}
-                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/80 to-white" />
+                {/* Gradient fade overlay - Fade to White - Extended for smoothness */}
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/40 to-white" />
+                <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-white to-transparent" />
             </div>
 
             {/* Paywall CTA Overlay */}
-            <div className="absolute inset-0 flex items-center justify-center pt-20">
-                <div className="relative max-w-md mx-auto p-8 text-center z-10 p-8">
-                    {/* Clean Minimal Card */}
-                    <div className="bg-white rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.08)] border border-gray-100 p-8">
+            <div className="absolute inset-0 flex items-center justify-center top-12 md:top-24 z-10">
+                <div className="w-full max-w-sm mx-auto px-4">
+                    {/* Apple-style premium card */}
+                    <div className="bg-white/80 backdrop-blur-2xl rounded-[24px] shadow-[0_20px_60px_-10px_rgba(0,0,0,0.1)] border border-white/50 ring-1 ring-black/5 p-8 text-center transform transition-all hover:scale-[1.01] duration-500">
                         {/* Lock icon */}
-                        <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-50 mb-6 text-gray-900">
-                            <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                        <div className="w-12 h-12 bg-black text-white rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg shadow-black/10">
+                            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                             </svg>
                         </div>
 
-                        {/* Title */}
-                        <h3 className="text-2xl font-bold text-gray-900 mb-3 font-serif">
+                        <h3 className="text-xl font-bold text-gray-900 mb-2 font-sans tracking-tight">
                             Read the full story
                         </h3>
 
-                        {/* Description */}
-                        <p className="text-gray-500 mb-8 leading-relaxed">
-                            Unlock this article with a one-time micropayment.
-                            <br /><span className="text-gray-900 font-medium">No subscription required.</span>
+                        <p className="text-gray-500 text-sm mb-8 leading-relaxed font-medium">
+                            <span className="text-gray-900">One-time payment.</span> Instant access.<br />
+                            No subscription or sign-up needed.
                         </p>
 
-                        {/* Price tag */}
-                        <div className="inline-flex items-center gap-2 bg-gray-50 px-4 py-2 rounded-full border border-gray-100 mb-8">
-                            <span className="text-xl font-bold text-gray-900">{priceInSol.toFixed(4)} SOL</span>
-                            <span className="text-gray-400 text-sm">≈ ${(priceInSol * 150).toFixed(2)}</span>
-                        </div>
-
-                        {/* CTA Button */}
                         <button
                             onClick={() => setShowModal(true)}
                             disabled={isUnlocking}
-                            className="w-full py-3.5 px-6 bg-black hover:bg-gray-900 text-white font-medium rounded-full transition-all transform hover:scale-[1.02] active:scale-[0.98] shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                            className="w-full h-12 bg-[#000000] hover:bg-[#1a1a1a] text-white font-semibold rounded-full transition-all active:scale-[0.98] shadow-md hover:shadow-lg disabled:opacity-70 disabled:cursor-wait flex items-center justify-center gap-2 group"
                         >
                             {isUnlocking ? (
                                 <>
-                                    <svg className="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
-                                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                                    </svg>
-                                    Unlocking...
+                                    <svg className="w-4 h-4 animate-spin text-white/50" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" /></svg>
+                                    <span>Verifying...</span>
                                 </>
                             ) : (
-                                "Unlock now"
+                                <>
+                                    <span className="tracking-tight">Pay {priceInSol.toFixed(3)} SOL</span>
+                                    <svg className="w-4 h-4 opacity-50 group-hover:translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" /></svg>
+                                </>
                             )}
                         </button>
 
-                        {/* Features */}
-                        <div className="mt-8 pt-6 border-t border-gray-100">
-                            <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm text-gray-500">
-                                <span className="flex items-center gap-1.5">
-                                    <svg className="w-4 h-4 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
-                                    Instance access
-                                </span>
-                                <span className="flex items-center gap-1.5">
-                                    <svg className="w-4 h-4 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
-                                    24h session
-                                </span>
-                            </div>
+                        {/* Footer / Trust signal */}
+                        <div className="mt-6 pt-6 border-t border-black/5">
+                            <p className="text-[10px] uppercase tracking-wider text-gray-400 font-semibold flex items-center justify-center gap-2">
+                                <svg className="w-3 h-3" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9v-2h2v2zm0-4H9V7h2v5z" /></svg>
+                                Secured by Solana
+                            </p>
                         </div>
                     </div>
                 </div>

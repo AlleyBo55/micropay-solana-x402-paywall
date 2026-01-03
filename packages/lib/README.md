@@ -19,7 +19,7 @@ npm install @alleyboss/micropay-solana-x402-paywall @solana/web3.js
 | Feature | Description |
 |---------|-------------|
 | 💰 **SOL & USDC Payments** | Native SOL and SPL tokens (USDC, USDT) |
-| 🔐 **x402 Protocol** | HTTP 402 Payment Required standard |
+| 🔐 **x402 Protocol** | Full HTTP 402 compliance with `X-Payment-Required` headers |
 | 🔑 **JWT Sessions** | Secure unlock tracking with anti-replay |
 | 🛡️ **Signature Store** | Prevent double-spend at app layer |
 | 🔌 **Express & Next.js** | Zero-boilerplate middleware |
@@ -82,27 +82,42 @@ import { getSolPrice, formatPriceDisplay, configurePricing } from '@alleyboss/mi
 import { withRetry } from '@alleyboss/micropay-solana-x402-paywall/utils';
 ```
 
-## 🔥 New in v2.1.0
+## 🔥 New in v2.2.0
 
-- **RPC Fallback Support** — Automatic failover on primary RPC failure (configurable, default: off)
-- **Priority Fees** — Compute budget instructions for landing transactions faster (configurable, default: off)
-- **Versioned Transactions** — Full v0 transaction support with lookup tables
-- **TDD Test Suite** — Comprehensive tests with vitest (must pass before npm publish)
+### x402 Protocol Compliance
+
+Full compliance with the [x402.org](https://x402.org) specification:
 
 ```typescript
-// RPC Fallback configuration
-const config = {
-  network: 'mainnet-beta',
-  rpcUrl: 'https://primary-rpc.com',
-  enableFallback: true, // default: false
-  fallbackRpcUrls: [
-    'https://fallback1.com',
-    'https://fallback2.com',
-  ],
-};
+import { create402Response, parsePaymentHeader, encodePaymentRequirement } from '@alleyboss/micropay-solana-x402-paywall/x402';
 
+// Create 402 response with X-Payment-Required header
+const response = create402Response({
+  scheme: 'exact',
+  network: 'solana-mainnet',
+  maxAmountRequired: '10000000',
+  payTo: 'CreatorWallet...',
+  resource: '/api/premium',
+  description: 'Premium content access',
+  maxTimeoutSeconds: 300,
+  asset: 'native',
+});
+// Response includes: X-Payment-Required: <base64-encoded-requirement>
+
+// Parse X-Payment header from client
+const payload = parsePaymentHeader(request.headers.get('x-payment'));
+```
+
+### Previous Features (v2.1.x)
+
+- **RPC Fallback Support** — Automatic failover on primary RPC failure
+- **Priority Fees** — Compute budget instructions for landing transactions faster
+- **Versioned Transactions** — Full v0 transaction support with lookup tables
+- **TDD Test Suite** — Comprehensive tests with vitest
+
+```typescript
 // Priority fees
-import { createPriorityFeeInstructions, estimatePriorityFee } from '@alleyboss/micropay-solana-x402-paywall/solana';
+import { createPriorityFeeInstructions } from '@alleyboss/micropay-solana-x402-paywall/solana';
 
 const instructions = createPriorityFeeInstructions({
   enabled: true,

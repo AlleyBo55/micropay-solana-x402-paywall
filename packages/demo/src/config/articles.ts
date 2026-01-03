@@ -66,7 +66,7 @@ DeFi is not just a technological innovation; it's a movement toward a more inclu
     `.trim(),
         author: {
             name: 'Alex Chen',
-            avatar: '/avatars/alex.jpg',
+            avatar: '/avatars/alex.png',
         },
         publishedAt: new Date('2024-01-15'),
         readingTime: '8 min read',
@@ -204,7 +204,7 @@ Building on Solana in 2024 is more accessible than ever. With robust tooling, co
     `.trim(),
         author: {
             name: 'Sarah Martinez',
-            avatar: '/avatars/sarah.jpg',
+            avatar: '/avatars/sarah.png',
         },
         publishedAt: new Date('2024-02-20'),
         readingTime: '12 min read',
@@ -329,7 +329,7 @@ The micropayments revolution is finally here. With x402 and Solana, we have the 
     `.trim(),
         author: {
             name: 'Jamie Wilson',
-            avatar: '/avatars/jamie.jpg',
+            avatar: '/avatars/jamie.png',
         },
         publishedAt: new Date('2024-03-10'),
         readingTime: '10 min read',

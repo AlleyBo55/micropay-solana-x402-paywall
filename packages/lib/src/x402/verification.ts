@@ -83,6 +83,7 @@ export async function verifyX402Payment(
     return {
         valid: true,
         settled: verification.confirmed,
+        from: verification.from,
         transaction: {
             signature: verification.signature,
             blockTime: verification.blockTime,
@@ -92,8 +93,11 @@ export async function verifyX402Payment(
 }
 
 /**
- * Parse payment payload from x402 header
+ * Parse payment payload from X-Payment header (base64 encoded JSON)
  * SECURITY: Safe JSON parsing with try-catch
+ * 
+ * @example
+ * const payload = parsePaymentHeader(request.headers.get('x-payment'));
  */
 export function parsePaymentHeader(header: string): PaymentPayload | null {
     if (!header || typeof header !== 'string') {
@@ -121,8 +125,49 @@ export function parsePaymentHeader(header: string): PaymentPayload | null {
 }
 
 /**
- * Encode payment response for header
+ * Encode PaymentRequirement for X-Payment-Required header
+ * Per x402 spec: base64 encoded JSON
+ * 
+ * @example
+ * response.headers.set('X-Payment-Required', encodePaymentRequirement(requirement));
+ */
+export function encodePaymentRequirement(requirement: PaymentRequirement): string {
+    return Buffer.from(JSON.stringify(requirement)).toString('base64');
+}
+
+/**
+ * Encode VerificationResponse for X-Payment-Response header
  */
 export function encodePaymentResponse(response: VerificationResponse): string {
     return Buffer.from(JSON.stringify(response)).toString('base64');
+}
+
+/**
+ * Create a 402 Payment Required response with proper x402 headers
+ * 
+ * @example
+ * if (!hasValidPayment) {
+ *   return create402Response(requirement, { message: 'Payment required' });
+ * }
+ */
+export function create402Response(
+    requirement: PaymentRequirement,
+    body?: object
+): Response {
+    const headers = new Headers({
+        'Content-Type': 'application/json',
+        'X-Payment-Required': encodePaymentRequirement(requirement),
+    });
+
+    const responseBody = body || {
+        error: 'Payment Required',
+        message: 'This resource requires payment to access',
+        x402Version: 1,
+        accepts: [requirement],
+    };
+
+    return new Response(JSON.stringify(responseBody), {
+        status: 402,
+        headers,
+    });
 }
