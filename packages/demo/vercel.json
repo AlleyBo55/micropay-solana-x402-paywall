@@ -3,7 +3,7 @@
     "framework": "nextjs",
     "buildCommand": "npm run build",
     "devCommand": "npm run dev",
-    "installCommand": "rm -rf node_modules && npm install --no-workspaces",
+    "installCommand": "npm install --no-workspaces",
     "regions": [
         "iad1"
     ],
