@@ -212,6 +212,8 @@ We take security seriously. Here's why you can trust this library:
 4. **No Private Keys Stored**  
    The library is designed to be non-custodial for the payment flow. User wallets sign transactions directly. Your server only needs a public key to verify.
 
+## 🔒 Security Best Practices
+
 - ✅ No hardcoded private keys
 - ✅ Session cookies are HTTP-only and secure
 - ✅ On-chain verification for all payments
