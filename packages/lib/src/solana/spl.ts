@@ -1,8 +1,9 @@
 // SPL Token payment verification
 // SECURITY: On-chain verification for SPL token transfers (USDC, USDT, custom)
-import { type ParsedTransactionWithMeta } from '@solana/web3.js';
+import { type ParsedTransactionWithMeta, PublicKey } from '@solana/web3.js';
 import { getConnection, type SolanaClientConfig } from './client';
 import { TOKEN_MINTS, type PaymentAsset } from '../types';
+import type { SignatureStore } from '../store';
 
 /** Result of SPL token transfer verification */
 export interface SPLVerificationResult {
@@ -42,6 +43,8 @@ export interface VerifySPLPaymentParams {
     clientConfig: SolanaClientConfig;
     /** Maximum transaction age in seconds */
     maxAgeSeconds?: number;
+    /** Optional signature store for anti-replay protection */
+    signatureStore?: SignatureStore;
 }
 
 // Signature validation regex
@@ -201,7 +204,16 @@ export async function verifySPLPayment(
         asset,
         clientConfig,
         maxAgeSeconds = 300,
+        signatureStore,
     } = params;
+
+    // Check local signature store (if provided)
+    if (signatureStore) {
+        const isUsed = await signatureStore.hasBeenUsed(signature);
+        if (isUsed) {
+            return { valid: false, confirmed: true, signature, error: 'Signature already used' };
+        }
+    }
 
     // Validate signature format
     if (!SIGNATURE_REGEX.test(signature)) {
@@ -261,6 +273,40 @@ export async function verifySPLPayment(
                 signature,
                 error: 'No valid token transfer to recipient found',
             };
+        }
+
+        // SECURITY: Verify token account owner (Critical fix for spoofing)
+        // Ensure tokens were sent to an account OWNED by expectedRecipient
+        if (transfer.to) {
+            try {
+                // If we found the transfer via postTokenBalances, we might already know the owner
+                // But parseSPLTransfer doesn't return that info explicitly, so we verify strictly via RPC
+                // unless it was a direct transfer to wallet (rare for tokens)
+
+                // Note: Only perform this check if we fell back to instruction parsing
+                // or just always do it to be safe 100%. 
+                // Optimization: We could return 'verifiedOwner' from parseSPLTransfer if found in balances.
+
+                const destinationInfo = await connection.getParsedAccountInfo(new PublicKey(transfer.to));
+                const owner = (destinationInfo.value?.data as any)?.parsed?.info?.owner;
+
+                if (owner && owner !== expectedRecipient) {
+                    return {
+                        valid: false,
+                        confirmed: true,
+                        signature,
+                        error: 'Recipient mismatch: Token account not owned by merchant'
+                    };
+                }
+            } catch (e) {
+                // Fail secure if we can't verify ownership
+                return {
+                    valid: false,
+                    confirmed: true,
+                    signature,
+                    error: 'Could not verify token account owner'
+                };
+            }
         }
 
         // Validate mint matches

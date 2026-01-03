@@ -220,6 +220,9 @@ We take security seriously. Here's why you can trust this library:
 - ✅ Environment variables for sensitive config
 - ✅ CORS headers configured properly
 
+> [!CAUTION]
+> **SPL Token Validation Note**: The library currently validates that tokens are sent to a *valid token account*, but does not perform the extra RPC call to verify that token account is owned by `expectedRecipient`. For high-value transactions, we recommend implementing a strict verification step server-side.
+
 ## 🤝 Contributing
 
 1. Fork the repository

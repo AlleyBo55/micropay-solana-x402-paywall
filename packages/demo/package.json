@@ -17,7 +17,7 @@
     }
   },
   "dependencies": {
-    "@alleyboss/micropay-solana-x402-paywall": "^2.2.0",
+    "@alleyboss/micropay-solana-x402-paywall": "^2.3.0",
     "@solana/wallet-adapter-base": "^0.9.27",
     "@solana/wallet-adapter-react": "^0.15.39",
     "@solana/wallet-adapter-react-ui": "^0.9.39",

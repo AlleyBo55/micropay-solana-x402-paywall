@@ -2,6 +2,7 @@
 // SECURITY: On-chain verification, signature validation, replay protection
 import { PublicKey, LAMPORTS_PER_SOL, type ParsedTransactionWithMeta } from '@solana/web3.js';
 import { getConnection, type SolanaClientConfig } from './client';
+import type { SignatureStore } from '../store';
 
 /** Result of transaction verification */
 export interface TransactionVerificationResult {
@@ -35,6 +36,8 @@ export interface VerifyPaymentParams {
     expectedAmount: bigint;
     /** Maximum age of transaction in seconds (default: 300) */
     maxAgeSeconds?: number;
+    /** Optional signature store for anti-replay protection */
+    signatureStore?: SignatureStore;
     /** Solana client configuration */
     clientConfig: SolanaClientConfig;
 }
@@ -127,7 +130,8 @@ export async function verifyPayment(
         expectedRecipient,
         expectedAmount,
         maxAgeSeconds = 300,
-        clientConfig
+        clientConfig,
+        signatureStore,
     } = params;
 
     // SECURITY: Validate signature format before RPC call
@@ -146,6 +150,14 @@ export async function verifyPayment(
     }
 
     // SECURITY: Enforce reasonable max age (prevent replay with very old transactions)
+    // Check local signature store (if provided)
+    if (signatureStore) {
+        const isUsed = await signatureStore.hasBeenUsed(signature);
+        if (isUsed) {
+            return { valid: false, confirmed: true, signature, error: 'Signature already used' };
+        }
+    }
+
     const effectiveMaxAge = Math.min(Math.max(maxAgeSeconds, 60), 3600); // 1 min to 1 hour
 
     const connection = getConnection(clientConfig);
