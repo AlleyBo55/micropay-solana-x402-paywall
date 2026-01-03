@@ -4,16 +4,16 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import {
-    ArrowRight01Icon,
-    ZapIcon as LightningIcon,
-    SourceCodeIcon,
-    Shield02Icon,
-    Globe02Icon,
-    LockPasswordIcon,
-    Copy01Icon,
-    Tick01Icon
-} from 'hugeicons-react';
+import ArrowRight01Icon from 'hugeicons-react/dist/esm/icons/arrow_right_01_icon';
+import ZapIcon from 'hugeicons-react/dist/esm/icons/zap_icon';
+import SourceCodeIcon from 'hugeicons-react/dist/esm/icons/source_code_icon';
+import Shield02Icon from 'hugeicons-react/dist/esm/icons/shield_02_icon';
+import Globe02Icon from 'hugeicons-react/dist/esm/icons/globe_02_icon';
+import LockPasswordIcon from 'hugeicons-react/dist/esm/icons/lock_password_icon';
+import Copy01Icon from 'hugeicons-react/dist/esm/icons/copy_01_icon';
+import Tick01Icon from 'hugeicons-react/dist/esm/icons/tick_01_icon';
+
+const LightningIcon = ZapIcon;
 import { getAllArticles } from '@/config';
 import { lamportsToSol } from '@alleyboss/micropay-solana-x402-paywall';
 

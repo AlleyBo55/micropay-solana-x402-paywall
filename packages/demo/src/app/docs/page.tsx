@@ -2,22 +2,22 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import {
-    BookOpen01Icon,
-    CodeCircleIcon,
-    CreditCardValidationIcon,
-    ZapIcon as LightningIcon,
-    SecurityCheckIcon,
-    Share01Icon,
-    Settings01Icon,
-    Database01Icon,
-    DollarCircleIcon,
-    ArrowRight01Icon,
-    CheckmarkCircle01Icon,
-    Copy01Icon,
-    RefreshIcon,
-    ShieldKeyIcon
-} from 'hugeicons-react';
+import BookOpen01Icon from 'hugeicons-react/dist/esm/icons/book_open_01_icon';
+import CodeCircleIcon from 'hugeicons-react/dist/esm/icons/code_circle_icon';
+import CreditCardValidationIcon from 'hugeicons-react/dist/esm/icons/credit_card_validation_icon';
+import ZapIcon from 'hugeicons-react/dist/esm/icons/zap_icon';
+import SecurityCheckIcon from 'hugeicons-react/dist/esm/icons/security_check_icon';
+import Share01Icon from 'hugeicons-react/dist/esm/icons/share_01_icon';
+import Settings01Icon from 'hugeicons-react/dist/esm/icons/settings_01_icon';
+import Database01Icon from 'hugeicons-react/dist/esm/icons/database_01_icon';
+import DollarCircleIcon from 'hugeicons-react/dist/esm/icons/dollar_circle_icon';
+import ArrowRight01Icon from 'hugeicons-react/dist/esm/icons/arrow_right_01_icon';
+import CheckmarkCircle01Icon from 'hugeicons-react/dist/esm/icons/checkmark_circle_01_icon';
+import Copy01Icon from 'hugeicons-react/dist/esm/icons/copy_01_icon';
+import RefreshIcon from 'hugeicons-react/dist/esm/icons/refresh_icon';
+import ShieldKeyIcon from 'hugeicons-react/dist/esm/icons/shield_key_icon';
+
+const LightningIcon = ZapIcon;
 
 const sections = [
     { id: 'intro', title: 'Introduction' },
