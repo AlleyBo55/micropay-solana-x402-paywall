@@ -43,3 +43,4 @@ tmp/
 # NPM publish
 *.tgz
 .npmrc
+!packages/demo/.npmrc
