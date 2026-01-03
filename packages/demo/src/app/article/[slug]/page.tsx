@@ -99,8 +99,8 @@ export default function ArticlePage() {
                 <div className="max-w-screen-xl mx-auto px-6 h-14 flex items-center justify-between">
                     <div className="flex items-center gap-4">
                         <Link href="/" className="group flex items-center gap-2 hover:opacity-70 transition-opacity">
-                            <ArrowLeft01Icon size={20} className="text-gray-500 group-hover:text-black transition-colors" />
-                            <span className="font-semibold text-sm hidden sm:block">All Articles</span>
+                            <ArrowLeft01Icon size={20} className="text-black" />
+                            <span className="font-semibold text-sm text-black hidden sm:block">All Articles</span>
                         </Link>
                     </div>
 
@@ -108,7 +108,7 @@ export default function ArticlePage() {
                         <div className="w-6 h-6 bg-black rounded-md flex items-center justify-center text-white shadow-sm">
                             <LightningIcon className="w-3.5 h-3.5 text-white fill-current" />
                         </div>
-                        <span className="font-bold tracking-tight text-sm">Micropay</span>
+                        <span className="font-bold tracking-tight text-sm text-black">Micropay</span>
                     </div>
 
                     <div className="flex items-center gap-4">
@@ -137,7 +137,7 @@ export default function ArticlePage() {
                     {article.tags && article.tags.length > 0 && (
                         <div className="flex flex-wrap gap-3 justify-center md:justify-start mb-6">
                             {article.tags.map(tag => (
-                                <span key={tag} className="text-[10px] uppercase tracking-widest font-bold text-gray-500">
+                                <span key={tag} className="text-[10px] uppercase tracking-widest font-bold text-black/60">
                                     {tag}
                                 </span>
                             ))}
@@ -145,12 +145,12 @@ export default function ArticlePage() {
                     )}
 
                     {/* Title */}
-                    <h1 className="text-4xl md:text-6xl font-serif font-bold text-gray-900 mb-6 leading-[1.1] tracking-tight">
+                    <h1 className="text-4xl md:text-6xl font-serif font-bold text-black mb-6 leading-[1.1] tracking-tight">
                         {article.title}
                     </h1>
 
                     {/* Excerpt */}
-                    <p className="text-xl md:text-2xl text-gray-500 leading-relaxed font-light mb-8 max-w-2xl">
+                    <p className="text-xl md:text-2xl text-black/70 leading-relaxed font-light mb-8 max-w-2xl">
                         {article.excerpt}
                     </p>
 
@@ -162,8 +162,8 @@ export default function ArticlePage() {
                             )}
                         </div>
                         <div className="text-left">
-                            <div className="font-bold text-sm text-gray-900">{article.author.name}</div>
-                            <div className="text-xs text-gray-500 font-medium">
+                            <div className="font-bold text-sm text-black">{article.author.name}</div>
+                            <div className="text-xs text-black/60 font-medium">
                                 {new Date(article.publishedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })} · {article.readingTime}
                             </div>
                         </div>

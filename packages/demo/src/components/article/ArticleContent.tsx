@@ -17,11 +17,12 @@ export function ArticleContent({ article }: ArticleContentProps) {
     return (
         <article className="max-w-none">
             {/* Content */}
-            <div className="prose prose-lg md:prose-xl max-w-none
-                prose-headings:font-sans prose-headings:font-bold prose-headings:tracking-tight prose-headings:text-black
+            <div className="prose prose-light prose-lg md:prose-xl max-w-none
+                prose-headings:font-sans prose-headings:font-bold prose-headings:tracking-tight
                 prose-h1:hidden 
-                prose-h2:text-2xl md:prose-h2:text-3xl prose-h2:mt-16 prose-h2:mb-6
-                prose-h3:text-xl md:prose-h3:text-2xl prose-h3:mt-12 prose-h3:mb-4
+                prose-h2:text-2xl md:prose-h2:text-3xl prose-h2:mt-16 prose-h2:mb-6 prose-h2:text-black
+                prose-h3:text-xl md:prose-h3:text-2xl prose-h3:mt-12 prose-h3:mb-4 prose-h3:text-black
+                prose-h4:text-lg prose-h4:text-black prose-h5:text-black prose-h6:text-black
                 prose-p:font-serif prose-p:text-[1.125rem] md:prose-p:text-[1.25rem] prose-p:leading-[1.8] prose-p:text-black prose-p:mb-8
                 prose-a:text-black prose-a:underline prose-a:decoration-1 prose-a:underline-offset-4 hover:prose-a:decoration-2
                 prose-strong:text-black prose-strong:font-bold
@@ -45,8 +46,8 @@ export function ArticleContent({ article }: ArticleContentProps) {
                         )}
                     </div>
                     <div>
-                        <p className="text-sm font-bold text-gray-900">{article.author.name}</p>
-                        <p className="text-xs text-gray-500">Published in {format(article.publishedAt, 'MMMM yyyy')}</p>
+                        <p className="text-sm font-bold text-black">{article.author.name}</p>
+                        <p className="text-xs text-black/60">Published in {format(article.publishedAt, 'MMMM yyyy')}</p>
                     </div>
                 </div>
 
