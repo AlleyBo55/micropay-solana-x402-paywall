@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
                 description: `Unlock: ${article.title}`,
                 payTo: getCreatorWallet(),
                 maxTimeoutSeconds: 300,
-                asset: 'native',
+                asset: 'native' as const,
             };
 
         const payload: PaymentPayload = {

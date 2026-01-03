@@ -39,7 +39,7 @@ A production-ready, per-article paywall system using the **x402 protocol** and *
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/solanapaywall.git
+git clone https://github.com/AlleyBo55/micropay-solana-x402-paywall.git
 cd solanapaywall
 
 # Install dependencies
@@ -182,7 +182,7 @@ NEXT_PUBLIC_RPC_URL=https://solana-devnet.gateway.tatum.io
 
 ## 🚢 Deploy to Vercel
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/yourusername/solanapaywall)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/AlleyBo55/micropay-solana-x402-paywall.git)
 
 ### Environment Variables for Vercel
 

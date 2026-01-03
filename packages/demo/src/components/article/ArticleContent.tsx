@@ -23,8 +23,8 @@ export function ArticleContent({ article }: ArticleContentProps) {
                 <div className="flex items-center gap-4 mb-8">
                     {/* Author Avatar */}
                     <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 font-medium overflow-hidden">
-                        {article.author.image ? (
-                            <img src={article.author.image} alt={article.author.name} className="w-full h-full object-cover" />
+                        {article.author.avatar ? (
+                            <img src={article.author.avatar} alt={article.author.name} className="w-full h-full object-cover" />
                         ) : (
                             <span className="text-lg">{article.author.name.charAt(0)}</span>
                         )}
