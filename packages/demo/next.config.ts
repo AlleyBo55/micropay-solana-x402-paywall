@@ -17,6 +17,9 @@ const nextConfig: NextConfig = {
     '@solana/wallet-adapter-react-ui',
     '@solana/wallet-adapter-wallets',
     '@solana/wallet-adapter-base',
+    'hugeicons-react',
+    'framer-motion',
+    '@alleyboss/micropay-solana-x402-paywall',
   ],
 };
 
