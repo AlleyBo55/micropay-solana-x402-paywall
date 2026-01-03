@@ -64,7 +64,7 @@ export async function POST(req) {
                     </Link>
                     <div className="flex items-center gap-6">
                         <Link href="/docs" className="text-sm font-medium text-gray-500 hover:text-black transition-colors hidden sm:block">Documentation</Link>
-                        <a href="https://github.com/alleyboss/micropay-solana-x402-paywall" target="_blank" className="text-sm font-medium text-gray-500 hover:text-black transition-colors hidden sm:block">GitHub</a>
+                        <a href="https://github.com/AlleyBo55/micropay-solana-x402-paywall" target="_blank" className="text-sm font-medium text-gray-500 hover:text-black transition-colors hidden sm:block">GitHub</a>
                         <Link href="/docs" className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-black rounded-full hover:bg-gray-800 transition-all shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 duration-200">
                             Start Building
                         </Link>
@@ -86,7 +86,7 @@ export async function POST(req) {
                                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
                                 <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
                             </span>
-                            <span className="text-xs font-medium text-gray-600">v1.0 Public Beta is Live</span>
+                            <span className="text-xs font-medium text-gray-600">v2.2.0 Stable Release</span>
                         </motion.div>
 
                         <motion.h1
@@ -336,12 +336,12 @@ export async function POST(req) {
                     </div>
                     <div className="flex gap-8 text-sm text-gray-500 font-medium">
                         <Link href="/docs" className="hover:text-black transition-colors">Documentation</Link>
-                        <a href="https://github.com/alleyboss/micropay-solana-x402-paywall" target="_blank" className="hover:text-black transition-colors inline-flex items-center gap-1">
+                        <a href="https://github.com/AlleyBo55/micropay-solana-x402-paywall" target="_blank" className="hover:text-black transition-colors inline-flex items-center gap-1">
                             GitHub
                         </a>
                         <a href="https://x402.org" target="_blank" className="hover:text-black transition-colors">x402 Protocol</a>
                     </div>
-                    <p className="text-gray-400 text-sm">© 2024 AlleyBoss. All rights reserved.</p>
+                    <p className="text-gray-400 text-sm">© 2026 AlleyBoss. All rights reserved.</p>
                 </div>
             </footer>
         </div>

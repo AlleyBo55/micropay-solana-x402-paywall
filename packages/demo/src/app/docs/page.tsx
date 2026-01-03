@@ -1101,7 +1101,7 @@ const result = await withRetry(
                         </p>
                         <div className="mt-4 flex justify-center gap-4">
                             <a href="https://www.npmjs.com/package/@alleyboss/micropay-solana-x402-paywall" target="_blank" className="text-purple-600 hover:underline text-sm">npm</a>
-                            <a href="https://github.com/alleyboss/micropay-solana-x402-paywall" target="_blank" className="text-purple-600 hover:underline text-sm">GitHub</a>
+                            <a href="https://github.com/AlleyBo55/micropay-solana-x402-paywall" target="_blank" className="text-purple-600 hover:underline text-sm">GitHub</a>
                         </div>
                     </footer>
 
