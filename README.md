@@ -227,40 +227,6 @@ solanapaywall/
 └── README.md                      # This file
 ```
 
-## 🎬 Video Demo Script
-
-For creating a video walkthrough:
-
-### Scene 1: Introduction (30s)
-- Show landing page
-- Explain: "SolanaPaywall enables per-article micropayments using x402 protocol"
-- Highlight: "No subscriptions — readers pay only for what they read"
-
-### Scene 2: User Experience (60s)
-- Navigate to a demo article
-- Show blurred content with paywall overlay
-- Connect wallet (show Phantom popup)
-- Click "Pay X SOL"
-- Show transaction approval
-- Watch content unlock smoothly
-
-### Scene 3: Creator Dashboard (30s)
-- Navigate to /dashboard
-- Show earnings overview
-- Show article performance metrics
-- Show recent transactions
-
-### Scene 4: Technical Overview (60s)
-- Explain x402 protocol flow
-- Show code structure briefly
-- Highlight Tatum.io RPC integration
-- Show environment configuration
-
-### Scene 5: Call to Action (20s)
-- "Deploy your own in minutes"
-- Show Vercel deploy button
-- Link to GitHub repo
-
 ## 🔒 Security Best Practices
 
 - ✅ No hardcoded private keys
