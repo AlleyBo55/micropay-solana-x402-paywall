@@ -1,6 +1,6 @@
 {
     "name": "@alleyboss/micropay-solana-x402-paywall",
-    "version": "2.2.0",
+    "version": "2.3.0",
     "description": "Production-ready Solana micropayments library implementing x402 protocol with SPL token support, RPC fallback, priority fees, and versioned transactions",
     "author": "AlleyBoss",
     "license": "MIT",
