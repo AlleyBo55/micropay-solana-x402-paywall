@@ -179,17 +179,20 @@ export async function getSolPrice(): Promise<PriceData> {
         }
     }
 
-    // All providers failed, use stale cache or fallback
+    // All providers failed, use stale cache if available
     if (cachedPrice) {
-        return cachedPrice;
+        // Mark as stale but still usable
+        return {
+            ...cachedPrice,
+            source: `${cachedPrice.source} (stale)`,
+        };
     }
 
-    // Last resort fallback
-    return {
-        solPrice: 150, // Reasonable fallback
-        fetchedAt: new Date(),
-        source: 'fallback',
-    };
+    // SECURITY: Never use hardcoded fallback - throw error instead
+    throw new Error(
+        'Failed to fetch SOL price from all providers. ' +
+        'Configure a custom provider or ensure network connectivity.'
+    );
 }
 
 /**

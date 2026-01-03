@@ -44,3 +44,6 @@ tmp/
 *.tgz
 .npmrc
 !packages/demo/.npmrc
+
+# Security audits (private)
+SECURITY_AUDIT.md
