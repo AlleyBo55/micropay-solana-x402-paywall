@@ -4,7 +4,7 @@
   "private": true,
   "description": "Demo application for @alleyboss/micropay-solana-x402-paywall",
   "scripts": {
-    "dev": "next dev --port 3001",
+    "dev": "NEXT_TELEMETRY_DISABLED=1 NODE_OPTIONS='--max-old-space-size=4096' next dev --port 3001",
     "build": "next build",
     "start": "next start",
     "lint": "eslint"
