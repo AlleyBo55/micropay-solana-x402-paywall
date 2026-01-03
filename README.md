@@ -15,6 +15,15 @@ A production-ready, per-article paywall system using the **x402 protocol** and *
   </a>
 </div>
 
+## 🏆 Why Choose SolanaPaywall?
+
+Building a robust crypto payment system is hard. We made it 10x easier.
+
+- **🚀 Save 100+ Hours** — Don't reinvent the wheel. We handled the edge cases, wallet connections, and verification logic.
+- **🛡️ Bank-Grade Security** — Implements the full **x402** standard with server-side validation and anti-replay protection.
+- **🧩 Plug & Play** — Drop-in React components and Next.js middleware. Get running in minutes, not weeks.
+- **📱 Mobile Optimized** — Built-in Solana Pay QR support for seamless mobile wallet payments.
+
 ## ✨ Features
 
 Turn any content into paid content with **one-time micropayments** on Solana. No subscriptions, no recurring charges—just pay to unlock.
@@ -156,7 +165,21 @@ Add these variables in your Vercel project settings:
 | `CREATOR_WALLET_ADDRESS` | Your Solana wallet |
 | `SESSION_SECRET` | Random 32+ char string |
 
-## 🔒 Security Best Practices
+## 🔒 Security Architecture
+
+We take security seriously. Here's why you can trust this library:
+
+1. **Zero-Trust Verification**  
+   We never trust the client. All payment signatures are verified **on-chain** (or via high-performance RPCs) by your backend before issuing access tokens.
+
+2. **Anti-Replay Protection**  
+   We implement a **Signature Store** (Redis/Memory) to ensure every transaction signature can only be used ONCE. This prevents "replay attacks" where a user tries to use the same payment proof multiple times.
+
+3. **Stateless JWT Sessions**  
+   Access is granted via signed HTTP-only cookies. No database required for session management. The proof of payment is cryptographically sealed in the token.
+
+4. **No Private Keys Stored**  
+   The library is designed to be non-custodial for the payment flow. User wallets sign transactions directly. Your server only needs a public key to verify.
 
 - ✅ No hardcoded private keys
 - ✅ Session cookies are HTTP-only and secure
