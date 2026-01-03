@@ -1,0 +1,226 @@
+@import "tailwindcss";
+
+/* Vercel-style monochrome design system */
+:root {
+  --background: #000000;
+  --foreground: #fafafa;
+  --muted: #888888;
+  --border: #333333;
+  --accent: #0070f3;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-inter);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Scrollbar - minimal */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #333;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Card styling - no glassmorphism */
+.card {
+  background: #111111;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+/* Modal backdrop */
+.modal-backdrop {
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.8);
+}
+
+/* Prose styling for articles */
+.prose {
+  color: #a1a1a1;
+  max-width: none;
+}
+
+.prose h1,
+.prose h2,
+.prose h3,
+.prose h4,
+.prose h5,
+.prose h6 {
+  color: var(--foreground);
+  font-weight: 600;
+  margin-top: 2em;
+  margin-bottom: 0.5em;
+}
+
+.prose h1 {
+  font-size: 2rem;
+}
+
+.prose h2 {
+  font-size: 1.5rem;
+}
+
+.prose h3 {
+  font-size: 1.25rem;
+}
+
+.prose p {
+  margin-top: 1.25em;
+  margin-bottom: 1.25em;
+  line-height: 1.75;
+}
+
+.prose a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.prose a:hover {
+  text-decoration: underline;
+}
+
+.prose strong {
+  color: var(--foreground);
+  font-weight: 600;
+}
+
+.prose code {
+  color: #e5e5e5;
+  background: #1a1a1a;
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  font-size: 0.875em;
+}
+
+.prose pre {
+  background: #0a0a0a;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1rem;
+  overflow-x: auto;
+  margin: 1.5em 0;
+}
+
+.prose pre code {
+  background: transparent;
+  padding: 0;
+  color: #e5e5e5;
+}
+
+.prose blockquote {
+  border-left: 2px solid var(--border);
+  padding-left: 1rem;
+  color: var(--muted);
+  font-style: italic;
+}
+
+.prose ul,
+.prose ol {
+  padding-left: 1.5rem;
+}
+
+.prose li {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+  color: #a1a1a1;
+}
+
+.prose li::marker {
+  color: var(--muted);
+}
+
+.prose hr {
+  border-color: var(--border);
+  margin: 2em 0;
+}
+
+/* Wallet adapter - Vercel style */
+.wallet-adapter-button {
+  background: var(--foreground) !important;
+  color: var(--background) !important;
+  border-radius: 6px !important;
+  font-weight: 500 !important;
+  border: none !important;
+}
+
+.wallet-adapter-button:hover {
+  background: #e5e5e5 !important;
+}
+
+.wallet-adapter-modal-wrapper {
+  background: rgba(0, 0, 0, 0.9) !important;
+  backdrop-filter: blur(4px) !important;
+}
+
+.wallet-adapter-modal-container {
+  background: #111 !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 12px !important;
+}
+
+.wallet-adapter-modal-title {
+  color: var(--foreground) !important;
+}
+
+.wallet-adapter-modal-list li {
+  background: #0a0a0a !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 8px !important;
+}
+
+.wallet-adapter-modal-list li:hover {
+  background: #1a1a1a !important;
+}
+
+.wallet-adapter-modal-list-more {
+  color: var(--muted) !important;
+}
+
+/* Button styles */
+.btn-primary {
+  background: var(--foreground);
+  color: var(--background);
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  font-weight: 500;
+  transition: background 0.15s ease;
+}
+
+.btn-primary:hover {
+  background: #e5e5e5;
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--foreground);
+  padding: 0.75rem 1.5rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-weight: 500;
+  transition: border-color 0.15s ease;
+}
+
+.btn-secondary:hover {
+  border-color: var(--foreground);
+}

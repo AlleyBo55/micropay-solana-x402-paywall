@@ -1,0 +1,152 @@
+{
+    "name": "@alleyboss/micropay-solana-x402-paywall",
+    "version": "2.1.1",
+    "description": "Production-ready Solana micropayments library implementing x402 protocol with SPL token support, RPC fallback, priority fees, and versioned transactions",
+    "author": "AlleyBoss",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "git@github.com:AlleyBo55/micropay-solana-x402-paywall.git"
+    },
+    "keywords": [
+        "solana",
+        "x402",
+        "paywall",
+        "micropayments",
+        "web3",
+        "crypto",
+        "usdc",
+        "spl-token",
+        "nextjs",
+        "priority-fees",
+        "versioned-transactions"
+    ],
+    "type": "module",
+    "main": "./dist/index.cjs",
+    "module": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "exports": {
+        ".": {
+            "import": {
+                "types": "./dist/index.d.ts",
+                "default": "./dist/index.js"
+            },
+            "require": {
+                "types": "./dist/index.d.cts",
+                "default": "./dist/index.cjs"
+            }
+        },
+        "./solana": {
+            "import": {
+                "types": "./dist/solana/index.d.ts",
+                "default": "./dist/solana/index.js"
+            },
+            "require": {
+                "types": "./dist/solana/index.d.cts",
+                "default": "./dist/solana/index.cjs"
+            }
+        },
+        "./session": {
+            "import": {
+                "types": "./dist/session/index.d.ts",
+                "default": "./dist/session/index.js"
+            },
+            "require": {
+                "types": "./dist/session/index.d.cts",
+                "default": "./dist/session/index.cjs"
+            }
+        },
+        "./x402": {
+            "import": {
+                "types": "./dist/x402/index.d.ts",
+                "default": "./dist/x402/index.js"
+            },
+            "require": {
+                "types": "./dist/x402/index.d.cts",
+                "default": "./dist/x402/index.cjs"
+            }
+        },
+        "./store": {
+            "import": {
+                "types": "./dist/store/index.d.ts",
+                "default": "./dist/store/index.js"
+            },
+            "require": {
+                "types": "./dist/store/index.d.cts",
+                "default": "./dist/store/index.cjs"
+            }
+        },
+        "./middleware": {
+            "import": {
+                "types": "./dist/middleware/index.d.ts",
+                "default": "./dist/middleware/index.js"
+            },
+            "require": {
+                "types": "./dist/middleware/index.d.cts",
+                "default": "./dist/middleware/index.cjs"
+            }
+        },
+        "./utils": {
+            "import": {
+                "types": "./dist/utils/index.d.ts",
+                "default": "./dist/utils/index.js"
+            },
+            "require": {
+                "types": "./dist/utils/index.d.cts",
+                "default": "./dist/utils/index.cjs"
+            }
+        },
+        "./client": {
+            "import": {
+                "types": "./dist/client/index.d.ts",
+                "default": "./dist/client/index.js"
+            },
+            "require": {
+                "types": "./dist/client/index.d.cts",
+                "default": "./dist/client/index.cjs"
+            }
+        },
+        "./pricing": {
+            "import": {
+                "types": "./dist/pricing/index.d.ts",
+                "default": "./dist/pricing/index.js"
+            },
+            "require": {
+                "types": "./dist/pricing/index.d.cts",
+                "default": "./dist/pricing/index.cjs"
+            }
+        }
+    },
+    "files": [
+        "dist",
+        "README.md",
+        "LICENSE"
+    ],
+    "scripts": {
+        "build": "tsup",
+        "dev": "tsup --watch",
+        "test": "vitest run",
+        "test:watch": "vitest",
+        "test:coverage": "vitest run --coverage",
+        "typecheck": "tsc --noEmit",
+        "prepublishOnly": "npm run test && npm run build"
+    },
+    "dependencies": {
+        "jose": "^6.1.3",
+        "uuid": "^13.0.0"
+    },
+    "peerDependencies": {
+        "@solana/web3.js": "^1.90.0"
+    },
+    "devDependencies": {
+        "@solana/web3.js": "^1.98.4",
+        "@types/node": "^20",
+        "@types/uuid": "^10.0.0",
+        "tsup": "^8.0.0",
+        "typescript": "^5",
+        "vitest": "^3.0.0"
+    },
+    "engines": {
+        "node": ">=18"
+    }
+}
