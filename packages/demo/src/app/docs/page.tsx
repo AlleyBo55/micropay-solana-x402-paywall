@@ -658,6 +658,12 @@ await connection.confirmTransaction({
                             Accept USDC, USDT, or any custom SPL token. The library handles mint address resolution and token account parsing automatically.
                         </p>
 
+                        <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4 mb-6">
+                            <p className="text-sm text-yellow-800">
+                                <strong>⚠️ Security Note:</strong> The library validates that tokens are sent to a valid token account, but does not strictly verify the token account's owner via RPC (for performance reasons). For high-value transactions, consider implementing strict owner verification server-side.
+                            </p>
+                        </div>
+
                         <div className="bg-white border border-black/5 rounded-2xl p-6 shadow-sm mb-6">
                             <h3 className="font-semibold mb-4">Built-in Token Mints</h3>
                             <div className="grid grid-cols-2 gap-4 text-sm">
