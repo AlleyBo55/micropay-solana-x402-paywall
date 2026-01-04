@@ -348,6 +348,30 @@ const { solPrice } = await getSolPrice();`} />
                         </div>
                     </section>
 
+                    {/* Support */}
+                    <section id="support" className="mb-20 scroll-mt-24">
+                        <div className="flex items-center gap-3 mb-6">
+                            <div className="p-2 bg-pink-100 text-pink-600 rounded-lg"><DollarCircleIcon size={20} /></div>
+                            <h2 className="text-2xl font-bold text-[#1D1D1F]">Support</h2>
+                        </div>
+                        <div className="bg-gradient-to-br from-pink-50 to-orange-50 border border-pink-100 rounded-2xl p-8 text-center">
+                            <h3 className="text-xl font-bold mb-4">☕ Buy Me a Coffee</h3>
+                            <p className="text-gray-600 mb-6">
+                                If you find this library useful, consider sending some SOL to support development:
+                            </p>
+                            <div className="bg-white px-4 py-3 rounded-xl border border-pink-100 inline-flex items-center gap-3 shadow-sm mx-auto max-w-full overflow-hidden">
+                                <code className="font-mono text-sm text-pink-600 break-all">7fPjNJaEHtepp1ZRr6GsaW1k22U1FupQtwuHUkTb6Xg9</code>
+                                <button
+                                    onClick={() => navigator.clipboard.writeText('7fPjNJaEHtepp1ZRr6GsaW1k22U1FupQtwuHUkTb6Xg9')}
+                                    className="p-1.5 hover:bg-gray-100 rounded-lg transition-colors text-gray-400 hover:text-gray-600"
+                                    title="Copy Address"
+                                >
+                                    <Copy01Icon size={16} />
+                                </button>
+                            </div>
+                        </div>
+                    </section>
+
                     {/* Footer */}
                     <footer className="text-center py-12 border-t border-black/5">
                         <p className="text-gray-400 text-sm">

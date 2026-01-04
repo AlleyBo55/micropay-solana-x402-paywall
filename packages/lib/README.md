@@ -58,6 +58,30 @@ app.get('/premium', x402Middleware(server, {
 });
 ```
 
+## 📦 Next.js (App Router)
+
+Use the official `@x402/next` adapter with our session management:
+
+```typescript
+// app/api/premium/route.ts
+import { withX402 } from '@x402/next';
+import { x402ResourceServer } from '@x402/core/server';
+
+const server = new x402ResourceServer({ ... });
+
+const handler = (req) => {
+  return Response.json({ content: "Premium Data" });
+};
+
+export const GET = withX402(handler, {
+  accepts: { 
+    scheme: 'exact', 
+    amount: '1000000',
+    network: 'solana-mainnet' 
+  }
+}, server);
+```
+
 ## 🔧 Modules
 
 Import only what you need:
@@ -107,6 +131,14 @@ if (result.success) {
 For full documentation:
 - **Library Docs**: [solana-x402-paywall.vercel.app/docs](https://solana-x402-paywall.vercel.app/docs)
 - **Protocol Docs**: [x402.org](https://docs.x402.org)
+
+## ☕ Support
+
+If you find this library useful, you can buy me a coffee by sending some SOL to:
+
+**`7fPjNJaEHtepp1ZRr6GsaW1k22U1FupQtwuHUkTb6Xg9`**
+
+Your support helps maintain this project!
 
 ## 📄 License
 
