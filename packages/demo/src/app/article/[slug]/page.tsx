@@ -78,8 +78,11 @@ export default function ArticlePage() {
 
             if (!response.ok) {
                 const error = await response.json().catch(() => ({}));
+                console.error('[Client] Unlock API failed:', response.status, error);
                 throw new Error(error.error || 'Payment verification failed');
             }
+
+            console.log('[Client] Unlock successful, refreshing content');
 
             const data = await response.json();
             setArticle(data.article);

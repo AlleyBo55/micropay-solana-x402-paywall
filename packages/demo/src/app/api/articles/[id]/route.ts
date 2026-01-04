@@ -19,6 +19,7 @@ async function paidHandler(
     req: NextRequest,
     params: { id: string }
 ) {
+    console.log('[API] Entered paidHandler for article:', params.id);
     const article = getArticleById(params.id);
     if (!article) {
         return Response.json({ error: 'Article not found' }, { status: 404 });
@@ -70,8 +71,11 @@ export async function GET(
 ) {
     // A. Check Session
     const sessionToken = req.cookies.get('x402_session')?.value;
+    console.log('[API] GET request. Session present:', !!sessionToken);
+
     if (sessionToken) {
         const validation = await validateSession(sessionToken, SESSION_SECRET);
+        console.log('[API] Session validation:', validation.valid);
         if (validation.valid && validation.session?.unlockedArticles.includes(params.id)) {
             // Valid session -> Serve Content Directly
             return paidHandler(req, params); // Re-use handler logic (without setting new cookie necessarily, or refresh it)
@@ -80,5 +84,5 @@ export async function GET(
 
     // B. Fallback to Payment
     // Delegate to x402 middleware
-    return protectedHandler(req, { params });
+    return (protectedHandler as any)(req, { params });
 }
