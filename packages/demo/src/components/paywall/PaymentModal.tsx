@@ -31,6 +31,7 @@ export function PaymentModal({
     const [showQR, setShowQR] = useState(false);
 
     const priceInSol = Number(priceInLamports) / LAMPORTS_PER_SOL;
+    console.log('[PaymentModal] Opening. Lamports:', priceInLamports.toString(), 'SOL:', priceInSol);
     const hasEnoughBalance = balance !== null && balance >= priceInSol;
 
     // Reset state when modal opens/closes

@@ -202,7 +202,10 @@ export default function ArticlePage() {
                             recipientWallet={creatorWallet}
                             onUnlock={handleUnlock}
                         >
-                            <ArticleContent article={article} />
+                            {(() => {
+                                console.log('[ArticlePage] Rendering Overlay. Price:', article.priceInLamports, 'Locked:', isLocked);
+                                return <ArticleContent article={article} />;
+                            })()}
                         </PaywallOverlay>
                     )}
                 </main>

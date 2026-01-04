@@ -43,6 +43,7 @@ async function paidHandler(
     const response = NextResponse.json({
         article: {
             ...article,
+            priceInLamports: article.priceInLamports.toString(),
             content: article.content
         }
     });
