@@ -57,11 +57,8 @@ export function getConnection(): Connection {
 
     // Build RPC URL
     let rpcUrl = config.rpcUrl;
-    if (!rpcUrl && config.tatumApiKey) {
-        rpcUrl = config.network === 'mainnet-beta'
-            ? `https://solana-mainnet.gateway.tatum.io/${config.tatumApiKey}`
-            : `https://solana-devnet.gateway.tatum.io/${config.tatumApiKey}`;
-    }
+
+    // Fallback to public endpoints if not configured
     if (!rpcUrl) {
         rpcUrl = config.network === 'mainnet-beta'
             ? 'https://api.mainnet-beta.solana.com'

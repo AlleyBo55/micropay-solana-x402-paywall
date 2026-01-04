@@ -2,7 +2,8 @@
 // Optional credit-based session management for agent payments
 
 import { SignJWT, jwtVerify } from 'jose';
-import { v4 as uuidv4 } from 'uuid';
+// Replace 'uuid' with native crypto for smaller bundle size
+const uuidv4 = () => crypto.randomUUID();
 import type { SessionConfig, SessionData } from '../session/types';
 
 /** Credit claims stored in session JWT */
