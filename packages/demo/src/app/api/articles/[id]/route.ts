@@ -135,7 +135,6 @@ export async function GET(
                 payTo: getCreatorWallet(),
                 amount: article.priceInLamports.toString(),
                 network: networkId,
-                asset: 'native',
             }
         }
     );
