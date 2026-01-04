@@ -13,70 +13,84 @@ import {
     Tick01Icon
 } from 'hugeicons-react';
 
+import { createAuthorizationHeader } from '@/lib/x402-client-helper';
+
 export default function ArticlePage() {
     const params = useParams();
     const slug = params.slug as string;
-    const article = getArticleBySlug(slug);
+    const initialArticle = getArticleBySlug(slug);
 
+    // State
+    const [article, setArticle] = useState(initialArticle);
     const [isLocked, setIsLocked] = useState(true);
     const [isLoading, setIsLoading] = useState(true);
+    const [paymentHeader, setPaymentHeader] = useState<string | null>(null);
 
     // Get creator wallet from environment
     const creatorWallet = process.env.NEXT_PUBLIC_CREATOR_WALLET || '';
 
-    // Check if article is already unlocked (from session)
+    // Fetch Article Logic
     useEffect(() => {
-        async function checkSession() {
-            if (!article) return;
+        if (!initialArticle) return;
 
+        async function fetchArticle() {
             try {
-                const response = await fetch('/api/session/validate');
-                if (response.ok) {
-                    const data = await response.json();
-                    if (data.valid) {
-                        const isUnlocked =
-                            data.session.siteWideUnlock ||
-                            data.session.unlockedArticles.includes(article.id);
-                        setIsLocked(!isUnlocked);
-                    }
+                // Try to fetch (this handles session check automatically via route.ts)
+                const res = await fetch(`/api/articles/${initialArticle?.id}`);
+
+                if (res.status === 402) {
+                    // Payment Required
+                    const wwwAuth = res.headers.get('WWW-Authenticate');
+                    if (wwwAuth) setPaymentHeader(wwwAuth);
+                    setIsLocked(true);
+                } else if (res.ok) {
+                    // Unlocked (valid session)
+                    const data = await res.json();
+                    setArticle(data.article); // Update with full content from API if applicable
+                    setIsLocked(false);
                 }
             } catch (error) {
-                console.error('Session check failed:', error);
+                console.error('Fetch failed:', error);
             } finally {
                 setIsLoading(false);
             }
         }
 
-        checkSession();
-    }, [article]);
+        fetchArticle();
+    }, [initialArticle]);
 
     const handleUnlock = useCallback(async (signature: string) => {
-        if (!article) return;
+        if (!article || !paymentHeader) return;
 
+        setIsLoading(true);
         try {
-            const response = await fetch('/api/payment/verify', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    signature,
-                    articleId: article.id,
-                }),
+            // Create x402 Authorization header
+            const authHeader = createAuthorizationHeader(signature, paymentHeader);
+
+            // Re-request article with proof
+            // Note: The route.ts will set a session cookie upon success, so future refreshes work
+            const response = await fetch(`/api/articles/${article.id}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': authHeader
+                },
             });
 
             if (!response.ok) {
-                const error = await response.json();
+                const error = await response.json().catch(() => ({}));
                 throw new Error(error.error || 'Payment verification failed');
             }
 
             const data = await response.json();
-            if (data.success) {
-                setIsLocked(false);
-            }
+            setArticle(data.article);
+            setIsLocked(false);
         } catch (error) {
             console.error('Unlock failed:', error);
             throw error;
+        } finally {
+            setIsLoading(false);
         }
-    }, [article]);
+    }, [article, paymentHeader]);
 
     if (!article) {
         return (
@@ -178,10 +192,10 @@ export default function ArticlePage() {
                         </div>
                     ) : (
                         <PaywallOverlay
-                            isLocked={isLocked && article.isPremium}
+                            isLocked={isLocked && !!article.isPremium} // Force boolean
                             articleId={article.id}
                             articleTitle={article.title}
-                            priceInLamports={article.priceInLamports}
+                            priceInLamports={BigInt(article.priceInLamports)} // Ensure BigInt
                             recipientWallet={creatorWallet}
                             onUnlock={handleUnlock}
                         >

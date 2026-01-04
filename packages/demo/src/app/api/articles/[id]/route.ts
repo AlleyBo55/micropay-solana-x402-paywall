@@ -1,64 +1,84 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { withX402 } from '@x402/next';
+import { createX402Middleware } from '@alleyboss/micropay-solana-x402-paywall/next';
+import { validateSession, createSession } from '@alleyboss/micropay-solana-x402-paywall/session';
 import { getArticleById } from '@/config/articles';
-import {
-    x402Server,
-    SOLANA_NETWORK,
-    CREATOR_WALLET
-} from '@/lib/x402-config';
+import { getCreatorWallet, getSolanaConfig, getDefaultPrice } from '@/lib/config';
 
-// Wrapped handler for x402 protection
-const getArticle = async (
+// Initialize middleware
+const solanaConfig = getSolanaConfig();
+const withMicropay = createX402Middleware({
+    walletAddress: getCreatorWallet(),
+    network: solanaConfig.network,
+    price: getDefaultPrice().toString()
+});
+
+const SESSION_SECRET = process.env.SESSION_SECRET || 'demo-session-secret-change-me';
+
+// Internal handler for successful payment
+async function paidHandler(
     req: NextRequest,
-    { params }: { params: Promise<{ id: string }> }
-) => {
-    const { id } = await params;
-    const article = getArticleById(id);
-
+    params: { id: string }
+) {
+    const article = getArticleById(params.id);
     if (!article) {
-        return NextResponse.json(
-            { error: 'Article not found' },
-            { status: 404 }
-        );
+        return Response.json({ error: 'Article not found' }, { status: 404 });
     }
 
-    // Return full article content only if payment is satisfied
-    // The withX402 middleware handles the 402 checks and payment verification
-    return NextResponse.json({
+    // Payment is valid! Create a session for 24 hours
+    // We attempt to extract wallet from headers or assume anonymous for demo (less secure but functional)
+    // To be secure, we'd recover signer from Authorization header signature
+    // For this demo, we can just create a session for the article
+
+    // In a real app, you'd extract wallet from the signature verification result
+    // Here we'll use a placeholder or extract from header if available
+    const walletAddress = req.headers.get('x-wallet-address') || 'payment-provider';
+
+    const { token } = await createSession(walletAddress, article.id, {
+        secret: SESSION_SECRET,
+        durationHours: 24,
+    });
+
+    const response = NextResponse.json({
         article: {
             ...article,
-            content: article.content // This is the premium content
-        },
-        unlocked: true
+            content: article.content
+        }
     });
-};
 
-// Export the GET handler wrapped with x402 protection
-export const GET = (req: NextRequest, props: any) => {
-    // We need to dynamically construct the route config based on the requested article
-    // But withX402 expects a static config or we need a way to look it up.
-    // Limitation: withX402 wraps the handler with ONE config.
-    // To handle dynamic prices per article, we need to implement a dynamic handler.
+    // Set cookie
+    response.cookies.set('x402_session', token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict',
+        maxAge: 60 * 60 * 24 // 24 hours
+    });
 
-    // For now, let's look up the article ID from the URL manually to set price
-    const id = req.nextUrl.pathname.split('/').pop() || '';
-    const article = getArticleById(id);
+    return response;
+}
 
-    const price = article?.priceInLamports?.toString() || '10000000';
-    const title = article?.title || 'Premium Article';
+// 1. Wrap the handler with x402 middleware
+// Note: We need to adapt the signature for the wrapper if needed, 
+// but Next.js usually passes (req, ctx)
+const protectedHandler = withMicropay(
+    async (req: any, ctx: any) => paidHandler(req, ctx.params || ctx)
+);
 
-    return withX402(
-        getArticle,
-        {
-            accepts: {
-                scheme: 'exact',
-                payTo: CREATOR_WALLET,
-                maxAmountRequired: price,
-                network: SOLANA_NETWORK,
-                asset: 'native',
-            },
-            description: `Unlock article: ${title}`,
-        },
-        x402Server
-    )(req, props);
-};
+// 2. Export GET with Hybrid Logic
+export async function GET(
+    req: NextRequest,
+    { params }: { params: { id: string } }
+) {
+    // A. Check Session
+    const sessionToken = req.cookies.get('x402_session')?.value;
+    if (sessionToken) {
+        const validation = await validateSession(sessionToken, SESSION_SECRET);
+        if (validation.valid && validation.session?.unlockedArticles.includes(params.id)) {
+            // Valid session -> Serve Content Directly
+            return paidHandler(req, params); // Re-use handler logic (without setting new cookie necessarily, or refresh it)
+        }
+    }
+
+    // B. Fallback to Payment
+    // Delegate to x402 middleware
+    return protectedHandler(req, { params });
+}
