@@ -68,8 +68,10 @@ const protectedHandler = withMicropay(
 // 2. Export GET with Hybrid Logic
 export async function GET(
     req: NextRequest,
-    { params }: { params: { id: string } }
+    props: { params: Promise<{ id: string }> }
 ) {
+    const params = await props.params;
+
     // A. Check Session
     const sessionToken = req.cookies.get('x402_session')?.value;
     console.log('[API] GET request. Session present:', !!sessionToken);
@@ -85,5 +87,6 @@ export async function GET(
 
     // B. Fallback to Payment
     // Delegate to x402 middleware
+    // We pass resolved params to ensure downstream compatibility
     return (protectedHandler as any)(req, { params });
 }
