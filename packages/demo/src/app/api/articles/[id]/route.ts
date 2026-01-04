@@ -32,7 +32,8 @@ async function paidHandler(
 
     // In a real app, you'd extract wallet from the signature verification result
     // Here we'll use a placeholder or extract from header if available
-    const walletAddress = req.headers.get('x-wallet-address') || 'payment-provider';
+    // Use a placeholder valid address if header is missing (e.g. System Program)
+    const walletAddress = req.headers.get('x-wallet-address') || '11111111111111111111111111111111';
 
     const { token } = await createSession(walletAddress, article.id, {
         secret: SESSION_SECRET,
