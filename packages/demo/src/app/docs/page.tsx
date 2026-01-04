@@ -51,17 +51,19 @@ function CodeBlock({ code, language = 'typescript' }: { code: string; language?:
         setTimeout(() => setCopied(false), 2000);
     };
 
-    // Syntax highlighting (Simplified for brevity)
-    // ... [Same logic as before]
-    const highlightCode = (source: string) => {
-        const tokens: { type: string; value: string }[] = [];
-        // Basic tokenizer
-        tokens.push({ type: 'plain', value: source });
-        return tokens;
+    const getLanguageStyle = () => {
+        if (language === 'bash' || language === 'shell') {
+            return 'bg-[#1E1E1E] text-[#D4D4D4]';
+        }
+        return 'bg-[#0D0D0D] text-gray-300';
     };
 
-    // Use a simple pre block for now to avoid complexity in this file generation tool
-    // Real implementation would reuse the highlighter
+    const getPrompt = () => {
+        if (language === 'bash' || language === 'shell') {
+            return <span className="text-green-400 select-none">$ </span>;
+        }
+        return null;
+    };
 
     return (
         <div className="relative group">
@@ -71,9 +73,9 @@ function CodeBlock({ code, language = 'typescript' }: { code: string; language?:
             >
                 {copied ? <CheckmarkCircle01Icon size={16} className="text-green-400" /> : <Copy01Icon size={16} className="text-gray-400" />}
             </button>
-            <div className="bg-[#0D0D0D] rounded-xl p-3 sm:p-5 font-mono text-xs sm:text-sm overflow-x-auto shadow-xl ring-1 ring-white/10 max-w-full">
-                <pre className="text-gray-300 min-w-0">
-                    {code}
+            <div className={`${getLanguageStyle()} rounded-xl p-3 sm:p-5 font-mono text-xs sm:text-sm overflow-x-auto shadow-xl ring-1 ring-white/10 max-w-full`}>
+                <pre className="min-w-0">
+                    {getPrompt()}{code}
                 </pre>
             </div>
         </div>
@@ -284,30 +286,85 @@ if (result.success) {
                             <h2 className="text-2xl font-bold text-[#1D1D1F]">PayAI Format Support</h2>
                         </div>
                         <p className="text-gray-600 mb-6">
-                            The middleware automatically supports the PayAI payment format for multi-chain compatibility.
+                            Native support for the <strong>PayAI payment format</strong> - a universal payment protocol that works across Solana, Ethereum, Base, and other chains. The middleware automatically detects and transforms PayAI format to x402.
                         </p>
 
-                        <h3 className="font-bold text-lg mb-4">PayAI Request Format</h3>
+                        <div className="bg-gradient-to-br from-indigo-50 to-purple-50 border border-indigo-100 rounded-2xl p-6 mb-6">
+                            <h3 className="font-bold mb-2">✨ Features</h3>
+                            <ul className="text-sm space-y-1">
+                                <li>✅ Automatic format detection and transformation</li>
+                                <li>✅ Multi-chain ready (Solana, Ethereum, Base)</li>
+                                <li>✅ Full TypeScript support</li>
+                                <li>✅ Backward compatible with x402 format</li>
+                            </ul>
+                        </div>
+
+                        <h3 className="font-bold text-lg mb-4">PayAI Format Structure</h3>
                         <CodeBlock code={`{
   "scheme": "exact-svm",
   "networkId": "solana-devnet",
-  "paymentDetails": { /* from 402 response */ },
+  "paymentDetails": {
+    "amount": "10000000",
+    "recipient": "YourWalletAddress..."
+  },
   "authorization": {
     "signatures": ["5j8..."]
   }
 }`} />
 
-                        <h3 className="font-bold text-lg mb-4 mt-6">Client Usage</h3>
-                        <CodeBlock code={`const payaiPayload = {
-  scheme: 'exact-svm',
-  networkId: 'solana-devnet',
-  authorization: { signatures: [signature] }
-};
+                        <h3 className="font-bold text-lg mb-4 mt-6">Client Implementation</h3>
+                        <CodeBlock code={`import { useWallet } from '@solana/wallet-adapter-react';
+import { Connection, Transaction, SystemProgram, PublicKey } from '@solana/web3.js';
 
-const response = await fetch('/api/protected', {
-  headers: {
-    'Authorization': \`x402 \${btoa(JSON.stringify(payaiPayload))}\`
-  }
+async function payWithPayAI() {
+  const { publicKey, signTransaction } = useWallet();
+  const connection = new Connection('https://api.devnet.solana.com');
+  
+  // Create and sign transaction
+  const transaction = new Transaction().add(
+    SystemProgram.transfer({
+      fromPubkey: publicKey!,
+      toPubkey: new PublicKey('CREATOR_WALLET'),
+      lamports: 10_000_000
+    })
+  );
+  
+  const { blockhash } = await connection.getLatestBlockhash();
+  transaction.recentBlockhash = blockhash;
+  transaction.feePayer = publicKey!;
+  
+  const signed = await signTransaction!(transaction);
+  const signature = await connection.sendRawTransaction(signed.serialize());
+  await connection.confirmTransaction(signature);
+  
+  // Build PayAI payload
+  const payaiPayload = {
+    scheme: 'exact-svm',
+    networkId: 'solana-devnet',
+    authorization: { signatures: [signature] }
+  };
+  
+  // Call protected API
+  const response = await fetch('/api/premium', {
+    headers: {
+      'Authorization': \`x402 \${btoa(JSON.stringify(payaiPayload))}\`
+    }
+  });
+}`} />
+
+                        <h3 className="font-bold text-lg mb-4 mt-6">Server Configuration</h3>
+                        <p className="text-gray-600 mb-4">No changes needed! The middleware automatically handles PayAI format:</p>
+                        <CodeBlock code={`import { createX402Middleware } from '@alleyboss/micropay-solana-x402-paywall/next';
+
+const withPayment = createX402Middleware({
+  walletAddress: process.env.CREATOR_WALLET_ADDRESS!,
+  price: '10000000',
+  network: 'devnet',
+  rpcUrl: process.env.NEXT_PUBLIC_RPC_URL
+});
+
+export const GET = withPayment(async (req) => {
+  return new Response('Premium content unlocked!');
 });`} />
 
                         <h3 className="font-bold text-lg mb-4 mt-6">Network Mapping</h3>
@@ -332,11 +389,46 @@ const response = await fetch('/api/protected', {
                             </table>
                         </div>
 
+                        <h3 className="font-bold text-lg mb-4 mt-6">Verification Modes</h3>
+                        <div className="grid md:grid-cols-2 gap-4">
+                            <div className="bg-white p-5 rounded-xl border border-black/5">
+                                <h4 className="font-bold mb-2">🔐 Local Verification</h4>
+                                <p className="text-sm text-gray-600 mb-3">Verify on your own RPC node</p>
+                                <CodeBlock code={`createX402Middleware({
+  walletAddress: 'YOUR_WALLET',
+  rpcUrl: process.env.RPC_URL
+});`} />
+                            </div>
+                            <div className="bg-white p-5 rounded-xl border border-black/5">
+                                <h4 className="font-bold mb-2">🌐 Remote Verification</h4>
+                                <p className="text-sm text-gray-600 mb-3">Use PayAI facilitator</p>
+                                <CodeBlock code={`createX402Middleware({
+  walletAddress: 'YOUR_WALLET',
+  facilitatorUrl: 'https://payai.network'
+});`} />
+                            </div>
+                        </div>
+
                         <div className="bg-blue-50 border border-blue-100 rounded-xl p-4 mt-6">
                             <p className="text-sm text-blue-800">
-                                <strong>Note:</strong> PayAI format is automatically detected and transformed. No code changes needed in your handlers.
+                                <strong>💡 Tip:</strong> PayAI format is automatically detected. Both x402 and PayAI formats work with the same middleware configuration.
                             </p>
                         </div>
+
+                        <h3 className="font-bold text-lg mb-4 mt-6">TypeScript Types</h3>
+                        <CodeBlock code={`import type { 
+  PayAIPayload, 
+  PayAISvmAuthorization,
+  PayAINetworkId 
+} from '@alleyboss/micropay-solana-x402-paywall';
+
+const payload: PayAIPayload = {
+  scheme: 'exact-svm',
+  networkId: 'solana-devnet',
+  authorization: {
+    signatures: ['...']
+  }
+};`} />
                     </section>
 
                     {/* Self-Sovereign Mode */}
@@ -424,7 +516,7 @@ const facilitator = new RemoteSvmFacilitator('https://facilitator.payai.network'
                             <div className="p-2 bg-purple-100 text-purple-600 rounded-lg"><CodeCircleIcon size={20} /></div>
                             <h2 className="text-2xl font-bold text-[#1D1D1F]">Installation</h2>
                         </div>
-                        <CodeBlock code="npm install @alleyboss/micropay-solana-x402-paywall @solana/web3.js" />
+                        <CodeBlock language="bash" code="npm install @alleyboss/micropay-solana-x402-paywall @solana/web3.js" />
                     </section>
 
                     {/* Configuration */}
@@ -437,7 +529,7 @@ const facilitator = new RemoteSvmFacilitator('https://facilitator.payai.network'
                             Configure your environment for Mainnet or custom x402 facilitators.
                         </p>
                         <h3 className="font-bold text-lg mb-3">Mainnet Setup (Next.js)</h3>
-                        <CodeBlock code={`// .env.local
+                        <CodeBlock language="bash" code={`# .env.local
 NEXT_PUBLIC_SOLANA_NETWORK=mainnet-beta
 NEXT_PUBLIC_RPC_URL=https://api.mainnet-beta.solana.com
 # Optional: Custom Facilitator
