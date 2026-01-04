@@ -430,11 +430,14 @@ const { solPrice } = await getSolPrice();`} />
                         <p className="text-gray-600 mb-6">
                             We&apos;re actively building the future of micropayments on Solana:
                         </p>
-                        <div className="grid md:grid-cols-2 gap-4 mb-6">
+
+                        {/* Core Features */}
+                        <h3 className="font-bold text-lg mb-4 text-[#1D1D1F]">Core Features</h3>
+                        <div className="grid md:grid-cols-2 gap-4 mb-8">
                             <div className="bg-gradient-to-br from-purple-50 to-indigo-50 border border-purple-100 rounded-2xl p-5">
                                 <div className="flex items-center gap-2 mb-3">
                                     <span className="text-lg">⚡</span>
-                                    <h3 className="font-bold">Jupiter Swap-on-Pay</h3>
+                                    <h4 className="font-bold">Jupiter Swap-on-Pay</h4>
                                     <span className="text-xs bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded-full">Coming Soon</span>
                                 </div>
                                 <p className="text-sm text-gray-600">Pay with any token. Auto-swap to SOL/USDC behind the scenes.</p>
@@ -442,7 +445,7 @@ const { solPrice } = await getSolPrice();`} />
                             <div className="bg-gradient-to-br from-pink-50 to-rose-50 border border-pink-100 rounded-2xl p-5">
                                 <div className="flex items-center gap-2 mb-3">
                                     <span className="text-lg">🖼️</span>
-                                    <h3 className="font-bold">NFT/Token-Gating</h3>
+                                    <h4 className="font-bold">NFT/Token-Gating</h4>
                                     <span className="text-xs bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded-full">Coming Soon</span>
                                 </div>
                                 <p className="text-sm text-gray-600">Verify NFT ownership for access discounts or exclusive content.</p>
@@ -450,7 +453,7 @@ const { solPrice } = await getSolPrice();`} />
                             <div className="bg-gradient-to-br from-green-50 to-emerald-50 border border-green-100 rounded-2xl p-5">
                                 <div className="flex items-center gap-2 mb-3">
                                     <span className="text-lg">📊</span>
-                                    <h3 className="font-bold">Payment Analytics</h3>
+                                    <h4 className="font-bold">Payment Analytics</h4>
                                     <span className="text-xs bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded-full">Coming Soon</span>
                                 </div>
                                 <p className="text-sm text-gray-600">Webhooks & callbacks for tracking payment events in real-time.</p>
@@ -458,12 +461,71 @@ const { solPrice } = await getSolPrice();`} />
                             <div className="bg-gradient-to-br from-blue-50 to-cyan-50 border border-blue-100 rounded-2xl p-5">
                                 <div className="flex items-center gap-2 mb-3">
                                     <span className="text-lg">🌳</span>
-                                    <h3 className="font-bold">Compressed NFT Access</h3>
+                                    <h4 className="font-bold">Compressed NFT Access</h4>
                                     <span className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full">Planned</span>
                                 </div>
                                 <p className="text-sm text-gray-600">Scalable access tokens via cNFTs for high-volume applications.</p>
                             </div>
                         </div>
+
+                        {/* Solana Power Users */}
+                        <h3 className="font-bold text-lg mb-4 text-[#1D1D1F]">⚡ For Solana Power Users</h3>
+                        <div className="grid md:grid-cols-3 gap-4 mb-8">
+                            <div className="bg-gradient-to-br from-orange-50 to-amber-50 border border-orange-100 rounded-2xl p-5">
+                                <div className="flex items-center gap-2 mb-3">
+                                    <span className="text-lg">🚀</span>
+                                    <h4 className="font-bold">Jito Bundles</h4>
+                                    <span className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full">Planned</span>
+                                </div>
+                                <p className="text-sm text-gray-600">Guaranteed transaction inclusion via MEV protection.</p>
+                            </div>
+                            <div className="bg-gradient-to-br from-teal-50 to-cyan-50 border border-teal-100 rounded-2xl p-5">
+                                <div className="flex items-center gap-2 mb-3">
+                                    <span className="text-lg">📡</span>
+                                    <h4 className="font-bold">WebSocket</h4>
+                                    <span className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full">Planned</span>
+                                </div>
+                                <p className="text-sm text-gray-600">Real-time confirmation without polling.</p>
+                            </div>
+                            <div className="bg-gradient-to-br from-violet-50 to-purple-50 border border-violet-100 rounded-2xl p-5">
+                                <div className="flex items-center gap-2 mb-3">
+                                    <span className="text-lg">📋</span>
+                                    <h4 className="font-bold">Lookup Tables</h4>
+                                    <span className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full">Planned</span>
+                                </div>
+                                <p className="text-sm text-gray-600">Batch payments efficiency for AI agents.</p>
+                            </div>
+                        </div>
+
+                        {/* x402 Ecosystem */}
+                        <h3 className="font-bold text-lg mb-4 text-[#1D1D1F]">🔵 For x402 Protocol</h3>
+                        <div className="grid md:grid-cols-3 gap-4 mb-6">
+                            <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-100 rounded-2xl p-5">
+                                <div className="flex items-center gap-2 mb-3">
+                                    <span className="text-lg">💳</span>
+                                    <h4 className="font-bold">Coinbase Commerce</h4>
+                                    <span className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full">Planned</span>
+                                </div>
+                                <p className="text-sm text-gray-600">Accept payments via Coinbase Pay integration.</p>
+                            </div>
+                            <div className="bg-gradient-to-br from-slate-50 to-gray-50 border border-slate-200 rounded-2xl p-5">
+                                <div className="flex items-center gap-2 mb-3">
+                                    <span className="text-lg">🤖</span>
+                                    <h4 className="font-bold">CDP Agent Wallets</h4>
+                                    <span className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full">Planned</span>
+                                </div>
+                                <p className="text-sm text-gray-600">Coinbase Developer Platform agent wallet integration.</p>
+                            </div>
+                            <div className="bg-gradient-to-br from-sky-50 to-blue-50 border border-sky-100 rounded-2xl p-5">
+                                <div className="flex items-center gap-2 mb-3">
+                                    <span className="text-lg">🔷</span>
+                                    <h4 className="font-bold">Base Network</h4>
+                                    <span className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full">Planned</span>
+                                </div>
+                                <p className="text-sm text-gray-600">EVM x402 payments on Coinbase&apos;s L2.</p>
+                            </div>
+                        </div>
+
                         <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 text-center">
                             <p className="text-sm text-gray-600">
                                 Want to contribute or sponsor a feature? <a href="https://github.com/AlleyBo55/micropay-solana-x402-paywall" target="_blank" className="text-purple-600 hover:underline font-medium">Open an issue on GitHub</a>

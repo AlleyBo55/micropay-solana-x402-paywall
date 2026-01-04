@@ -186,6 +186,7 @@ function PaywallBanner({ priceInLamports }) {
 
 We're actively working on these exciting features:
 
+### Core Features
 | Feature | Status | Description |
 |---------|--------|-------------|
 | ⚡ **Jupiter Swap-on-Pay** | 🔜 Coming Soon | Pay with any token, auto-swap to SOL/USDC |
@@ -193,6 +194,20 @@ We're actively working on these exciting features:
 | 📊 **Payment Analytics** | 🔜 Coming Soon | Webhooks & callbacks for payment events |
 | 🌳 **Compressed NFTs** | 🔜 Planned | Scalable access tokens via cNFTs |
 | 🔄 **Payment Streaming** | 🔜 Planned | Pay-as-you-consume for APIs |
+
+### For Solana Power Users
+| Feature | Status | Description |
+|---------|--------|-------------|
+| 🚀 **Jito Bundle Support** | 🔜 Planned | Guaranteed transaction inclusion via MEV |
+| 📡 **WebSocket Confirmations** | 🔜 Planned | Real-time confirmation, no polling |
+| 📋 **Lookup Tables** | 🔜 Planned | Batch payments efficiency for agents |
+
+### For x402 Protocol Ecosystem
+| Feature | Status | Description |
+|---------|--------|-------------|
+| 💳 **Coinbase Commerce** | 🔜 Planned | Accept payments via Coinbase Pay |
+| 🤖 **CDP Agent Wallets** | 🔜 Planned | Coinbase Developer Platform integration |
+| 🔷 **Base Network Support** | 🔜 Planned | EVM x402 payments on Base L2 |
 
 Want to contribute or sponsor a feature? Open an issue on [GitHub](https://github.com/AlleyBo55/micropay-solana-x402-paywall)!
 

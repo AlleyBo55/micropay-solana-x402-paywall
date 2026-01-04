@@ -39,23 +39,50 @@ export class LocalSvmFacilitator implements FacilitatorClient {
      * Get supported payment kinds
      * Mocking the response of the /supported endpoint
      */
-    // Network Constants - CAIP-2 format for x402 v2
+    /**
+     * Network Constants - CAIP-2 format for x402 v2
+     * These match the official Solana chain IDs used by x402 protocol
+     */
     private readonly NETWORKS = {
         DEVNET: 'solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1',
         MAINNET: 'solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp'
     } as const;
 
-    // Dummy fee payer address (System Program) - not used in local verification
-    // but required by x402 protocol for supported kinds
+    /**
+     * DUMMY_FEE_PAYER Explanation (for auditors):
+     * 
+     * In a HOSTED facilitator (like x402.org), the `feePayer` field in the 
+     * SupportedResponse.extra specifies which address will pay transaction fees
+     * when the facilitator submits transactions on behalf of users.
+     * 
+     * In LOCAL/SELF-SOVEREIGN mode (this implementation):
+     * - The USER pays their own transaction fees directly
+     * - The facilitator NEVER submits transactions - it only VERIFIES them
+     * - Therefore, no fee payer address is actually used
+     * 
+     * However, the x402 protocol REQUIRES this field in the response schema.
+     * We use the System Program address (all 1s) as a placeholder because:
+     * 1. It's clearly not a real wallet (obvious placeholder)
+     * 2. It cannot receive funds or sign transactions
+     * 3. It signals to developers that fee paying is handled differently
+     * 
+     * SECURITY NOTE: This is NOT a security risk because:
+     * - The fee payer is never used in verify() or settle() methods
+     * - Users sign and pay for their own transactions
+     * - The address is just a protocol-required placeholder
+     * 
+     * @see https://docs.x402.org for protocol specification
+     */
     private readonly DUMMY_FEE_PAYER = '11111111111111111111111111111111';
 
     /**
      * Get supported payment kinds
      * Returns x402 v2 compatible response with CAIP-2 network identifiers
+     * 
+     * NOTE: The feePayer in extra.feePayer is a placeholder only.
+     * In self-sovereign mode, users pay their own transaction fees.
      */
     async getSupported(_extensionKeys: string[] = []): Promise<SupportedResponse> {
-        console.log('[LocalSvmFacilitator] getSupported called');
-
         const supported: SupportedResponse = {
             kinds: [
                 {
@@ -73,11 +100,11 @@ export class LocalSvmFacilitator implements FacilitatorClient {
             ],
             extensions: [],
             signers: {
+                // Placeholder - in self-sovereign mode, users are their own signers
                 'solana:*': [this.DUMMY_FEE_PAYER]
             }
         };
 
-        console.log('[LocalSvmFacilitator] Returning supported:', JSON.stringify(supported));
         return supported;
     }
 
