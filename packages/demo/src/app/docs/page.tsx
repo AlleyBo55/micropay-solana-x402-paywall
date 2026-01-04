@@ -16,11 +16,11 @@ import CheckmarkCircle01Icon from 'hugeicons-react/dist/esm/icons/checkmark_circ
 import Copy01Icon from 'hugeicons-react/dist/esm/icons/copy_01_icon';
 import RefreshIcon from 'hugeicons-react/dist/esm/icons/refresh_icon';
 import ShieldKeyIcon from 'hugeicons-react/dist/esm/icons/shield_key_icon';
-import Cpu01Icon from 'hugeicons-react/dist/esm/icons/cpu_01_icon';
+import CpuIcon from 'hugeicons-react/dist/esm/icons/cpu_icon';
 import SparklesIcon from 'hugeicons-react/dist/esm/icons/sparkles_icon';
 
 const LightningIcon = ZapIcon;
-const Cpu = Cpu01Icon;
+const Cpu = CpuIcon;
 const Sparkles = SparklesIcon;
 
 
