@@ -37,7 +37,8 @@
       "react": "$react",
       "react-dom": "$react-dom"
     },
-    "use-sync-external-store": "^1.4.0"
+    "use-sync-external-store": "^1.4.0",
+    "zod": "3.22.4"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
