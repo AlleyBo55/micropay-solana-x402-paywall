@@ -28,6 +28,7 @@ export {
     type PriceData,
     type PriceConfig,
     type CustomPriceProvider,
+    lamportsToSol,
 } from './pricing';
 
 

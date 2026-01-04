@@ -271,6 +271,7 @@ export function clearPriceCache(): void {
 /**
  * Get list of available built-in providers
  */
+export * from './utils';
 export function getProviders(): { name: string; url: string }[] {
     return PROVIDERS.map(p => ({ name: p.name, url: p.url }));
 }
