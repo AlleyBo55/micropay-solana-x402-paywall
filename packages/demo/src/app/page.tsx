@@ -8,12 +8,17 @@ import ArrowRight01Icon from 'hugeicons-react/dist/esm/icons/arrow_right_01_icon
 import ZapIcon from 'hugeicons-react/dist/esm/icons/zap_icon';
 import SourceCodeIcon from 'hugeicons-react/dist/esm/icons/source_code_icon';
 import Shield02Icon from 'hugeicons-react/dist/esm/icons/shield_02_icon';
+import Share01Icon from 'hugeicons-react/dist/esm/icons/share_01_icon';
+import Settings01Icon from 'hugeicons-react/dist/esm/icons/settings_01_icon';
+import Database01Icon from 'hugeicons-react/dist/esm/icons/database_01_icon';
 import Globe02Icon from 'hugeicons-react/dist/esm/icons/globe_02_icon';
 import LockPasswordIcon from 'hugeicons-react/dist/esm/icons/lock_password_icon';
 import Copy01Icon from 'hugeicons-react/dist/esm/icons/copy_01_icon';
 import Tick01Icon from 'hugeicons-react/dist/esm/icons/tick_01_icon';
+import SparklesIcon from 'hugeicons-react/dist/esm/icons/sparkles_icon';
 
 const LightningIcon = ZapIcon;
+
 import { getAllArticles } from '@/config';
 import { lamportsToSol } from '@alleyboss/micropay-solana-x402-paywall';
 
@@ -63,6 +68,7 @@ export async function POST(req) {
                         Micropay
                     </Link>
                     <div className="flex items-center gap-6">
+                        <Link href="/agent-chat" className="text-sm font-medium text-purple-600 hover:text-purple-800 transition-colors hidden sm:block">🤖 Agent Demo</Link>
                         <Link href="/docs" className="text-sm font-medium text-gray-500 hover:text-black transition-colors hidden sm:block">Documentation</Link>
                         <a href="https://github.com/AlleyBo55/micropay-solana-x402-paywall" target="_blank" className="text-sm font-medium text-gray-500 hover:text-black transition-colors hidden sm:block">GitHub</a>
                         <Link href="/docs" className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-black rounded-full hover:bg-gray-800 transition-all shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 duration-200">
@@ -86,7 +92,7 @@ export async function POST(req) {
                                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
                                 <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
                             </span>
-                            <span className="text-xs font-medium text-gray-600">v2.2.0 Stable Release</span>
+                            <span className="text-xs font-medium text-gray-600">v3.1.0 · Self-Sovereign Mode</span>
                         </motion.div>
 
                         <motion.h1
@@ -178,10 +184,10 @@ export async function POST(req) {
                             <div className="bg-[#FAFAFA] rounded-3xl p-10 border border-black/5 shadow-sm flex flex-col justify-between hover:shadow-md transition-all duration-300 group">
                                 <div>
                                     <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center mb-6 text-[#1D1D1F] shadow-sm border border-black/5">
-                                        <Globe02Icon className="w-6 h-6" />
+                                        <Database01Icon className="w-6 h-6" />
                                     </div>
-                                    <h3 className="text-2xl font-semibold mb-3 text-[#1D1D1F]">Global Payments</h3>
-                                    <p className="text-gray-500 leading-relaxed">Accept payments from anyone, anywhere, instantly. No region locks.</p>
+                                    <h3 className="text-2xl font-semibold mb-3 text-[#1D1D1F]">Self-Sovereign</h3>
+                                    <p className="text-gray-500 leading-relaxed">Verify payments locally on your own RPC node. No dependency on external APIs. Trustless.</p>
                                 </div>
                             </div>
 
@@ -241,14 +247,64 @@ export async function POST(req) {
                             <div>
                                 <h2 className="text-4xl font-bold tracking-tight mb-4 text-[#1D1D1F]">See it in action.</h2>
                                 <p className="text-lg text-gray-500 max-w-xl leading-relaxed">
-                                    We've deployed a live demo of a "Premium Blog" using the library.
-                                    Click an article below to try the payment flow (Devnet).
+                                    Experience the power of x402 with our live demos.
+                                    Try the autonomous AI agent or unlock premium blog content with instant micropayments (Devnet).
                                 </p>
                             </div>
                             <Link href="/docs" className="text-sm font-semibold border-b border-black pb-0.5 hover:opacity-70 transition-opacity flex items-center gap-1">
                                 Read the Docs <ArrowRight01Icon size={16} />
                             </Link>
                         </div>
+
+                        {/* Agent Chat Demo Banner - Apple/Gemini Aesthetic */}
+                        <Link
+                            href="/agent-chat"
+                            className="mb-16 block group relative overflow-hidden rounded-[2.5rem] bg-white border border-gray-100 shadow-[0_8px_40px_-12px_rgba(0,0,0,0.08)] hover:shadow-[0_20px_60px_-16px_rgba(0,0,0,0.12)] transition-all duration-500 hover:-translate-y-1"
+                        >
+                            <div className="absolute inset-0 bg-gradient-to-br from-blue-50/50 via-white to-purple-50/30 opacity-100" />
+
+                            <div className="relative z-10 flex flex-col md:flex-row items-center justify-between p-10 md:p-14 gap-10">
+                                <div className="max-w-2xl">
+                                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-black/5 backdrop-blur-md mb-6 border border-black/5">
+                                        <SparklesIcon size={14} className="text-black" />
+                                        <span className="text-[11px] font-semibold tracking-wide uppercase text-gray-600">Autonomous Agent</span>
+                                    </div>
+
+                                    <h3 className="text-4xl md:text-5xl font-semibold text-[#1D1D1F] tracking-tight mb-4 leading-[1.1]">
+                                        Experience the future <br />
+                                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">of AI commerce.</span>
+                                    </h3>
+
+                                    <p className="text-xl text-gray-500 font-light leading-relaxed max-w-lg">
+                                        Chat with an agent that pays its own way. <br className="hidden md:block" />
+                                        Zero friction. Autonomous execution.
+                                    </p>
+                                </div>
+
+                                <div className="relative group-hover:scale-105 transition-transform duration-700 ease-[0.16,1,0.3,1]">
+                                    {/* Abstract UI representation */}
+                                    <div className="w-64 aspect-[4/3] rounded-2xl bg-white shadow-2xl border border-gray-100 p-4 flex flex-col gap-3 rotate-3 group-hover:rotate-6 transition-transform duration-500">
+                                        <div className="flex gap-2 mb-2">
+                                            <div className="w-2 h-2 rounded-full bg-red-400/20" />
+                                            <div className="w-2 h-2 rounded-full bg-yellow-400/20" />
+                                            <div className="w-2 h-2 rounded-full bg-green-400/20" />
+                                        </div>
+                                        <div className="w-3/4 h-3 bg-gray-100 rounded-full" />
+                                        <div className="w-1/2 h-3 bg-gray-100 rounded-full" />
+                                        <div className="mt-auto self-end px-3 py-1.5 rounded-lg bg-black text-white text-xs font-medium flex items-center gap-1.5 shadow-lg shadow-blue-500/20">
+                                            <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
+                                            Paying 0.002 SOL
+                                        </div>
+                                    </div>
+
+                                    <div className="absolute -bottom-6 -right-6">
+                                        <div className="h-14 w-14 rounded-full bg-black text-white flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform duration-300">
+                                            <ArrowRight01Icon size={24} />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </Link>
 
                         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                             {articles.map((article, i) => (

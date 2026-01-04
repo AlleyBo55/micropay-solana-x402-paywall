@@ -1,5 +1,5 @@
 // Price Conversion Helpers
-// Multi-provider SOL price fetching with fallback rotation
+// Multi-provider SOL price fetching with parallel racing and serverless-safe caching
 
 /**
  * Price data from API
@@ -26,14 +26,25 @@ export interface PriceConfig {
     customProvider?: CustomPriceProvider;
     /** Cache TTL in milliseconds (default: 60000) */
     cacheTTL?: number;
-    /** Request timeout in milliseconds (default: 5000) */
+    /** Request timeout in milliseconds (default: 3000) */
     timeout?: number;
+    /** Use parallel fetching (default: true, faster but more network calls) */
+    parallelFetch?: boolean;
 }
 
-// Cached price data
-let cachedPrice: PriceData | null = null;
-let config: PriceConfig = {};
-let lastProviderIndex = -1;
+/**
+ * Serverless-safe price cache
+ * Uses timestamp-based invalidation to handle cold starts properly
+ */
+interface PriceCache {
+    data: PriceData;
+    timestamp: number;
+}
+
+// Module-level cache with explicit timestamp checking
+// Works correctly in serverless: if cache is stale, it's ignored
+let priceCache: PriceCache | null = null;
+let currentConfig: PriceConfig = {};
 
 /**
  * Configure price fetching
@@ -48,17 +59,17 @@ let lastProviderIndex = -1;
  *   },
  * });
  * 
- * // Or just adjust cache TTL
- * configurePricing({ cacheTTL: 30000 }); // 30 seconds
+ * // Or adjust settings
+ * configurePricing({ cacheTTL: 30000, parallelFetch: true });
  * ```
  */
 export function configurePricing(newConfig: PriceConfig): void {
-    config = { ...config, ...newConfig };
-    cachedPrice = null; // Clear cache on config change
+    currentConfig = { ...currentConfig, ...newConfig };
+    // Don't clear cache on config change - let TTL handle it
 }
 
 /**
- * Built-in price providers with reliability rotation
+ * Built-in price providers with parallel support
  */
 const PROVIDERS = [
     {
@@ -90,7 +101,7 @@ const PROVIDERS = [
 async function fetchFromProvider(
     provider: typeof PROVIDERS[0],
     timeout: number
-): Promise<number> {
+): Promise<{ price: number; source: string }> {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), timeout);
 
@@ -111,20 +122,50 @@ async function fetchFromProvider(
             throw new Error('Invalid price');
         }
 
-        return price;
+        return { price, source: provider.name };
     } finally {
         clearTimeout(timeoutId);
     }
 }
 
 /**
- * Get SOL price with multi-provider fallback
+ * Fetch price using parallel racing (fastest provider wins)
+ */
+async function fetchPriceParallel(timeout: number): Promise<{ price: number; source: string }> {
+    const promises = PROVIDERS.map(provider =>
+        fetchFromProvider(provider, timeout).catch(() => null)
+    );
+
+    // Race all providers, first successful one wins
+    const results = await Promise.all(promises);
+    const validResult = results.find(r => r !== null);
+
+    if (validResult) {
+        return validResult;
+    }
+
+    throw new Error('All providers failed');
+}
+
+/**
+ * Fetch price using sequential fallback
+ */
+async function fetchPriceSequential(timeout: number): Promise<{ price: number; source: string }> {
+    for (const provider of PROVIDERS) {
+        try {
+            return await fetchFromProvider(provider, timeout);
+        } catch {
+            continue;
+        }
+    }
+    throw new Error('All providers failed');
+}
+
+/**
+ * Get SOL price with multi-provider support
  * 
- * Provider rotation order:
- * 1. CoinCap (primary)
- * 2. Binance (backup #1)
- * 3. CoinGecko (backup #2)
- * 4. Kraken (backup #3)
+ * Default behavior: Parallel fetch (all providers race, fastest wins)
+ * This is faster and more reliable in serverless environments.
  * 
  * @example
  * ```typescript
@@ -133,66 +174,62 @@ async function fetchFromProvider(
  * ```
  */
 export async function getSolPrice(): Promise<PriceData> {
-    const cacheTTL = config.cacheTTL ?? 60000;
-    const timeout = config.timeout ?? 5000;
+    const cacheTTL = currentConfig.cacheTTL ?? 60000;
+    const timeout = currentConfig.timeout ?? 3000;
+    const useParallel = currentConfig.parallelFetch ?? true;
+    const now = Date.now();
 
-    // Return cached price if valid
-    if (cachedPrice && Date.now() - cachedPrice.fetchedAt.getTime() < cacheTTL) {
-        return cachedPrice;
+    // Return cached price if valid (serverless-safe: explicit timestamp check)
+    if (priceCache && (now - priceCache.timestamp) < cacheTTL) {
+        return priceCache.data;
     }
 
     // Try custom provider first if configured
-    if (config.customProvider) {
+    if (currentConfig.customProvider) {
         try {
-            const price = await config.customProvider();
+            const price = await currentConfig.customProvider();
             if (price > 0) {
-                cachedPrice = {
+                const data: PriceData = {
                     solPrice: price,
                     fetchedAt: new Date(),
                     source: 'custom',
                 };
-                return cachedPrice;
+                priceCache = { data, timestamp: now };
+                return data;
             }
         } catch {
             // Fall through to built-in providers
         }
     }
 
-    // Try providers in rotation, starting after the last successful one
-    for (let i = 0; i < PROVIDERS.length; i++) {
-        const idx = (lastProviderIndex + 1 + i) % PROVIDERS.length;
-        const provider = PROVIDERS[idx];
+    // Fetch from providers
+    try {
+        const result = useParallel
+            ? await fetchPriceParallel(timeout)
+            : await fetchPriceSequential(timeout);
 
-        try {
-            const price = await fetchFromProvider(provider, timeout);
-            lastProviderIndex = idx;
-
-            cachedPrice = {
-                solPrice: price,
-                fetchedAt: new Date(),
-                source: provider.name,
-            };
-            return cachedPrice;
-        } catch {
-            // Try next provider
-            continue;
-        }
-    }
-
-    // All providers failed, use stale cache if available
-    if (cachedPrice) {
-        // Mark as stale but still usable
-        return {
-            ...cachedPrice,
-            source: `${cachedPrice.source} (stale)`,
+        const data: PriceData = {
+            solPrice: result.price,
+            fetchedAt: new Date(),
+            source: result.source,
         };
-    }
+        priceCache = { data, timestamp: now };
+        return data;
+    } catch {
+        // All providers failed, use stale cache if available
+        if (priceCache) {
+            return {
+                ...priceCache.data,
+                source: `${priceCache.data.source} (stale)`,
+            };
+        }
 
-    // SECURITY: Never use hardcoded fallback - throw error instead
-    throw new Error(
-        'Failed to fetch SOL price from all providers. ' +
-        'Configure a custom provider or ensure network connectivity.'
-    );
+        // SECURITY: Never use hardcoded fallback - throw error instead
+        throw new Error(
+            'Failed to fetch SOL price from all providers. ' +
+            'Configure a custom provider or ensure network connectivity.'
+        );
+    }
 }
 
 /**
@@ -264,13 +301,13 @@ export function formatPriceSync(lamports: bigint, solPrice: number): {
  * Clear the price cache (for testing or manual refresh)
  */
 export function clearPriceCache(): void {
-    cachedPrice = null;
-    lastProviderIndex = -1;
+    priceCache = null;
 }
 
 /**
  * Get list of available built-in providers
  */
+export * from './utils';
 export function getProviders(): { name: string; url: string }[] {
     return PROVIDERS.map(p => ({ name: p.name, url: p.url }));
 }

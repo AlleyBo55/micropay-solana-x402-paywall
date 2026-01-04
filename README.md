@@ -152,7 +152,51 @@ const config = {
 └─────────────────────────────────────────────────────────────┘
 ```
 
+## 🤖 Agent Chat Demo (NEW!)
+
+Experience **autonomous AI agent payments** in action! The Agent Chat Demo showcases an AI agent that autonomously pays for premium API access using x402 micropayments on Solana.
+
+### Try It Out
+
+```bash
+cd packages/demo
+npm install
+npm run dev
+# Visit http://localhost:3001/agent-chat
+```
+
+### Features
+
+| Feature | Description |
+|---------|-------------|
+| 🧠 **AI Agent** | Chat with an agent that can pay for premium features |
+| 💳 **Autonomous Payments** | Agent pays SOL micropayments without human interaction |
+| 🔄 **Live Streaming** | Watch payment steps in real-time during chat |
+| 📊 **Premium Content** | Premium queries trigger actual Devnet payments |
+
+### How It Works
+
+1. User asks a free question → Agent responds normally
+2. User asks for "premium crypto analysis" → Agent detects premium request
+3. Agent autonomously pays 0.002 SOL via x402 protocol
+4. Payment confirmed on-chain → Premium content delivered
+5. All steps shown transparently in chat UI
+
+### Setup Agent Wallet
+
+```bash
+# Generate a new keypair
+node -e "console.log(require('@solana/web3.js').Keypair.generate().secretKey.toString())"
+
+# Add to .env.local
+AGENT_KEYPAIR_SECRET=<comma-separated-bytes>
+
+# Fund on Devnet
+solana airdrop 2 <agent-address> --url devnet
+```
+
 ## 🚢 Deploy to Vercel
+
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/AlleyBo55/micropay-solana-x402-paywall.git)
 

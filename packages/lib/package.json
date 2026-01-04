@@ -1,7 +1,7 @@
 {
     "name": "@alleyboss/micropay-solana-x402-paywall",
-    "version": "2.3.0",
-    "description": "Production-ready Solana micropayments library implementing x402 protocol with SPL token support, RPC fallback, priority fees, and versioned transactions",
+    "version": "3.3.0",
+    "description": "Production-ready Solana micropayments library wrapper for official x402 SDK",
     "author": "AlleyBoss",
     "license": "MIT",
     "repository": {
@@ -14,12 +14,8 @@
         "paywall",
         "micropayments",
         "web3",
-        "crypto",
-        "usdc",
-        "spl-token",
-        "nextjs",
-        "priority-fees",
-        "versioned-transactions"
+        "coinbase",
+        "agent-payments"
     ],
     "type": "module",
     "main": "./dist/index.cjs",
@@ -36,64 +32,44 @@
                 "default": "./dist/index.cjs"
             }
         },
-        "./solana": {
+        "./express": {
             "import": {
-                "types": "./dist/solana/index.d.ts",
-                "default": "./dist/solana/index.js"
+                "types": "./dist/express/index.d.ts",
+                "default": "./dist/express/index.js"
             },
             "require": {
-                "types": "./dist/solana/index.d.cts",
-                "default": "./dist/solana/index.cjs"
+                "types": "./dist/express/index.d.cts",
+                "default": "./dist/express/index.cjs"
             }
         },
-        "./session": {
+        "./next": {
             "import": {
-                "types": "./dist/session/index.d.ts",
-                "default": "./dist/session/index.js"
+                "types": "./dist/next/index.d.ts",
+                "default": "./dist/next/index.js"
             },
             "require": {
-                "types": "./dist/session/index.d.cts",
-                "default": "./dist/session/index.cjs"
+                "types": "./dist/next/index.d.cts",
+                "default": "./dist/next/index.cjs"
             }
         },
-        "./x402": {
+        "./agent": {
             "import": {
-                "types": "./dist/x402/index.d.ts",
-                "default": "./dist/x402/index.js"
+                "types": "./dist/agent/index.d.ts",
+                "default": "./dist/agent/index.js"
             },
             "require": {
-                "types": "./dist/x402/index.d.cts",
-                "default": "./dist/x402/index.cjs"
+                "types": "./dist/agent/index.d.cts",
+                "default": "./dist/agent/index.cjs"
             }
         },
-        "./store": {
+        "./pricing": {
             "import": {
-                "types": "./dist/store/index.d.ts",
-                "default": "./dist/store/index.js"
+                "types": "./dist/pricing/index.d.ts",
+                "default": "./dist/pricing/index.js"
             },
             "require": {
-                "types": "./dist/store/index.d.cts",
-                "default": "./dist/store/index.cjs"
-            }
-        },
-        "./middleware": {
-            "import": {
-                "types": "./dist/middleware/index.d.ts",
-                "default": "./dist/middleware/index.js"
-            },
-            "require": {
-                "types": "./dist/middleware/index.d.cts",
-                "default": "./dist/middleware/index.cjs"
-            }
-        },
-        "./utils": {
-            "import": {
-                "types": "./dist/utils/index.d.ts",
-                "default": "./dist/utils/index.js"
-            },
-            "require": {
-                "types": "./dist/utils/index.d.cts",
-                "default": "./dist/utils/index.cjs"
+                "types": "./dist/pricing/index.d.cts",
+                "default": "./dist/pricing/index.cjs"
             }
         },
         "./client": {
@@ -106,14 +82,14 @@
                 "default": "./dist/client/index.cjs"
             }
         },
-        "./pricing": {
+        "./session": {
             "import": {
-                "types": "./dist/pricing/index.d.ts",
-                "default": "./dist/pricing/index.js"
+                "types": "./dist/session/index.d.ts",
+                "default": "./dist/session/index.js"
             },
             "require": {
-                "types": "./dist/pricing/index.d.cts",
-                "default": "./dist/pricing/index.cjs"
+                "types": "./dist/session/index.d.cts",
+                "default": "./dist/session/index.cjs"
             }
         }
     },
@@ -132,16 +108,26 @@
         "prepublishOnly": "npm run test && npm run build"
     },
     "dependencies": {
-        "jose": "^6.1.3",
-        "uuid": "^13.0.0"
+        "@types/bs58": "^4.0.4",
+        "@x402/core": "^2.1.0",
+        "@x402/next": "^2.1.0",
+        "@x402/svm": "^2.1.0",
+        "bs58": "^6.0.0",
+        "jose": "^6.1.3"
     },
     "peerDependencies": {
-        "@solana/web3.js": "^1.90.0"
+        "@solana/web3.js": "^1.90.0",
+        "react": ">=16.8.0",
+        "react-dom": ">=16.8.0"
     },
     "devDependencies": {
         "@solana/web3.js": "^1.98.4",
+        "@types/express": "^5.0.6",
         "@types/node": "^20",
+        "@types/react": "^19.2.7",
         "@types/uuid": "^10.0.0",
+        "express": "^5.2.1",
+        "react": "^19.2.3",
         "tsup": "^8.0.0",
         "typescript": "^5",
         "vitest": "^3.0.0"

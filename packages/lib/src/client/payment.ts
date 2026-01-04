@@ -1,7 +1,7 @@
 // Client-Side Payment Flow Helper
 // Headless payment flow for frontend integration (no Node.js dependencies)
 
-import { TOKEN_MINTS, type PaymentAsset, type SolanaNetwork } from '../types';
+import { TOKEN_MINTS, type PaymentAsset, type SolanaNetwork } from './types';
 
 /**
  * Payment flow configuration
