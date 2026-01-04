@@ -123,7 +123,7 @@ export default function DocsPage() {
                         Micropay Docs
                     </Link>
                     <div className="flex items-center gap-4">
-                        <span className="hidden md:inline text-xs font-mono bg-green-100 text-green-700 px-2 py-1 rounded-full">v3.0.0</span>
+                        <span className="hidden md:inline text-xs font-mono bg-green-100 text-green-700 px-2 py-1 rounded-full">v3.0.4</span>
                         <a href="https://www.npmjs.com/package/@alleyboss/micropay-solana-x402-paywall" target="_blank" className="p-2 hover:bg-black/5 rounded-lg transition-colors text-gray-500 hover:text-black">
                             <Share01Icon size={18} />
                         </a>
@@ -278,7 +278,7 @@ if (result.success) {
                             <div className="p-2 bg-purple-100 text-purple-600 rounded-lg"><CodeCircleIcon size={20} /></div>
                             <h2 className="text-2xl font-bold text-[#1D1D1F]">Installation</h2>
                         </div>
-                        <CodeBlock code="npm install @alleyboss/micropay-solana-x402-paywall @x402/core @x402/svm @solana/web3.js" />
+                        <CodeBlock code="npm install @alleyboss/micropay-solana-x402-paywall @solana/web3.js" />
                     </section>
 
                     {/* Quick Start */}

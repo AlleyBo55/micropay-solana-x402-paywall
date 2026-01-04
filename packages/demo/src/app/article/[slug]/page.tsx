@@ -13,7 +13,7 @@ import {
     Tick01Icon
 } from 'hugeicons-react';
 
-import { createAuthorizationHeader } from '@/lib/x402-client-helper';
+import { createX402AuthorizationHeader } from '@alleyboss/micropay-solana-x402-paywall/client';
 
 export default function ArticlePage() {
     const params = useParams();
@@ -65,7 +65,7 @@ export default function ArticlePage() {
         setIsLoading(true);
         try {
             // Create x402 Authorization header
-            const authHeader = createAuthorizationHeader(signature, paymentHeader);
+            const authHeader = createX402AuthorizationHeader(signature, paymentHeader);
 
             // Re-request article with proof
             // Note: The route.ts will set a session cookie upon success, so future refreshes work
