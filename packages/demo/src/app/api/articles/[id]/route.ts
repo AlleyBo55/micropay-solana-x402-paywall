@@ -12,7 +12,7 @@ const withMicropay = createX402Middleware({
     price: getDefaultPrice().toString()
 });
 
-const SESSION_SECRET = process.env.SESSION_SECRET || 'demo-session-secret-change-me';
+const SESSION_SECRET = process.env.SESSION_SECRET || 'demo-session-secret-change-me-longer-than-32-chars';
 
 // Internal handler for successful payment
 async function paidHandler(
