@@ -240,8 +240,8 @@ export default function AgentChat() {
     }, [input, isLoading, demoMode, fetchBalance]);
 
     const examplePrompts = demoMode === 'agent-to-agent'
-        ? ["Analyze SOL trends", "Research DeFi yields", "Audit NFT proj", "Check AI tokens"]
-        : ["What is x402?", "Analysis of BTC", "Crypto Market Report", "Solana Ecosystem"];
+        ? ["Analyze SOL trends", "Research Memecoin trending", "Audit NFT project (name)", "Check token (address)"]
+        : ["Premium analysis x402?", "Premium Analysis of BTC", "Premium Crypto Market Report", "Premium knowledge solana eco"];
 
     return (
         // Apple Intelligence: Edge-to-edge glass canvas
@@ -287,7 +287,7 @@ export default function AgentChat() {
                             />
                         )}
                         <span className="hidden xs:inline">Agent-to-Agent</span>
-                        <span className="xs:hidden">A2A</span>
+                        <span className="xs:hidden">Agent to Agent</span>
                     </button>
                 </div>
 
