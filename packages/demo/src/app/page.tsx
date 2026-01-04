@@ -137,11 +137,45 @@ export async function POST(req) {
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             transition={{ duration: 1, delay: 0.8 }}
-                            className="mt-24 pt-10 border-t border-black/5 flex items-center justify-center gap-12 sm:gap-16 opacity-30 grayscale"
+                            className="mt-24 pt-10 border-t border-black/5 flex flex-wrap items-center justify-center gap-12 sm:gap-16 opacity-80"
                         >
-                            <div className="flex items-center gap-2 font-bold text-xl"><span className="w-6 h-6 bg-black rounded-full block" />SOLANA</div>
-                            <div className="flex items-center gap-2 font-bold text-xl"><span className="w-6 h-6 border-2 border-black rounded-full block" />Next.js</div>
-                            <div className="flex items-center gap-2 font-bold text-xl"><span className="w-6 h-6 bg-gray-400 rounded-full block" />Typescript</div>
+                            {/* Solana Logo - Standard */}
+                            <div className="flex items-center gap-2.5 font-bold text-xl text-black">
+                                <img src="https://upload.wikimedia.org/wikipedia/en/b/b9/Solana_logo.png" className="w-8 h-8 object-contain" alt="Solana" />
+                                <span>Solana</span>
+                            </div>
+
+                            {/* Next.js Logo - Standard */}
+                            <div className="flex items-center gap-2.5 font-bold text-xl text-black">
+                                <svg className="w-8 h-8" viewBox="0 0 180 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path fillRule="evenodd" clipRule="evenodd" d="M90 180C139.706 180 180 139.706 180 90C180 40.2944 139.706 0 90 0C40.2944 0 0 40.2944 0 90C0 139.706 40.2944 180 90 180ZM128.496 148.974L56.7483 55.4571H48.5143V124.543H60.0571V70.7351L120.309 148.974H128.496ZM131.486 124.543V55.4571H119.943V124.543H131.486Z" fill="black" />
+                                </svg>
+                                <span>Next.js</span>
+                            </div>
+
+                            {/* TypeScript Logo - Standard */}
+                            <div className="flex items-center gap-2.5 font-bold text-xl text-[#3178C6]">
+                                <svg className="w-8 h-8 rounded-md" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M0 0H24V24H0V0Z" fill="#3178C6" />
+                                    <path d="M11.8 7.5H6.2V9.16H8.2V16.5H9.8V9.16H11.8V7.5Z" fill="white" />
+                                    <path d="M12.5 14.8C12.5 15.6 13.1 15.82 13.8 15.82C14.7 15.82 15.1 15.42 15.1 14.82C15.1 14.52 14.9 14.12 13.8 13.72L13.1 13.52C11.9 13.12 11.4 12.32 11.4 11.42C11.4 9.92 12.6 9.02 14 9.02C15.6 9.02 16.5 10.02 16.5 11.32H15C15 10.72 14.6 10.42 14.1 10.42C13.5 10.42 13 10.82 13 11.32C13 11.72 13.3 12.02 13.9 12.22L14.6 12.42C16 12.92 16.6 13.62 16.6 14.72C16.6 16.42 15.3 17.32 13.7 17.32C12 17.32 10.9 16.22 10.9 14.82H12.5V14.8Z" fill="white" />
+                                </svg>
+                                <span>TypeScript</span>
+                            </div>
+
+                            {/* Express Logo */}
+                            <div className="flex items-center gap-2.5 font-bold text-xl text-black">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/6/64/Expressjs.png" className="h-6 w-auto object-contain" alt="Express.js" />
+                                {/* <span>Express</span> */}
+                            </div>
+                            {/* NPM Logo */}
+                            <div className="flex items-center gap-2.5 font-bold text-xl text-[#CB3837]">
+                                <svg className="w-8 h-8" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M0 256V0H256V256H0Z" fill="#CB3837" />
+                                    <path d="M48 48V208H208V48H48ZM176 176H144V96H112V176H80V80H176V176Z" fill="white" />
+                                </svg>
+                                <span>npm</span>
+                            </div>
                         </motion.div>
                     </div>
                 </section>
@@ -236,6 +270,97 @@ export async function POST(req) {
                                         <span className="text-yellow-300">{`}`}</span></code></pre>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                </section>
+
+                {/* Inspiration Gallery - Apple/Airbnb Aesthetic */}
+                <section className="py-32 bg-[#F5F5F7] mx-4 md:mx-8 rounded-[3rem]">
+                    <div className="max-w-7xl mx-auto px-6">
+                        <div className="max-w-2xl mb-16">
+                            <h2 className="text-4xl font-bold tracking-tight mb-4 text-[#1D1D1F]">Infinite possibilities.</h2>
+                            <p className="text-lg text-gray-500 leading-relaxed">From gated APIs to autonomous agent marketplaces. See what you can build with x402.</p>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {[
+                                {
+                                    icon: <Globe02Icon className="w-5 h-5" />,
+                                    title: "Gated APIs",
+                                    desc: "Monetize per-request.",
+                                    image: "/inspiration-gated.png",
+                                    color: "from-blue-500/80 to-blue-600/80"
+                                },
+                                {
+                                    icon: <SparklesIcon className="w-5 h-5" />,
+                                    title: "Agent Hierarchies",
+                                    desc: "Agents hiring agents.",
+                                    image: "/inspiration-silk.png",
+                                    color: "from-purple-500/80 to-purple-600/80"
+                                },
+                                {
+                                    icon: <ZapIcon className="w-5 h-5" />,
+                                    title: "Metered Compute",
+                                    desc: "Pay for GPU ms.",
+                                    image: "/inspiration-metered.png",
+                                    color: "from-orange-500/80 to-orange-600/80"
+                                },
+                                {
+                                    icon: <Share01Icon className="w-5 h-5" />,
+                                    title: "Data Marketplace",
+                                    desc: "Buy datasets autonomously.",
+                                    image: "/inspiration-spheres.png",
+                                    color: "from-green-500/80 to-green-600/80"
+                                },
+                                {
+                                    icon: <Settings01Icon className="w-5 h-5" />,
+                                    title: "Tool Rental",
+                                    desc: "Rent premium tools.",
+                                    image: "/inspiration-tools.png",
+                                    color: "from-pink-500/80 to-pink-600/80"
+                                },
+                                {
+                                    icon: <LockPasswordIcon className="w-5 h-5" />,
+                                    title: "Model Access",
+                                    desc: "Gate fine-tuned models.",
+                                    image: "/inspiration-data.png",
+                                    color: "from-indigo-500/80 to-indigo-600/80"
+                                }
+                            ].map((item, i) => (
+                                <motion.div
+                                    initial={{ opacity: 0, y: 20 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    viewport={{ once: true }}
+                                    transition={{ delay: i * 0.1 }}
+                                    key={i}
+                                    className="group relative h-64 rounded-[2rem] overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 cursor-default bg-white"
+                                >
+                                    {/* Background Image with Zoom */}
+                                    <div className="absolute inset-0">
+                                        <Image
+                                            src={item.image}
+                                            alt={item.title}
+                                            fill
+                                            className="object-cover transition-transform duration-700 group-hover:scale-110"
+                                        />
+                                        <div className="absolute inset-0 bg-white/10 backdrop-blur-[2px]" />
+                                    </div>
+
+                                    {/* Content Overlay */}
+                                    <div className="absolute inset-x-0 bottom-0 p-6 bg-gradient-to-t from-black/60 via-black/30 to-transparent pt-20">
+                                        <div className="relative z-10">
+                                            <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${item.color} backdrop-blur-md flex items-center justify-center mb-3 text-white shadow-lg`}>
+                                                {item.icon}
+                                            </div>
+                                            <h3 className="text-xl font-bold text-white mb-1 tracking-tight">{item.title}</h3>
+                                            <p className="text-white/80 text-sm font-medium leading-relaxed">{item.desc}</p>
+                                        </div>
+                                    </div>
+
+                                    {/* Shine Effect */}
+                                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 bg-gradient-to-tr from-white/10 to-transparent transition-opacity duration-500 pointer-events-none" />
+                                </motion.div>
+                            ))}
                         </div>
                     </div>
                 </section>

@@ -45,6 +45,14 @@ export default function ArticlePage() {
 
     const article = fetchedData?.article || initialArticle;
 
+    // Debug: Trace price sources
+    console.log('[ArticlePage] Price Sources:', {
+        'hook.price': price?.toString(),
+        'initialArticle.priceInLamports': initialArticle?.priceInLamports?.toString(),
+        'article.priceInLamports': article?.priceInLamports?.toString(),
+        'finalPriceInLamports': (price || BigInt(article?.priceInLamports || 0))?.toString(),
+    });
+
     // ... rest of UI ...
 
     if (!article) {
@@ -66,14 +74,24 @@ export default function ArticlePage() {
             {/* Apple-style Header */}
             <nav className="border-b border-black/5 sticky top-0 bg-white/80 backdrop-blur-xl z-50 transition-all">
                 <div className="max-w-screen-xl mx-auto px-6 h-14 flex items-center justify-between">
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-2 sm:gap-4">
                         <Link href="/" className="group flex items-center gap-2 hover:opacity-70 transition-opacity">
                             <ArrowLeft01Icon size={20} className="text-black" />
                             <span className="font-semibold text-sm text-black hidden sm:block">All Articles</span>
                         </Link>
+                        {article?.mode && (
+                            <span className={`text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full font-bold whitespace-nowrap
+                                ${article.mode === 'sovereign' ? 'bg-blue-100 text-blue-700' :
+                                    article.mode === 'platform' ? 'bg-purple-100 text-purple-700' :
+                                        article.mode === 'hybrid' ? 'bg-orange-100 text-orange-700' :
+                                            'bg-red-100 text-red-700'}`}>
+                                {article.mode} Mode
+                            </span>
+                        )}
                     </div>
 
-                    <div className="absolute left-1/2 transform -translate-x-1/2 flex items-center gap-2 opacity-100 transition-opacity">
+                    {/* Center Logo - Hidden on mobile */}
+                    <div className="hidden md:flex absolute left-1/2 transform -translate-x-1/2 items-center gap-2 opacity-100 transition-opacity">
                         <div className="w-6 h-6 bg-black rounded-md flex items-center justify-center text-white shadow-sm">
                             <LightningIcon className="w-3.5 h-3.5 text-white fill-current" />
                         </div>
@@ -108,7 +126,7 @@ export default function ArticlePage() {
                     {/* Tags */}
                     {article.tags && article.tags.length > 0 && (
                         <div className="flex flex-wrap gap-3 justify-center md:justify-start mb-6">
-                            {article.tags.map(tag => (
+                            {article.tags.map((tag: string) => (
                                 <span key={tag} className="text-[10px] uppercase tracking-widest font-bold text-black/60">
                                     {tag}
                                 </span>
@@ -163,6 +181,7 @@ export default function ArticlePage() {
                                 articleTitle={article.title}
                                 priceInLamports={price || BigInt(article.priceInLamports || 0)}
                                 recipientWallet={recipient || creatorWallet}
+                                mode={article.mode}
                                 onUnlock={async () => {
                                     if (!wallet.connected) {
                                         alert('Please connect your wallet first (top right)');

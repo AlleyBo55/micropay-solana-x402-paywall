@@ -1,4 +1,5 @@
 // Agent Chat API - Main chat endpoint with autonomous payment logic
+// Supports: standard chat, agent-to-agent workflows
 // This route handles chat messages and executes x402 payments when premium features are requested
 
 import { NextRequest } from 'next/server';
@@ -6,40 +7,85 @@ import OpenAI from 'openai';
 import { executeAgentPayment } from '@alleyboss/micropay-solana-x402-paywall/agent';
 import { getAgentKeypair, getConnection, validateAgentWallet } from '@/lib/agent-wallet';
 import { getCreatorWallet } from '@/lib/config';
+import { AGENTS } from '@/config/agents';
 
 // Initialize OpenAI client
+// SAFETY: API Key is strict server-side environment variable. Never exposed to client.
 const openai = process.env.OPENAI_API_KEY
     ? new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
     : null;
 
-// Premium action keywords that trigger payment
-const PREMIUM_KEYWORDS = [
-    'premium',
-    'detailed report',
-    'market report',
-    'crypto analysis',
-    'detailed analysis',
-    'execute trade',
-    'advanced',
-    'pro analysis',
-    'in-depth',
+console.log('[Agent Chat] OpenAI configured:', !!openai);
+
+// Rate Limiting (Simple In-Memory)
+const RATE_LIMIT_WINDOW = 10 * 60 * 1000; // 10 minutes
+const MAX_REQUESTS = 5;
+const requestLog = new Map<string, { count: number; expires: number }>();
+
+function checkRateLimit(ip: string): boolean {
+    const now = Date.now();
+    const record = requestLog.get(ip);
+
+    // Cleanup old record
+    if (record && now > record.expires) {
+        requestLog.delete(ip);
+    }
+
+    if (!requestLog.has(ip)) {
+        requestLog.set(ip, { count: 1, expires: now + RATE_LIMIT_WINDOW });
+        return true;
+    }
+
+    const current = requestLog.get(ip)!;
+    if (current.count >= MAX_REQUESTS) return false;
+
+    current.count++;
+    return true;
+}
+
+// Strict Topic Filtering (Save OpenAI Costs)
+const ALLOWED_TOPICS = [
+    'x402', 'solana', 'crypto', 'payment', 'blockchain', 'agent', 'analysis',
+    'bitcoin', 'btc', 'eth', 'price', 'market', 'token', 'wallet', 'demo',
+    'devnet', 'micropay', 'ai', 'research', 'report', 'hello', 'hi', 'help',
+
+    // Expanded variations
+    'sol', 'analyze', 'trend', 'trending', 'defi', 'nft', 'audit', 'prediction',
+    'invest', 'trade', 'hiring', 'hire', 'expert', 'consultation'
 ];
 
-// Check if message requests a premium action
+function isTopicAllowed(message: string): boolean {
+    const lower = message.toLowerCase();
+    return ALLOWED_TOPICS.some(topic => lower.includes(topic));
+}
+
+const PREMIUM_KEYWORDS = [
+    'premium', 'detailed report', 'market report', 'crypto analysis',
+    'detailed analysis', 'execute trade', 'advanced', 'pro analysis',
+    'in-depth', 'deep dive',
+];
+
+const AGENT_TO_AGENT_KEYWORDS = [
+    'analyze', 'research', 'expert opinion', 'specialist',
+    'compile', 'summarize',
+];
+
 function isPremiumRequest(message: string): boolean {
     const lower = message.toLowerCase();
     return PREMIUM_KEYWORDS.some(keyword => lower.includes(keyword));
 }
 
-// Create a streaming response
+function isAgentToAgentRequest(message: string): boolean {
+    const lower = message.toLowerCase();
+    return AGENT_TO_AGENT_KEYWORDS.some(keyword => lower.includes(keyword));
+}
+
 function createStream() {
     const encoder = new TextEncoder();
     let controller: ReadableStreamDefaultController<Uint8Array>;
 
     const stream = new ReadableStream({
-        start(c) {
-            controller = c;
-        },
+        start(c) { controller = c; },
     });
 
     const send = (data: object) => {
@@ -54,28 +100,20 @@ function createStream() {
     return { stream, send, close };
 }
 
-// Generate AI response using OpenAI or fallback
 async function generateAIResponse(
     message: string,
     isPremium: boolean,
-    send: (data: object) => void
+    send: (data: object) => void,
+    agentName?: string
 ): Promise<void> {
     const systemPrompt = isPremium
-        ? `You are a premium AI analyst providing detailed, expert-level analysis. 
-           The user has paid for this response via x402 micropayment on Solana.
-           Provide comprehensive, actionable insights with specific data points.
-           Format your response with clear sections using markdown.
-           Be thorough but concise. Include specific recommendations.`
-        : `You are a helpful AI assistant demonstrating x402 micropayments on Solana.
-           For free queries, give brief, helpful responses.
-           Encourage users to try premium features by asking for "detailed analysis" or "premium report".
-           Keep responses short and friendly.`;
+        ? AGENTS.RESEARCH_AGENT.premiumSystemPrompt
+        : AGENTS.RESEARCH_AGENT.systemPrompt;
 
     if (openai) {
-        // Use real OpenAI
         try {
             const stream = await openai.chat.completions.create({
-                model: isPremium ? 'gpt-4o' : 'gpt-4o-mini',
+                model: 'gpt-4o-mini',
                 messages: [
                     { role: 'system', content: systemPrompt },
                     { role: 'user', content: message }
@@ -87,160 +125,216 @@ async function generateAIResponse(
             for await (const chunk of stream) {
                 const content = chunk.choices[0]?.delta?.content || '';
                 if (content) {
-                    send({
-                        type: 'content',
-                        content,
-                        isPremium,
-                    });
+                    send({ type: 'content', content, isPremium, agentName });
                 }
             }
         } catch (error) {
-            // Fallback to mock if OpenAI fails
             console.error('OpenAI error:', error);
-            await generateMockResponse(message, isPremium, send);
+            await generateMockResponse(message, isPremium, send, agentName);
         }
     } else {
-        // No OpenAI key, use mock
-        await generateMockResponse(message, isPremium, send);
+        await generateMockResponse(message, isPremium, send, agentName);
     }
 }
 
-// Mock response generator (fallback when OpenAI isn't configured)
-async function generateMockResponse(
+async function generateAnalysisAgentResponse(
     message: string,
-    isPremium: boolean,
     send: (data: object) => void
 ): Promise<void> {
-    let response: string;
+    const systemPrompt = AGENTS.ANALYSIS_AGENT.systemPrompt;
 
-    if (isPremium) {
-        response = `🎯 **Premium Analysis Report**
+    if (openai) {
+        try {
+            const stream = await openai.chat.completions.create({
+                model: 'gpt-4o-mini',
+                messages: [
+                    { role: 'system', content: systemPrompt },
+                    { role: 'user', content: `Provide expert analysis on: ${message}` }
+                ],
+                stream: true,
+                max_tokens: 800,
+            });
 
-**Market Overview:**
-The cryptocurrency market is showing mixed signals with Bitcoin consolidating around key support levels. Volume has decreased 12% over the past 24 hours, suggesting accumulation phase.
+            for await (const chunk of stream) {
+                const content = chunk.choices[0]?.delta?.content || '';
+                if (content) {
+                    send({ type: 'content', content, isPremium: true, agentName: 'Analysis Agent' });
+                }
+            }
+        } catch {
+            await generateMockAnalysisResponse(message, send);
+        }
+    } else {
+        await generateMockAnalysisResponse(message, send);
+    }
+}
 
-**Technical Indicators:**
-- RSI (14): 52.3 - Neutral zone
-- MACD: Bullish crossover forming on 4H chart
-- Bollinger Bands: Price near middle band, low volatility
+async function generateMockAnalysisResponse(
+    message: string,
+    send: (data: object) => void
+): Promise<void> {
+    const response = `📊 **Expert Analysis Report**
 
-**Key Levels to Watch:**
-- Support: $42,100, $40,500
-- Resistance: $44,200, $46,000
+*Prepared by Analysis Agent (Hired by Research Agent)*
+
+**Execution Summary:**
+Analyzed ${message} via on-chain metrics. Sentiment is BULLISH.
+
+**Metrics:**
+- TVL Growth: +5.2% (24h)
+- Whale Accumulation: Detected 2 major wallets
+- Social Sentiment: 82/100
 
 **Recommendation:**
-Wait for clear breakout above $44,200 before entering long positions. Set stop-loss at $41,800.
+Strong Buy signal. The fundamentals indicate an incoming breakout.
 
-*This analysis was paid for via x402 micropayment on Solana.*`;
-    } else {
-        const lower = message.toLowerCase();
-        if (lower.includes('hello') || lower.includes('hi')) {
-            response = "Hello! I'm an AI agent that can pay for premium features using x402 micropayments on Solana. Try asking for 'premium crypto analysis' to see autonomous payments in action!";
-        } else {
-            response = `I understand you asked: "${message}"
+---
+*Analysis Agent - Paid Expert*`;
 
-I'm a demo AI agent showcasing x402 micropayments. For free queries like this, I give basic responses.
-
-**Want to see payments in action?** Try asking for:
-- "Give me premium crypto analysis"
-- "Generate detailed market report"
-
-These premium requests will trigger an automatic SOL payment!`;
-        }
-    }
-
-    // Simulate streaming
     const words = response.split(' ');
     let chunk = '';
     for (let i = 0; i < words.length; i++) {
         chunk += words[i] + ' ';
         if (i % 5 === 4 || i === words.length - 1) {
-            send({
-                type: 'content',
-                content: chunk,
-                isPremium,
-            });
+            send({ type: 'content', content: chunk, isPremium: true, agentName: 'Analysis Agent' });
+            chunk = '';
+            await new Promise(resolve => setTimeout(resolve, 15));
+        }
+    }
+}
+
+async function generateMockResponse(
+    message: string,
+    isPremium: boolean,
+    send: (data: object) => void,
+    agentName?: string
+): Promise<void> {
+    let response: string;
+
+    if (isPremium) {
+        response = `🎯 **Premium Insight**
+
+**Query:** ${message}
+**Analysis:** High-value opportunity detected. Solvency is robust.
+**Action:** Recommend immediate execution.
+
+*Paid via x402.*`;
+    } else {
+        const lower = message.toLowerCase();
+        if (lower.includes('hello') || lower.includes('hi')) {
+            response = "Hello! Ask me for 'premium analysis' to see me pay for data autonomously.";
+        } else {
+            response = `I can help with that. To get a deep dive, ask for "detailed analysis" (this will trigger a micropayment).`;
+        }
+    }
+
+    const words = response.split(' ');
+    let chunk = '';
+    for (let i = 0; i < words.length; i++) {
+        chunk += words[i] + ' ';
+        if (i % 5 === 4 || i === words.length - 1) {
+            send({ type: 'content', content: chunk, isPremium, agentName });
             chunk = '';
             await new Promise(resolve => setTimeout(resolve, 20));
         }
     }
 }
 
+// Caching for Deduplication (Server-side)
+const responseCache = new Map<string, string>();
+
 export async function POST(request: NextRequest) {
     try {
-        const { message } = await request.json();
+        const body = await request.json();
+        let { message, mode = 'chat' } = body; // let message to allow mutation
+        const ip = request.headers.get('x-forwarded-for') || 'unknown';
 
         if (!message || typeof message !== 'string') {
-            return new Response(JSON.stringify({ error: 'Message required' }), {
-                status: 400,
-                headers: { 'Content-Type': 'application/json' },
-            });
+            return new Response(JSON.stringify({ error: 'Message required' }), { status: 400 });
         }
+
+        // 1. Hard Input Truncation (Billing Protection)
+        // Limit to 500 chars (~125 tokens) to prevent token flooding
+        if (message.length > 500) {
+            message = message.slice(0, 500);
+        }
+
+        if (!checkRateLimit(ip)) {
+            return new Response(JSON.stringify({
+                error: 'Rate limit exceeded. You can ask 5 questions every 10 minutes.'
+            }), { status: 429 });
+        }
+
+        // 3. Server-Side Deduplication
+        // If exact same message sent recently, use cache (mock logic for stream)
+        const cacheKey = `${mode}:${message.toLowerCase().trim()}`;
+        // Note: For streaming, we can't easily cache the chunks in this simple map without buffering. 
+        // We will skip strict caching implementation for the *streaming* response in this demo 
+        // to avoid complexity, but Input Truncation is active.
 
         const { stream, send, close } = createStream();
 
-        // Process in background
         (async () => {
             try {
+                if (!isTopicAllowed(message)) {
+                    send({ type: 'thinking', id: 'filter', stepType: 'error', message: 'Topic analysis: Irrelevant to x402 demo.' });
+                    // ... fallback logic ...
+                    const isAgentMode = mode === 'agent-to-agent';
+                    const fallbackMessage = isAgentMode
+                        ? `**Agent-to-Agent Mode** requires complex requests to demonstrate **autonomous hiring**.
+
+I can only process requests that require **Research & Analysis**, such as:
+1.  **Market Analysis** (e.g., "Analyze SOL trends")
+2.  **Token Audits** (e.g., "Audit this NFT project")
+3.  **DeFi Research** (e.g., "Check high yield farms")
+
+*Try asking one of these to see me hire the Analysis Agent!*`
+                        : `**Micropayment Mode** demonstrates **Consumer-to-AI** payments.
+
+I can only process requests related to:
+1.  **x402 Protocol** (e.g., "Explain x402")
+2.  **Premium Reports** (e.g., "Crypto Market Report")
+3.  **Solana Tech** (e.g., "How does Solana work?")
+
+*Try asking "Detailed analysis of SOL" to see a micropayment!*`;
+
+                    send({ type: 'content', content: fallbackMessage, isPremium: false, agentName: 'System' });
+                    close();
+                    return;
+                }
+
+                // ... rest of logic ...
+
+
                 const isPremium = isPremiumRequest(message);
+                const isAgentToAgent = mode === 'agent-to-agent' && isAgentToAgentRequest(message);
 
-                if (isPremium) {
-                    // Step 1: Analyzing request
-                    send({
-                        type: 'thinking',
-                        id: 'analyze',
-                        stepType: 'thinking',
-                        message: 'Analyzing request... detected premium action',
-                    });
+                if (isAgentToAgent) {
+                    // Agent-to-Agent "Chain of Thought"
+                    const thoughtDelay = 400;
 
-                    await new Promise(resolve => setTimeout(resolve, 500));
+                    send({ type: 'thinking', id: 't1', stepType: 'thinking', message: 'Thinking: Decomposing user query...', agent: 'Research Agent' });
+                    await new Promise(r => setTimeout(r, thoughtDelay));
 
-                    // Step 2: Validate wallet configuration first
+                    send({ type: 'thinking', id: 't2', stepType: 'thinking', message: 'Plan: Complex financial query detected. Requires specialized "Analysis Agent" consultation.', agent: 'Research Agent' });
+                    await new Promise(r => setTimeout(r, thoughtDelay));
+
                     const walletStatus = await validateAgentWallet();
-
-                    if (!walletStatus.configured) {
-                        send({
-                            type: 'thinking',
-                            id: 'wallet-error',
-                            stepType: 'error',
-                            message: `Wallet not configured: ${walletStatus.error}`,
-                        });
-                        send({
-                            type: 'content',
-                            content: `❌ **Payment Failed**\n\nAgent wallet is not configured properly.\n\n**Error:** ${walletStatus.error}\n\nPlease configure AGENT_KEYPAIR_SECRET in your .env.local file.`,
-                            isPremium: false,
-                        });
+                    if (!walletStatus.configured || (walletStatus.balance && walletStatus.balance < 0.002)) {
+                        send({ type: 'thinking', id: 'err', stepType: 'error', message: 'Wallet Check: Insufficient funds for inter-agent payment.' });
+                        send({ type: 'content', content: `❌ **Failed:** Insufficient agent funds.`, isPremium: false });
                         close();
                         return;
                     }
 
-                    // Check balance
-                    if (walletStatus.balance !== undefined && walletStatus.balance < 0.003) {
-                        send({
-                            type: 'thinking',
-                            id: 'balance-error',
-                            stepType: 'error',
-                            message: `Insufficient balance: ${walletStatus.balance.toFixed(4)} SOL`,
-                        });
-                        send({
-                            type: 'content',
-                            content: `❌ **Payment Failed**\n\nInsufficient agent wallet balance.\n\n**Current Balance:** ${walletStatus.balance?.toFixed(4)} SOL\n**Required:** ~0.003 SOL (0.002 + fees)\n\n**Address:** \`${walletStatus.address}\`\n\nFund the wallet on Devnet:\n\`\`\`\nsolana airdrop 2 ${walletStatus.address} --url devnet\n\`\`\``,
-                            isPremium: false,
-                        });
-                        close();
-                        return;
-                    }
+                    send({ type: 'thinking', id: 't3', stepType: 'thinking', message: 'Wallet: Solvency confirmed (Balance > 0.002 SOL). Ready to hire.', agent: 'Research Agent' });
+                    await new Promise(r => setTimeout(r, thoughtDelay));
 
-                    // Step 3: Initiating payment
-                    send({
-                        type: 'thinking',
-                        id: 'payment-start',
-                        stepType: 'paying',
-                        message: 'Paying 0.002 SOL for premium access...',
-                        amount: '0.002 SOL',
-                    });
+                    send({ type: 'thinking', id: 'p1', stepType: 'paying', message: 'Action: Constructing SPL transaction (0.001 SOL + Priority Fee)...', agent: 'Research Agent', amount: '0.001 SOL' });
+                    await new Promise(r => setTimeout(r, thoughtDelay / 2));
 
-                    // Execute actual payment
+                    send({ type: 'thinking', id: 'p2', stepType: 'paying', message: 'Network: Broadcasting transaction to block builder...', agent: 'Research Agent' });
+
                     try {
                         const agentKeypair = getAgentKeypair();
                         const connection = getConnection();
@@ -250,92 +344,85 @@ export async function POST(request: NextRequest) {
                             connection,
                             agentKeypair,
                             recipientAddress: recipientWallet,
-                            amountLamports: BigInt(2_000_000), // 0.002 SOL
+                            amountLamports: BigInt(1_000_000),
                             priorityFee: { enabled: true, microLamports: 5000 },
                         });
 
                         if (result.success && result.signature) {
-                            send({
-                                type: 'thinking',
-                                id: 'payment-confirmed',
-                                stepType: 'confirmed',
-                                message: `Payment confirmed! Tx: ${result.signature.slice(0, 8)}...`,
-                                signature: result.signature,
-                                amount: '0.002 SOL',
-                            });
+                            send({ type: 'thinking', id: 'cnf', stepType: 'confirmed', message: `Success: Tx Confirmed (${result.signature.slice(0, 8)}...)`, signature: result.signature, agent: 'Research Agent' });
+                            await new Promise(r => setTimeout(r, thoughtDelay));
+
+                            send({ type: 'thinking', id: 'sw', stepType: 'confirmed', message: 'Handover: Context switching to [Analysis Agent]...', agent: 'Research Agent' });
+                            await new Promise(r => setTimeout(r, thoughtDelay));
+
+                            send({ type: 'thinking', id: 'an1', stepType: 'thinking', message: 'Analysis Agent: Booting expert persona. Analyzing market context...', agent: 'Analysis Agent' });
+                            await new Promise(r => setTimeout(r, thoughtDelay));
+
+                            await generateAnalysisAgentResponse(message, send);
                         } else {
-                            // Payment failed - show error only, NO content
-                            send({
-                                type: 'thinking',
-                                id: 'payment-error',
-                                stepType: 'error',
-                                message: `Payment failed: ${result.error || 'Unknown error'}`,
-                            });
-                            send({
-                                type: 'content',
-                                content: `❌ **Payment Failed**\n\nCould not complete the payment transaction.\n\n**Reason:** ${result.error || 'Unknown error'}\n\nPlease try again or check your wallet configuration.`,
-                                isPremium: false,
-                            });
-                            close();
-                            return;
+                            throw new Error(result.error);
                         }
-                    } catch (paymentError) {
-                        // Payment error - show error only, NO content
-                        const errorMessage = paymentError instanceof Error ? paymentError.message : 'Unknown error';
-                        send({
-                            type: 'thinking',
-                            id: 'payment-error',
-                            stepType: 'error',
-                            message: `Payment error: ${errorMessage}`,
-                        });
-                        send({
-                            type: 'content',
-                            content: `❌ **Payment Failed**\n\n${errorMessage}\n\nPlease check your wallet configuration and try again.`,
-                            isPremium: false,
-                        });
+                    } catch (e: any) {
+                        send({ type: 'thinking', id: 'err', stepType: 'error', message: `Payment Failed: ${e.message}` });
+                        send({ type: 'content', content: `❌ Error: ${e.message}`, isPremium: false });
+                    }
+                    close();
+                    return;
+                }
+
+                if (isPremium) {
+                    const d = 300;
+                    send({ type: 'thinking', id: 't1', stepType: 'thinking', message: 'Thinking: Identifying intent...' });
+                    await new Promise(r => setTimeout(r, d));
+
+                    send({ type: 'thinking', id: 't2', stepType: 'thinking', message: 'Intent: Premium resource request detected.' });
+                    await new Promise(r => setTimeout(r, d));
+
+                    const walletStatus = await validateAgentWallet();
+                    if (!walletStatus.configured || (walletStatus.balance && walletStatus.balance < 0.003)) {
+                        send({ type: 'thinking', id: 'err', stepType: 'error', message: 'Wallet Check: Failed.' });
+                        send({ type: 'content', content: `❌ **Failed:** Check agent wallet.`, isPremium: false });
                         close();
                         return;
                     }
 
-                    // Step 4: Generating premium content (only if payment succeeded)
-                    send({
-                        type: 'thinking',
-                        id: 'generating',
-                        stepType: 'complete',
-                        message: 'Generating premium content...',
-                    });
+                    send({ type: 'thinking', id: 'p1', stepType: 'paying', message: 'Action: Executing autonomous payment (0.002 SOL)...', amount: '0.002 SOL' });
 
-                    await new Promise(resolve => setTimeout(resolve, 300));
+                    try {
+                        const result = await executeAgentPayment({
+                            connection: getConnection(),
+                            agentKeypair: getAgentKeypair(),
+                            recipientAddress: getCreatorWallet(),
+                            amountLamports: BigInt(2_000_000),
+                            priorityFee: { enabled: true, microLamports: 5000 },
+                        });
+
+                        if (result.success) {
+                            send({ type: 'thinking', id: 'cnf', stepType: 'confirmed', message: `Success: Payment verified on-chain.`, signature: result.signature });
+                            await new Promise(r => setTimeout(r, d));
+                            send({ type: 'thinking', id: 'gen', stepType: 'complete', message: 'Generation: Accessing premium model...' });
+                            await new Promise(r => setTimeout(r, d));
+                        } else {
+                            throw new Error(result.error);
+                        }
+                    } catch (e: any) {
+                        send({ type: 'thinking', id: 'err', stepType: 'error', message: `Payment Error: ${e.message}` });
+                        send({ type: 'content', content: `❌ Error: ${e.message}`, isPremium: false });
+                        close();
+                        return;
+                    }
                 }
 
-                // Generate and stream AI response
                 await generateAIResponse(message, isPremium, send);
-
                 close();
-            } catch (error) {
-                send({
-                    type: 'thinking',
-                    id: 'error',
-                    stepType: 'error',
-                    message: error instanceof Error ? error.message : 'Unknown error',
-                });
+            } catch (error: any) {
+                send({ type: 'thinking', id: 'err', stepType: 'error', message: error.message });
                 close();
             }
         })();
 
-        return new Response(stream, {
-            headers: {
-                'Content-Type': 'text/event-stream',
-                'Cache-Control': 'no-cache',
-                'Connection': 'keep-alive',
-            },
-        });
-    } catch (error) {
-        return new Response(JSON.stringify({
-            error: error instanceof Error ? error.message : 'Unknown error'
-        }), {
-            status: 500,
-            headers: { 'Content-Type': 'application/json' },
-        });
+        return new Response(stream, { headers: { 'Content-Type': 'text/event-stream' } });
+    } catch (e: any) {
+        return new Response(JSON.stringify({ error: e.message }), { status: 500 });
     }
 }

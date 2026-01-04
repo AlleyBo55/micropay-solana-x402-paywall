@@ -1,9 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createX402Middleware } from '@alleyboss/micropay-solana-x402-paywall/next';
 import { validateSession, createSession } from '@alleyboss/micropay-solana-x402-paywall/session';
-import { LocalSvmFacilitator, RemoteSvmFacilitator } from '@alleyboss/micropay-solana-x402-paywall';
 import { getArticleById } from '@/config/articles';
-import { getCreatorWallet, getSolanaConfig, getDefaultPrice } from '@/lib/config';
+import { getCreatorWallet, getSolanaConfig } from '@/lib/config';
 
 console.log('[API Debug] Module Loading: /api/articles/[id]/route.ts');
 
@@ -21,8 +20,6 @@ async function paidHandler(
     }
 
     // Extract wallet from x-payment-payer header (set by middleware after verification)
-    // Or from x-wallet-address if client sends it
-    // Fallback to placeholder for demo purposes
     const walletAddress = req.headers.get('x-payment-payer')
         || req.headers.get('x-wallet-address')
         || '11111111111111111111111111111111';
@@ -82,6 +79,8 @@ export async function GET(
     // 1. SESSION CHECK (Fast path for returning users)
     // --------------------------
     const sessionToken = req.cookies.get('x402_session')?.value;
+    console.log('[API Debug] Session token present:', !!sessionToken);
+
     if (sessionToken) {
         const validation = await validateSession(sessionToken, SESSION_SECRET);
         if (validation.valid && validation.session?.unlockedArticles.includes(params.id)) {
@@ -90,47 +89,96 @@ export async function GET(
         }
     }
 
+    // Check for payment signature header
+    const paymentSig = req.headers.get('x-payment-signature');
+    const authHeader = req.headers.get('authorization');
+    console.log('[API Debug] Payment headers:', {
+        'x-payment-signature': paymentSig ? 'present' : 'missing',
+        'authorization': authHeader ? 'present' : 'missing',
+        allHeaders: Array.from(req.headers.keys())
+    });
+
     // --------------------------
     // 2. MIDDLEWARE VERIFICATION (Primary x402 flow)
     // --------------------------
+
     // Select facilitator based on article mode
     let facilitatorUrl: string | undefined;
     let rpcUrl: string | undefined;
+    let payTo: string = getCreatorWallet();
 
-    if (article.id === 'article-5') {
-        // Public Facilitator Mode - use remote
-        facilitatorUrl = process.env.NEXT_PUBLIC_FACILITATOR_URL || 'https://x402.org/facilitator';
-        console.log('[API] Using Public Facilitator:', facilitatorUrl);
-    } else {
-        // Sovereign Mode - use local RPC
-        rpcUrl = solanaConfig.rpcUrl || 'https://api.devnet.solana.com';
-        console.log('[API] Using Local Verification via RPC');
+    switch (article.mode) {
+        case 'platform':
+            facilitatorUrl = process.env.PLATFORM_FACILITATOR_URL || process.env.NEXT_PUBLIC_PLATFORM_FACILITATOR_URL;
+            // Fallback to local RPC if no facilitator URL
+            if (!facilitatorUrl) {
+                rpcUrl = solanaConfig.rpcUrl || 'https://api.devnet.solana.com';
+                console.log('[API] Mode: Platform - No facilitator URL, using local RPC');
+            } else {
+                console.log('[API] Mode: Platform Facilitated -', facilitatorUrl);
+            }
+            payTo = getCreatorWallet();
+            break;
+
+        case 'payai':
+            facilitatorUrl = process.env.PAYAI_FACILITATOR_URL || process.env.NEXT_PUBLIC_PAYAI_FACILITATOR_URL || 'https://facilitator.payai.network';
+            payTo = getCreatorWallet();
+            console.log('[API] Mode: PayAI Network -', facilitatorUrl);
+            break;
+
+        case 'hybrid':
+            rpcUrl = solanaConfig.rpcUrl || 'https://api.devnet.solana.com';
+            payTo = getCreatorWallet();
+            console.log('[API] Mode: Hybrid (Local verification)');
+            break;
+
+        case 'sovereign':
+        default:
+            rpcUrl = solanaConfig.rpcUrl || 'https://api.devnet.solana.com';
+            payTo = getCreatorWallet();
+            console.log('[API] Mode: Sovereign - RPC:', rpcUrl);
+            break;
     }
 
-    // Create middleware with appropriate facilitator
+    console.log('[API] Verification:', facilitatorUrl ? `Remote (${facilitatorUrl})` : `Local (${rpcUrl})`);
+
+    // Debug Configuration
+    console.log('[API Debug] Middleware Config:', {
+        mode: article.mode,
+        facilitatorUrl,
+        rpcUrl,
+        payTo,
+        priceLamports: article.priceInLamports.toString(),
+        network: solanaConfig.network
+    });
+
+    // Create middleware
+    // NOTE: x402 SDK internally multiplies 'price' by 1,000,000 to get 'amount' in lamports
+    // So we divide by 1M here to compensate and get the correct final amount
+    const priceForMiddleware = (Number(article.priceInLamports) / 1_000_000).toString();
+
     const withMicropay = createX402Middleware({
-        walletAddress: getCreatorWallet(),
+        walletAddress: payTo,
         network: solanaConfig.network,
-        price: (Number(article.priceInLamports) / 1_000_000).toString(), // Convert lamports to the expected unit
-        rpcUrl: rpcUrl,
+        price: priceForMiddleware,
+        rpcUrl: rpcUrl || solanaConfig.rpcUrl || 'https://api.devnet.solana.com', // Always provide RPC for fallback
         facilitatorUrl: facilitatorUrl,
     });
 
-    // Wrap handler with middleware
+    // Wrap handler
     const protectedHandler = withMicropay(
-        async (req: any, ctx: any) => paidHandler(req, params),
-        {
-            accepts: {
-                scheme: 'exact',
-                payTo: getCreatorWallet(),
-                price: (Number(article.priceInLamports) / 1_000_000).toString(),
-                network: networkId,
-            }
+        async (req: any) => {
+            console.log('[API Debug] Verification SUCCESS. Executing paidHandler...');
+            return paidHandler(req, params);
         }
     );
 
-    // Delegate to middleware - it will either:
-    // - Return 402 if no payment/invalid payment
-    // - Call paidHandler if payment verified
-    return (protectedHandler as any)(req, { params });
+    // Delegate to middleware
+    return (protectedHandler as any)(req, { params }).catch(async (err: any) => {
+        console.error('[API Debug] Verification FAILED:', err);
+        return NextResponse.json({
+            error: 'Payment Verification Failed',
+            details: err.message || 'Unknown error'
+        }, { status: 402 });
+    });
 }

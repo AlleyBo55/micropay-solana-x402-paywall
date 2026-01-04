@@ -153,26 +153,35 @@ export function usePaywallResource<T = any>({
     const unlock = useCallback(async () => {
         if (!paymentHeader || !price || !recipient) {
             setError('Missing payment requirements');
+            console.error('[usePaywallResource] Missing requirements:', { paymentHeader: !!paymentHeader, price, recipient });
             return;
         }
 
         setIsLoading(true);
+        console.log('[usePaywallResource] Starting unlock. Price:', price.toString(), 'Recipient:', recipient);
+
         try {
             // 1. Pay
+            console.log('[usePaywallResource] Step 1: Sending payment...');
             const { signature } = await sendSolanaPayment({
                 connection,
                 wallet,
                 recipientAddress: recipient,
                 amount: price
             });
+            console.log('[usePaywallResource] Step 1 Complete: Payment signature:', signature);
 
             // 2. Generate Header
+            console.log('[usePaywallResource] Step 2: Creating auth header...');
             const authHeader = createX402AuthorizationHeader(signature, paymentHeader);
+            console.log('[usePaywallResource] Step 2 Complete: Auth header created (length:', authHeader.length, ')');
 
             // 3. Retry Fetch
+            console.log('[usePaywallResource] Step 3: Retrying fetch with auth header...');
             await fetchData(authHeader);
+            console.log('[usePaywallResource] Step 3 Complete: Fetch completed');
         } catch (err: any) {
-            console.error('Unlock failed', err);
+            console.error('[usePaywallResource] Unlock failed at step:', err);
             setError(err.message || 'Payment/Unlock failed');
             setIsLoading(false); // Only set loading false on error, success handled by fetchData
         }

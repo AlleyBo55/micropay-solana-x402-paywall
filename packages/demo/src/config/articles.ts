@@ -11,451 +11,202 @@ export const DEMO_ARTICLES: Article[] = [
         title: 'The Future of Decentralized Finance: A Deep Dive',
         excerpt: 'Explore how DeFi is reshaping the financial landscape with innovative protocols and unprecedented opportunities for everyone.',
         content: `
-# The Future of Decentralized Finance: A Deep Dive
+# The Future of Decentralized Finance
 
-Decentralized Finance, or DeFi, represents one of the most transformative innovations in the history of finance. By leveraging blockchain technology, DeFi protocols are creating a new financial system that is open, transparent, and accessible to anyone with an internet connection.
+Decentralized Finance (DeFi) represents a paradigm shift.
 
-## The Promise of Open Finance
-
-Traditional financial systems are often characterized by their exclusivity. Banks, investment firms, and other financial institutions serve as gatekeepers, determining who can access financial services. DeFi changes this paradigm entirely.
-
-With DeFi, anyone can:
-- Lend and borrow assets without intermediaries
-- Trade tokens on decentralized exchanges
-- Earn yield through liquidity provision
-- Access sophisticated financial instruments
-
-## Key Innovations Driving DeFi
-
-### Automated Market Makers (AMMs)
-
-AMMs like Uniswap and Raydium have revolutionized token trading. Instead of relying on traditional order books, these protocols use mathematical formulas to determine prices and execute trades instantly.
-
-### Lending Protocols
-
-Platforms like Solend on Solana allow users to deposit collateral and borrow against it. The interest rates are determined algorithmically based on supply and demand.
-
-### Yield Aggregators
-
-Yield aggregators automatically move funds between different protocols to maximize returns, making sophisticated DeFi strategies accessible to everyone.
-
-## The Solana Advantage
-
-Solana's high throughput and low transaction costs make it an ideal platform for DeFi applications. With sub-second finality and transaction fees measured in fractions of a cent, Solana enables:
-
-- High-frequency trading strategies
-- Micro-transactions and micropayments
-- Complex multi-step DeFi operations
-
-## Looking Ahead
-
-The DeFi landscape continues to evolve at a rapid pace. We're seeing the emergence of:
-
-1. **Real-World Asset Tokenization** - Bringing traditional assets on-chain
-2. **Cross-chain Bridges** - Enabling liquidity to flow between networks
-3. **Decentralized Identity** - Creating trustless reputation systems
-4. **AI-Powered DeFi** - Using machine learning for risk assessment and optimization
-
-## Conclusion
-
-DeFi is not just a technological innovation; it's a movement toward a more inclusive and efficient financial system. As the infrastructure matures and user experience improves, we can expect DeFi to play an increasingly important role in global finance.
+## Key Innovations
+1. **AMMs**: Uniswap, Raydium
+2. **Lending**: Aave, Solend
+3. **Aggregators**: Jupiter
 
 ---
-
-*Thank you for unlocking this article! Your support helps create more quality content about the future of finance.*
-    `.trim(),
-        author: {
-            name: 'Alex Chen',
-            avatar: '/avatars/alex.png',
-        },
+*Verified by x402 Sovereign Mode.*
+`.trim(),
+        author: { name: 'Alex Chen', avatar: 'https://ui-avatars.com/api/?name=Alex+Chen&background=0D8ABC&color=fff' },
         publishedAt: new Date('2024-01-15'),
         readingTime: '8 min read',
         coverImage: 'https://picsum.photos/seed/article-1/800/600',
-        tags: ['DeFi', 'Solana', 'Finance'],
+        tags: ['DeFi', 'Solana'],
         priceInLamports: DEFAULT_PRICE,
         isPremium: true,
+        mode: 'sovereign',
     },
     {
         id: 'article-2',
         slug: 'building-solana-dapps-2024',
-        title: 'Building Solana dApps in 2024: The Complete Guide',
-        excerpt: 'Learn how to build high-performance decentralized applications on Solana with the latest tools and best practices.',
+        title: 'Building Solana dApps: Platform Facilitated',
+        excerpt: 'Learn how to build high-performance dApps. (Demonstrates Platform-Facilitated Payment Mode)',
         content: `
-# Building Solana dApps in 2024: The Complete Guide
+# Building Solana dApps (Platform Mode)
 
-The Solana ecosystem has matured significantly, offering developers a rich set of tools and frameworks for building decentralized applications. This guide covers everything you need to know to get started.
+This article uses the **Platform Model**. The platform (x402 Demo) facilitates verification.
 
-## Why Build on Solana?
-
-Solana offers several compelling advantages for dApp developers:
-
-- **Speed**: 400ms block times and 65,000 TPS
-- **Cost**: Transactions cost a fraction of a cent
-- **Ecosystem**: Rich tooling and active community
-- **Composability**: Easy integration with existing protocols
-
-## Setting Up Your Development Environment
-
-### Prerequisites
-
-\`\`\`bash
-# Install Rust
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-
-# Install Solana CLI
-sh -c "$(curl -sSfL https://release.solana.com/stable/install)"
-
-# Install Anchor Framework
-cargo install --git https://github.com/coral-xyz/anchor anchor-cli
-\`\`\`
-
-### Project Structure
-
-A typical Solana dApp consists of:
-
-1. **On-chain Program** (Rust/Anchor)
-2. **Client SDK** (TypeScript)
-3. **Frontend** (React/Next.js)
-
-## Building Your First Program
-
-Here's a simple example using Anchor:
-
-\`\`\`rust
-use anchor_lang::prelude::*;
-
-declare_id!("Your_Program_ID");
-
-#[program]
-pub mod hello_world {
-    use super::*;
-    
-    pub fn initialize(ctx: Context<Initialize>) -> Result<()> {
-        msg!("Hello, Solana!");
-        Ok(())
-    }
-}
-
-#[derive(Accounts)]
-pub struct Initialize {}
-\`\`\`
-
-## Frontend Integration
-
-Modern Solana frontends use the wallet adapter for seamless wallet connections:
-
-\`\`\`typescript
-import { useWallet } from '@solana/wallet-adapter-react';
-import { Connection, Transaction } from '@solana/web3.js';
-
-function MyComponent() {
-  const { publicKey, sendTransaction } = useWallet();
-  
-  const handleClick = async () => {
-    const connection = new Connection('https://api.devnet.solana.com');
-    const transaction = new Transaction();
-    // Add instructions...
-    await sendTransaction(transaction, connection);
-  };
-  
-  return <button onClick={handleClick}>Send Transaction</button>;
-}
-\`\`\`
-
-## Testing and Deployment
-
-### Local Testing
-
-\`\`\`bash
-# Start local validator
-solana-test-validator
-
-# Deploy to localnet
-anchor deploy
-\`\`\`
-
-### Devnet Deployment
-
-\`\`\`bash
-# Set CLI to devnet
-solana config set --url devnet
-
-# Airdrop SOL for deployment
-solana airdrop 2
-
-# Deploy
-anchor deploy
-\`\`\`
-
-## Best Practices
-
-1. **Security First**: Always audit your programs
-2. **Optimize Compute**: Minimize compute units usage
-3. **Error Handling**: Use descriptive error codes
-4. **Testing**: Comprehensive unit and integration tests
-
-## Conclusion
-
-Building on Solana in 2024 is more accessible than ever. With robust tooling, comprehensive documentation, and an active community, developers can create high-performance dApps that deliver exceptional user experiences.
+## Benefits
+- No infrastructure management
+- Instant verification
+- Trustless settlement
 
 ---
-
-*Thank you for supporting quality developer content!*
-    `.trim(),
-        author: {
-            name: 'Sarah Martinez',
-            avatar: '/avatars/sarah.png',
-        },
-        publishedAt: new Date('2024-02-20'),
+*Verified by x402 Platform.*
+`.trim(),
+        author: { name: 'Sarah Dev', avatar: 'https://ui-avatars.com/api/?name=Sarah+Dev&background=6366f1&color=fff' },
+        publishedAt: new Date('2024-02-01'),
         readingTime: '12 min read',
         coverImage: 'https://picsum.photos/seed/article-2/800/600',
-        tags: ['Solana', 'Development', 'Tutorial'],
-        priceInLamports: BigInt(15_000_000), // 0.015 SOL
+        tags: ['Dev', 'Solana'],
+        priceInLamports: BigInt(5_000_000),
         isPremium: true,
+        mode: 'platform',
     },
     {
         id: 'article-3',
-        slug: 'micropayments-revolution',
-        title: 'The Micropayments Revolution: How x402 Changes Everything',
-        excerpt: 'Discover how the x402 protocol enables instant micropayments on the web, unlocking new business models for content creators.',
+        slug: 'solana-token-extensions',
+        title: 'Token Extensions: Hybrid Payment Model',
+        excerpt: 'Deep dive into Token-2022 standards. (Demonstrates Hybrid Split Payment Mode)',
         content: `
-# The Micropayments Revolution: How x402 Changes Everything
+# Token Extensions (Hybrid Mode)
 
-For decades, the internet has struggled with monetization. Advertising became dominant, but it comes with privacy concerns and misaligned incentives. Subscriptions work for some, but create "subscription fatigue." Micropayments always seemed like the answer, but never quite worked—until now.
+This uses the **Hybrid Model**. Revenue is split between Creator (90%) and Platform (10%).
 
-## The x402 Protocol
-
-x402 brings micropayments to HTTP, the protocol that powers the web. Named after the HTTP 402 "Payment Required" status code, x402 enables:
-
-- **Native HTTP Integration**: Works with any web server
-- **Instant Payments**: Sub-second transaction finality on Solana
-- **Low Fees**: Fractions of a cent per transaction
-- **No Accounts Required**: Pay with your crypto wallet
-
-## How It Works
-
-1. Client requests a paid resource
-2. Server responds with 402 and payment details
-3. Client signs a payment transaction
-4. Server verifies on-chain and grants access
-
-\`\`\`
-Client                    Server
-   |                         |
-   |  GET /article/premium   |
-   |------------------------>|
-   |                         |
-   |  402 Payment Required   |
-   |  X-Payment-Required: {  |
-   |    price: 0.01 SOL      |
-   |    payTo: creator       |
-   |  }                      |
-   |<------------------------|
-   |                         |
-   |  GET /article/premium   |
-   |  X-Payment: {signature} |
-   |------------------------>|
-   |                         |
-   |  200 OK (content)       |
-   |<------------------------|
-\`\`\`
-
-## Why Solana?
-
-Solana is uniquely suited for micropayments:
-
-### Speed
-With 400ms block times, payments confirm almost instantly. Users don't wait—they pay and immediately access content.
-
-### Cost
-Transaction fees are typically 0.000005 SOL (~$0.001). Even for $0.01 micropayments, fees are negligible.
-
-### Scalability
-65,000+ TPS means the network can handle massive adoption without congestion.
-
-## New Business Models
-
-x402 enables business models that were previously impractical:
-
-### Pay-Per-Article
-Instead of subscriptions, readers pay only for what they read. A $0.10 article gives creators more per-reader than ad revenue while being cheaper than a subscription for occasional readers.
-
-### API Monetization
-Developers can monetize APIs with automatic payment flows. AI agents can pay for data and services programmatically.
-
-### Micro-Tipping
-Send $0.01 tips for quality comments, helpful answers, or great content. Small amounts add up.
-
-### Gated Communities
-Access exclusive content or communities with one-time payments. No recurring charges for inactive users.
-
-## The Privacy Advantage
-
-Unlike ads and subscriptions:
-- No tracking required
-- No personal data collected
-- No account creation needed
-- Pseudonymous payments via wallet
-
-## Building with x402
-
-Implementing x402 is surprisingly simple:
-
-\`\`\`typescript
-// Server-side middleware
-app.use(paymentMiddleware({
-  'GET /premium/*': {
-    price: { amount: '10000000', asset: 'native' },
-    payTo: 'creator-wallet-address'
-  }
-}));
-\`\`\`
-
-## The Future
-
-As x402 adoption grows, we'll see:
-- Browser-native wallet integration
-- Automatic micropayments based on user preferences
-- AI agents with budgets for accessing paid resources
-- A more sustainable creator economy
-
-## Conclusion
-
-The micropayments revolution is finally here. With x402 and Solana, we have the technology to transform how content is monetized on the web—creating a more direct, fair, and sustainable ecosystem for creators and consumers alike.
+## Split Revenue
+The x402 protocol allows defining multiple recipients in the \`X-Payment-Required\` header.
 
 ---
-
-*You just used x402 to unlock this article! Thanks for being part of the future of web payments.*
-    `.trim(),
-        author: {
-            name: 'Jamie Wilson',
-            avatar: '/avatars/jamie.png',
-        },
-        publishedAt: new Date('2024-03-10'),
-        readingTime: '10 min read',
+*Verified by Hybrid Consensus.*
+`.trim(),
+        author: { name: 'Mike Protocol', avatar: 'https://ui-avatars.com/api/?name=Mike+P&background=10b981&color=fff' },
+        publishedAt: new Date('2024-02-10'),
+        readingTime: '6 min read',
         coverImage: 'https://picsum.photos/seed/article-3/800/600',
-        tags: ['x402', 'Micropayments', 'Web3'],
-        priceInLamports: BigInt(8_000_000), // 0.008 SOL
+        tags: ['Token-2022', 'Hybrid'],
+        priceInLamports: BigInt(2_000_000),
         isPremium: true,
+        mode: 'hybrid',
     },
     {
         id: 'article-4',
         slug: 'sovereign-verification',
-        title: 'True Sovereignty: Self-Hosted Payment Verification',
-        excerpt: 'See how the LocalSvmFacilitator enables complete independence by verifying payments directly on your own infrastructure.',
+        title: 'True Sovereignty: Self-Hosted Verification',
+        excerpt: 'Demonstrating Sovereign Mode: Direct verification on your own infrastructure.',
         content: `
-# True Sovereignty: Self-Hosted Payment Verification
+# True Sovereignty (Sovereign Mode)
 
-One of the core promises of crypto is sovereignty—the ability to control your own infrastructure and finances without relying on third parties.
+**Mode: Sovereign**
 
-## The LocalSvmFacilitator
+In this mode, the server verifies the transaction directly against the Solana RPC. No third-party API is involved. You execute the "Banker" role yourself.
 
-This article is unlocked using the **LocalSvmFacilitator**. What does that mean?
-
-1. **No API Keys**: The verification happens right here on this server.
-2. **Direct RPC Connection**: The server talks directly to the Solana network via RPC.
-3. **No Middlemen**: No payment processor, no gateway, just code.
-
-## How It Works Locally
-
-When you paid for this article:
-1. Your wallet sent a transaction to the Solana network.
-2. The browser sent the transaction signature to our API.
-3. Our API (/api/articles/article-4) used **LocalSvmFacilitator** to query the blockchain.
-4. The API confirmed the payment and released the content.
-
-## Why This Matters
-
-For maximum censorship resistance and reliability, self-hosting verification is the gold standard. It ensures that as long as the Solana network is running, your business runs.
+## How it works
+1. Client pays
+2. Server calls \`getSignatureStatus\` on RPC
+3. Server confirms block depth
+4. Content unlocked
 
 ---
-
-*Verified locally by your own Sovereign Node (or at least, this demo's backend).*
-        `.trim(),
-        author: {
-            name: 'Satoshi Nakamoto',
-            avatar: '/avatars/satoshi.png',
-        },
+*Verified Locally.*
+`.trim(),
+        author: { name: 'Satoshi N.', avatar: 'https://ui-avatars.com/api/?name=Satoshi+N&background=10B981&color=fff' },
         publishedAt: new Date('2024-04-01'),
         readingTime: '5 min read',
         coverImage: 'https://picsum.photos/seed/article-4/800/600',
-        tags: ['Sovereignty', 'Infrastructure', 'Coding'],
-        priceInLamports: BigInt(5_000_000), // 0.005 SOL
+        tags: ['Sovereign', 'Self-Hosted'],
+        priceInLamports: BigInt(5_000_000),
         isPremium: true,
+        mode: 'sovereign',
     },
     {
         id: 'article-5',
-        slug: 'public-facilitator-network',
-        title: 'Global Access: Using Public Facilitators (PayAI)',
-        excerpt: 'Experience the ease of using a public facilitator network like PayAI to handle verification for you.',
+        slug: 'platform-x402-org',
+        title: 'Global Scale: x402.org Platform',
+        excerpt: 'Using the x402.org official facilitator for enterprise-grade verification.',
         content: `
-# Global Access: Using Public Facilitators
+# Global Scale (Platform Mode: x402.org)
 
-Not everyone wants to run their own infrastructure. That's where Public Facilitators come in.
+**Mode: Platform (x402.org)**
 
-## The PayAI Network
+This article relies on the official \`x402.org\` facilitator.
 
-This article is unlocked using the **RemoteSvmFacilitator**, connected to the PayAI Public Facilitator.
-
-1. **Zero Config**: No RPC URL to manage.
-2. **Advanced Features**: Future support for token swaps and fiat payments.
-3. **Universality**: Works across improved standard protocols.
-
-## How It Works Remotely
-
-When you paid for this article:
-1. Your wallet sent the transaction.
-2. Our API forwarded the proof to https://facilitator.payai.network.
-3. The PayAI network verified the transaction and returned a signed receipt.
-4. Our API trusted the receipt and unlocked the content.
-
-## Hybrid Future
-
-The beauty of x402 is choice. You can run sovereign for critical paths and use facilitators for convenience or advanced features, all with the same standard.
+## Why Platform?
+- **Enterprise SLA**: High availability verification
+- **Fraud Detection**: Advanced double-spend protection
+- **Analytics**: Built-in revenue dashboards
 
 ---
-
-*Verified remotely by the PayAI Public Facilitator Network.*
-        `.trim(),
-        author: {
-            name: 'PayAI Network',
-            avatar: '/avatars/payai.png',
-        },
-        publishedAt: new Date('2024-04-02'),
+*Verified by x402.org*
+`.trim(),
+        author: { name: 'x402 Fdn', avatar: 'https://ui-avatars.com/api/?name=x402&background=000&color=fff' },
+        publishedAt: new Date('2024-04-05'),
         readingTime: '4 min read',
         coverImage: 'https://picsum.photos/seed/article-5/800/600',
-        tags: ['PayAI', 'Facilitator', 'Cloud'],
-        priceInLamports: BigInt(2_000_000), // 0.002 SOL
+        tags: ['Platform', 'x402.org'],
+        priceInLamports: BigInt(8_000_000),
         isPremium: true,
+        mode: 'platform',
+    },
+    {
+        id: 'article-6',
+        slug: 'hybrid-revenue-share',
+        title: 'Creator Economy: Hybrid Revenue Share',
+        excerpt: 'A seamless hybrid model where platform and creator share success.',
+        content: `
+# Hybrid Revenue Share
+
+**Mode: Hybrid**
+
+Demonstrating advanced programmable payments.
+
+## The Split
+- **Creator**: 95%
+- **Protocol**: 5%
+
+This happens atomically in a single Solana transaction.
+
+---
+*Verified via Hybrid Logic.*
+`.trim(),
+        author: { name: 'Creator DAO', avatar: 'https://ui-avatars.com/api/?name=DAO&background=f59e0b&color=fff' },
+        publishedAt: new Date('2024-04-10'),
+        readingTime: '7 min read',
+        coverImage: 'https://picsum.photos/seed/article-6/800/600',
+        tags: ['Hybrid', 'RevShare'],
+        priceInLamports: BigInt(3_000_000),
+        isPremium: true,
+        mode: 'hybrid',
+    },
+    {
+        id: 'article-7',
+        slug: 'ai-autonomous-payment',
+        title: 'Autonomous Agents: Powered by PayAI',
+        excerpt: 'The future of Agent-to-Agent economy, verified by the specialized PayAI network.',
+        content: `
+# Autonomous Agents (PayAI Mode)
+
+**Mode: PayAI**
+
+This resource is optimized for AI Agent consumption.
+
+## PayAI Network
+A specialized facilitator optimized for high-frequency, low-latency machine payments.
+
+- **Optimized for Agents**: JSON-only responses available
+- **Micro-fees**: <$0.0001 overhead
+- **Machine Auth**: Token-based access
+
+---
+*Verified by PayAI.*
+`.trim(),
+        author: { name: 'PayAI Bot', avatar: 'https://ui-avatars.com/api/?name=PayAI&background=ef4444&color=fff' },
+        publishedAt: new Date('2024-04-15'),
+        readingTime: '3 min read',
+        coverImage: 'https://picsum.photos/seed/article-7/800/600',
+        tags: ['PayAI', 'Agents'],
+        priceInLamports: BigInt(1_000_000),
+        isPremium: true,
+        mode: 'payai',
     },
 ];
 
-/**
- * Get article by slug
- */
-export function getArticleBySlug(slug: string): Article | undefined {
-    return DEMO_ARTICLES.find((article) => article.slug === slug);
-}
-
-/**
- * Get article by ID
- */
-export function getArticleById(id: string): Article | undefined {
-    return DEMO_ARTICLES.find((article) => article.id === id);
-}
-
-/**
- * Get all articles
- */
-export function getAllArticles(): Article[] {
-    return DEMO_ARTICLES;
-}
-
-/**
- * Get free preview of article content (first paragraph)
- */
-export function getArticlePreview(content: string): string {
-    const lines = content.split('\n').filter((line) => line.trim());
-    const previewLines = lines.slice(0, 5);
-    return previewLines.join('\n');
-}
+export function getArticleBySlug(slug: string) { return DEMO_ARTICLES.find(a => a.slug === slug); }
+export function getArticleById(id: string) { return DEMO_ARTICLES.find(a => a.id === id); }
+export function getAllArticles() { return DEMO_ARTICLES; }
+export function getArticlePreview(content: string) { return content.substring(0, 150) + '...'; }

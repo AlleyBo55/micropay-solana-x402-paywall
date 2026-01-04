@@ -31,7 +31,6 @@ export class LocalSvmFacilitator implements FacilitatorClient {
     private connection: Connection;
 
     constructor(rpcUrl: string) {
-        console.log('[LocalSvmFacilitator] Initialized with RPC:', rpcUrl);
         this.connection = new Connection(rpcUrl, 'confirmed');
     }
 
@@ -124,43 +123,30 @@ export class LocalSvmFacilitator implements FacilitatorClient {
     }
 
     /**
-     * Enable debug logging (disable in production)
-     */
-    private debug = process.env.NODE_ENV === 'development';
-
-    /**
      * Verify a payment on-chain
      */
     async verify(payload: PaymentPayload, requirements: PaymentRequirements): Promise<VerifyResponse> {
         try {
-            const signature = payload.payload.signature as string;
+            const signature = payload.payload?.signature as string;
+
             if (!signature) {
                 return { isValid: false, invalidReason: 'Missing signature in payment payload' };
             }
 
-            // Verify Recipient and Amount
             const payTo = requirements.payTo;
             const amountVal = requirements.amount || (requirements as any).maxAmountRequired || '0';
             const requiredAmount = BigInt(amountVal);
 
-            // Log only non-sensitive info (signature prefix for debugging)
-            if (this.debug) {
-                console.log(`[LocalSvmFacilitator] Verifying tx: ${signature.slice(0, 8)}...`);
-            }
-
-            // Fetch transaction with retry logic
             const tx = await this.fetchTransactionWithRetry(signature, 3);
 
             if (!tx) {
                 return { isValid: false, invalidReason: 'Transaction not found or not confirmed' };
             }
 
-            // Parse instructions
             const instructions = tx.transaction.message.instructions;
             let paidAmount = 0n;
             let payer: string | undefined = undefined;
 
-            // Check SystemProgram transfers
             for (const ix of instructions) {
                 if ('program' in ix && ix.program === 'system') {
                     const parsed = (ix as any).parsed;
@@ -169,24 +155,9 @@ export class LocalSvmFacilitator implements FacilitatorClient {
                         if (!payer) payer = parsed.info.source;
                     }
                 }
-                // Also check SPL Token transfers
-                if ('program' in ix && (ix.program === 'spl-token' || ix.program === 'spl-token-2022')) {
-                    const parsed = (ix as any).parsed;
-                    if (parsed?.type === 'transferChecked' || parsed?.type === 'transfer') {
-                        // For SPL tokens, verify the mint and destination match requirements
-                        // This is a simplified check - production should verify ATA derivation
-                        if (this.debug) {
-                            console.log(`[LocalSvmFacilitator] Found SPL transfer`);
-                        }
-                    }
-                }
             }
 
-            // Check correctness
             if (paidAmount >= requiredAmount) {
-                if (this.debug) {
-                    console.log(`[LocalSvmFacilitator] Verification SUCCESS for tx: ${signature.slice(0, 8)}...`);
-                }
                 return {
                     isValid: true,
                     payer: payer || tx.transaction.message.accountKeys[0].pubkey.toBase58()
@@ -201,10 +172,6 @@ export class LocalSvmFacilitator implements FacilitatorClient {
 
         } catch (error: unknown) {
             const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-            // Don't log full error details in production
-            if (this.debug) {
-                console.error('[LocalSvmFacilitator] Verify error:', errorMessage);
-            }
             throw new VerifyError(500, {
                 isValid: false,
                 invalidReason: errorMessage
