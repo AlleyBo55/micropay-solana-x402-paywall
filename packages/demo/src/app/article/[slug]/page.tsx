@@ -14,7 +14,8 @@ import {
 
 import { usePaywallResource } from '@alleyboss/micropay-solana-x402-paywall/client';
 import { useConnection } from '@solana/wallet-adapter-react';
-import { useWallet as useSolanaWallet } from '@/components/providers';
+import { ClientWalletMultiButton } from '@/components/ClientWalletMultiButton';
+import { useWallet as useSolanaWallet } from '@solana/wallet-adapter-react';
 
 export default function ArticlePage() {
     const params = useParams();
@@ -34,7 +35,8 @@ export default function ArticlePage() {
         isLoading,
         unlock,
         price,
-        recipient
+        recipient,
+        error
     } = usePaywallResource({
         url: `/api/articles/${initialArticle?.id}`,
         connection,
@@ -95,7 +97,7 @@ export default function ArticlePage() {
                                 </span>
                             )
                         )}
-                        <div className="w-8 h-8 rounded-full bg-gray-100 border border-gray-200" />
+                        <ClientWalletMultiButton style={{ height: '32px', borderRadius: '9999px', fontSize: '12px', padding: '0 12px', backgroundColor: '#000' }} />
                     </div>
                 </div>
             </nav>
@@ -147,18 +149,33 @@ export default function ArticlePage() {
                             <div className="animate-spin w-5 h-5 border-2 border-black border-t-transparent rounded-full" />
                         </div>
                     ) : (
-                        <PaywallOverlay
-                            isLocked={isLocked && !!article.isPremium}
-                            articleId={article.id}
-                            articleTitle={article.title}
-                            priceInLamports={price || BigInt(article.priceInLamports || 0)}
-                            recipientWallet={recipient || creatorWallet}
-                            onUnlock={unlock}
-                        >
-                            {(() => {
-                                return <ArticleContent article={article} />;
-                            })()}
-                        </PaywallOverlay>
+                        <>
+                            {error && (
+                                <div className="absolute top-0 left-0 right-0 z-50 p-4 flex justify-center">
+                                    <div className="bg-red-50 text-red-600 px-4 py-2 rounded-full text-sm font-medium shadow-sm border border-red-100">
+                                        {error}
+                                    </div>
+                                </div>
+                            )}
+                            <PaywallOverlay
+                                isLocked={isLocked && !!article.isPremium}
+                                articleId={article.id}
+                                articleTitle={article.title}
+                                priceInLamports={price || BigInt(article.priceInLamports || 0)}
+                                recipientWallet={recipient || creatorWallet}
+                                onUnlock={async () => {
+                                    if (!wallet.connected) {
+                                        alert('Please connect your wallet first (top right)');
+                                        return;
+                                    }
+                                    await unlock();
+                                }}
+                            >
+                                {(() => {
+                                    return <ArticleContent article={article} />;
+                                })()}
+                            </PaywallOverlay>
+                        </>
                     )}
                 </main>
             </div>

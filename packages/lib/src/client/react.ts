@@ -78,10 +78,24 @@ export function usePaywallResource<T = any>({
                 headers['Authorization'] = authHeader;
             }
 
-            const res = await fetch(url, { headers });
+            const res = await fetch(url, {
+                headers,
+                credentials: 'include' // Ensure cookies are sent/received
+            });
 
             if (res.status === 402) {
-                const wwwAuth = res.headers.get('WWW-Authenticate');
+                // Check standard WWW-Authenticate header first, then fallback to Payment-Required (used by some implementations)
+                const wwwAuth = res.headers.get('WWW-Authenticate') || res.headers.get('Payment-Required');
+                // Check for specific error reason from server
+                const errorReason = res.headers.get('X-Payment-Error');
+                console.log('[usePaywallResource] 402 Response. Header:', wwwAuth, 'Error:', errorReason);
+
+                if (authHeader && errorReason) {
+                    console.error('[usePaywallResource] Verification Failed:', errorReason);
+                    setError(`Verification Failed: ${errorReason}`);
+                }
+
+
                 if (wwwAuth) {
                     setPaymentHeader(wwwAuth);
                     // Parse requirements from x402 header using proper decoder
@@ -91,21 +105,29 @@ export function usePaywallResource<T = any>({
                         // Strip 'x402 ' or 'X402 ' prefix if present
                         const cleanHeader = wwwAuth.replace(/^[Xx]402\s+/, '');
                         const decoded = decodePaymentRequiredHeader(cleanHeader);
+                        console.log('[usePaywallResource] Decoded header:', decoded);
 
                         // Handle array or single object requirement
                         const accepts = Array.isArray(decoded.accepts)
                             ? decoded.accepts[0]
                             : decoded.accepts;
 
+                        console.log('[usePaywallResource] Accepts:', accepts);
+
                         if (accepts) {
-                            // Get amount - could be 'amount' or 'maxAmountRequired' depending on version
-                            const amountStr = accepts.amount || (accepts as any).maxAmountRequired || '0';
+                            // Get amount - supports 'amount', 'price' (used in middleware), or 'maxAmountRequired'
+                            const amountStr = accepts.amount || (accepts as any).price || (accepts as any).maxAmountRequired || '0';
                             setPrice(BigInt(amountStr));
                             setRecipient(accepts.payTo);
+                            console.log('[usePaywallResource] Set price:', amountStr, 'recipient:', accepts.payTo);
+                        } else {
+                            console.warn('[usePaywallResource] No accepts found in header');
                         }
                     } catch (e) {
                         console.warn('[usePaywallResource] Failed to parse x402 header:', e);
                     }
+                } else {
+                    console.warn('[usePaywallResource] 402 response missing WWW-Authenticate header');
                 }
                 setIsLocked(true);
                 setData(null);

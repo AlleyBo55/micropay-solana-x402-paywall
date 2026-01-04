@@ -10,7 +10,12 @@ export * from '@x402/core/client';
 export * from '@x402/svm';
 
 // Client-side helpers (browser-safe, no Node.js deps)
-export * from './client';
+// Client-side helpers are not exported from root to prevent SSR issues
+// Import from @alleyboss/micropay-solana-x402-paywall/client instead
+// export * from './client';
+
+// SVM Facilitator (Manual Verification Support)
+export { LocalSvmFacilitator } from './svm/LocalSvmFacilitator';
 
 // Agent payment utilities (Unique Feature)
 export * from './agent';

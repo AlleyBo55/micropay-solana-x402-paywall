@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createX402Middleware } from '@alleyboss/micropay-solana-x402-paywall/next';
 import { validateSession, createSession } from '@alleyboss/micropay-solana-x402-paywall/session';
+import { LocalSvmFacilitator } from '@alleyboss/micropay-solana-x402-paywall';
 import { getArticleById } from '@/config/articles';
 import { getCreatorWallet, getSolanaConfig, getDefaultPrice } from '@/lib/config';
 
@@ -84,14 +85,17 @@ export async function GET(
     props: { params: Promise<{ id: string }> }
 ) {
     const params = await props.params;
-    console.log('[API Debug] GET request matched for ID:', params.id);
+    console.error('[API Debug] GET request matched for ID:', params.id);
+    console.error('[API Debug] Method:', req.method);
+    console.error('[API Debug] Authorization Header:', req.headers.get('authorization'));
+    // console.error('[API Debug] All Headers:', Object.fromEntries(req.headers.entries()));
 
     // Initialize config early
     const solanaConfig = getSolanaConfig();
     const withMicropay = createX402Middleware({
         walletAddress: getCreatorWallet(),
         network: solanaConfig.network,
-        price: getDefaultPrice().toString(),
+        price: (Number(getDefaultPrice()) / 1000000).toString(),
         rpcUrl: solanaConfig.rpcUrl
     });
 
@@ -113,7 +117,50 @@ export async function GET(
             }
         }
     }
-    // B. Fallback to Payment
+    // B. Check for Payment Header (Manual Verification Fallback)
+    const authHeader = req.headers.get('authorization');
+    if (authHeader && authHeader.startsWith('x402 ')) {
+        // console.log('[API Debug] Manual Verify: x402 header found.');
+        try {
+            const token = authHeader.replace('x402 ', '');
+            const jsonStr = Buffer.from(token, 'base64').toString('utf-8');
+            const payload = JSON.parse(jsonStr);
+            // console.log('[API Debug] Manual Verify: Payload parsed.');
+
+            const article = getArticleById(params.id);
+            if (article) {
+                const facilitator = new LocalSvmFacilitator(solanaConfig.rpcUrl || 'https://api.devnet.solana.com');
+                const requirements = {
+                    amount: article.priceInLamports.toString(),
+                    payTo: getCreatorWallet(),
+                    network: solanaConfig.network === 'mainnet-beta' ? 'solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp' : 'solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1'
+                };
+
+                // Construct payload expected by verify. In x402 payload structure:
+                // { payment: { signature: ... }, client: ... }
+                // verify() expects { payload: ... } where payload is the payment object usually?
+                // Looking at LocalSvmFacilitator source in my previous cat...
+                // verify(payload: PaymentPayload, ...)
+                // PaymentPayload interface: { payload: any; scheme: string; }
+                const paymentPayload = {
+                    payload: payload.payment || payload, // Handle both wrapped and unwrapped just in case
+                    scheme: 'exact'
+                };
+
+                const result = await facilitator.verify(paymentPayload as any, requirements as any);
+                if (result.isValid) {
+                    console.log('[API] Manual Verification SUCCESS. Unlocking content.');
+                    return await paidHandler(req, params);
+                } else {
+                    console.error('[API] Manual Verification FAILED:', result);
+                }
+            }
+        } catch (e) {
+            console.error('[API] Manual Verification ERROR:', e);
+        }
+    }
+
+    // C. Fallback to Payment Request (return 402)
     const article = getArticleById(params.id);
     if (!article) {
         return Response.json({ error: 'Article not found' }, { status: 404 });
@@ -133,7 +180,7 @@ export async function GET(
             accepts: {
                 scheme: 'exact',
                 payTo: getCreatorWallet(),
-                price: article.priceInLamports.toString(),
+                price: (Number(article.priceInLamports) / 1000000).toString(),
                 network: networkId,
             }
         }
