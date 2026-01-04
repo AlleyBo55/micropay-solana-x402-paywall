@@ -61,9 +61,9 @@ async function paidHandler(
 // 1. Wrap the handler with x402 middleware
 // Note: We need to adapt the signature for the wrapper if needed, 
 // but Next.js usually passes (req, ctx)
-const protectedHandler = withMicropay(
-    async (req: any, ctx: any) => paidHandler(req, ctx.params || ctx)
-);
+// const protectedHandler = withMicropay(
+//    async (req: any, ctx: any) => paidHandler(req, ctx.params || ctx)
+// );
 
 // 2. Export GET with Hybrid Logic
 export async function GET(
@@ -86,7 +86,30 @@ export async function GET(
     }
 
     // B. Fallback to Payment
+    const article = getArticleById(params.id);
+    if (!article) {
+        return Response.json({ error: 'Article not found' }, { status: 404 });
+    }
+
+    const network = solanaConfig.network;
+    const networkId = network === 'mainnet-beta'
+        ? 'solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp'
+        : 'solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1';
+
+    // Create a dynamic handler for THIS article's price
+    const dynamicHandler = withMicropay(
+        async (req: any, ctx: any) => paidHandler(req, params), // reuse resolved params
+        {
+            accepts: {
+                scheme: 'exact',
+                payTo: getCreatorWallet(),
+                maxAmountRequired: article.priceInLamports.toString(),
+                network: networkId,
+                asset: 'native',
+            }
+        }
+    );
+
     // Delegate to x402 middleware
-    // We pass resolved params to ensure downstream compatibility
-    return (protectedHandler as any)(req, { params });
+    return (dynamicHandler as any)(req, { params });
 }
