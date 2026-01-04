@@ -1,6 +1,6 @@
 {
     "name": "@alleyboss/micropay-solana-x402-paywall",
-    "version": "3.3.10",
+    "version": "3.3.12",
     "description": "Production-ready Solana micropayments library wrapper for official x402 SDK",
     "author": "AlleyBoss",
     "license": "MIT",

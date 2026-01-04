@@ -23,6 +23,17 @@ const nextConfig: NextConfig = {
     '@alleyboss/micropay-solana-x402-paywall',
   ],
 
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'picsum.photos',
+        port: '',
+        pathname: '/**',
+      },
+    ],
+  },
+
 };
 
 export default nextConfig;

@@ -11,6 +11,7 @@ import Share01Icon from 'hugeicons-react/dist/esm/icons/share_01_icon';
 import Settings01Icon from 'hugeicons-react/dist/esm/icons/settings_01_icon';
 import Database01Icon from 'hugeicons-react/dist/esm/icons/database_01_icon';
 import DollarCircleIcon from 'hugeicons-react/dist/esm/icons/dollar_circle_icon';
+import Globe02Icon from 'hugeicons-react/dist/esm/icons/globe_02_icon';
 import ArrowRight01Icon from 'hugeicons-react/dist/esm/icons/arrow_right_01_icon';
 import CheckmarkCircle01Icon from 'hugeicons-react/dist/esm/icons/checkmark_circle_01_icon';
 import Copy01Icon from 'hugeicons-react/dist/esm/icons/copy_01_icon';
@@ -279,33 +280,48 @@ if (result.success) {
                     <section id="self-sovereign" className="mb-20 scroll-mt-24">
                         <div className="flex items-center gap-3 mb-6">
                             <div className="p-2 bg-yellow-100 text-yellow-600 rounded-lg"><ShieldKeyIcon size={20} /></div>
-                            <h2 className="text-2xl font-bold text-[#1D1D1F]">Self-Sovereign Verification</h2>
+                            <h2 className="text-2xl font-bold text-[#1D1D1F]">Verification Modes</h2>
                         </div>
                         <p className="text-gray-600 mb-6">
-                            Remove dependency on external hosted facilitators. Verify payments directly against your own Solana RPC node.
+                            The library supports two distinct verification modes to suit your infrastructure needs.
                         </p>
-                        <div className="p-4 bg-yellow-50 border border-yellow-100 rounded-xl mb-6 text-sm text-yellow-800">
-                            <strong>Note:</strong> This mode runs verification logic inside your backend, making it fully self-contained.
-                        </div>
 
-                        <h3 className="font-bold text-lg mb-4">Verification Flow</h3>
-                        <div className="mb-6">
-                            <CodeBlock language="mermaid" code={`sequenceDiagram
-    participant User
-    participant App
-    participant Lib as x402 Lib
-    participant RPC as Solana RPC
-    
-    User->>App: Request Premium Content
-    App->>Lib: Create Payment Options
-    Lib-->>User: Return 402 + Payment Link
-    User->>RPC: Submit Transaction
-    User->>App: Send Receipt/Signature
-    App->>Lib: Verify Transaction
-    Lib->>RPC: Get Transaction Status (Local)
-    RPC-->>Lib: Confirmed
-    Lib-->>App: Valid Session Token
-    App-->>User: Unlock Content`} />
+                        <div className="grid md:grid-cols-2 gap-6 mb-8">
+                            {/* Mode 1: Sovereign */}
+                            <div className="bg-white p-6 rounded-2xl border border-black/5 shadow-sm">
+                                <h3 className="text-xl font-bold mb-3 flex items-center gap-2">
+                                    <span className="p-1.5 bg-yellow-100 rounded-lg"><ShieldKeyIcon size={16} className="text-yellow-700" /></span>
+                                    Self-Sovereign
+                                </h3>
+                                <p className="text-sm text-gray-500 mb-4">
+                                    Verify payments locally on your own backend using a direct connection to a Solana RPC node.
+                                </p>
+                                <ul className="text-sm space-y-2 mb-4">
+                                    <li className="flex gap-2"><span className="text-green-500">✓</span> No external dependency</li>
+                                    <li className="flex gap-2"><span className="text-green-500">✓</span> Maximum privacy</li>
+                                    <li className="flex gap-2"><span className="text-red-500">✗</span> Requires RPC management</li>
+                                </ul>
+                                <CodeBlock code={`import { LocalSvmFacilitator } from '@alleyboss/micropay-solana-x402-paywall';
+const facilitator = new LocalSvmFacilitator(RPC_URL);`} />
+                            </div>
+
+                            {/* Mode 2: Remote / Public */}
+                            <div className="bg-white p-6 rounded-2xl border border-black/5 shadow-sm">
+                                <h3 className="text-xl font-bold mb-3 flex items-center gap-2">
+                                    <span className="p-1.5 bg-blue-100 rounded-lg"><Globe02Icon size={16} className="text-blue-700" /></span>
+                                    Public Facilitator
+                                </h3>
+                                <p className="text-sm text-gray-500 mb-4">
+                                    Offload verification to a public x402 facilitator network (e.g. PayAI).
+                                </p>
+                                <ul className="text-sm space-y-2 mb-4">
+                                    <li className="flex gap-2"><span className="text-green-500">✓</span> Zero config (No RPC)</li>
+                                    <li className="flex gap-2"><span className="text-green-500">✓</span> Advanced features (Swaps)</li>
+                                    <li className="flex gap-2"><span className="text-red-500">✗</span> Relies on 3rd party</li>
+                                </ul>
+                                <CodeBlock code={`import { RemoteSvmFacilitator } from '@alleyboss/micropay-solana-x402-paywall';
+const facilitator = new RemoteSvmFacilitator('https://facilitator.payai.network');`} />
+                            </div>
                         </div>
 
                         <h3 className="font-bold text-lg mb-4">Hosted vs. Self-Sovereign</h3>
@@ -314,43 +330,29 @@ if (result.success) {
                                 <thead className="bg-gray-50 text-gray-500 font-medium">
                                     <tr>
                                         <th className="px-4 py-3">Feature</th>
-                                        <th className="px-4 py-3">Hosted Mode (Default)</th>
-                                        <th className="px-4 py-3">Self-Sovereign Mode</th>
+                                        <th className="px-4 py-3">Public Facilitator</th>
+                                        <th className="px-4 py-3">Self-Sovereign</th>
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-black/5">
                                     <tr className="bg-white">
                                         <td className="px-4 py-3 font-medium">Verification</td>
-                                        <td className="px-4 py-3">Verified by x402.org</td>
-                                        <td className="px-4 py-3">Verified by <span className="font-bold text-purple-600">You</span> (Local RPC)</td>
+                                        <td className="px-4 py-3">Remote API Call</td>
+                                        <td className="px-4 py-3">Local RPC Call</td>
                                     </tr>
                                     <tr className="bg-white">
-                                        <td className="px-4 py-3 font-medium">Trust</td>
-                                        <td className="px-4 py-3">Trust x402 Facilitator</td>
-                                        <td className="px-4 py-3">Trustless / Your Node</td>
+                                        <td className="px-4 py-3 font-medium">Complexity</td>
+                                        <td className="px-4 py-3">Low (Zero Config)</td>
+                                        <td className="px-4 py-3">Medium (RPC Node)</td>
                                     </tr>
                                     <tr className="bg-white">
                                         <td className="px-4 py-3 font-medium">Privacy</td>
                                         <td className="px-4 py-3">Metadata sent to facilitator</td>
                                         <td className="px-4 py-3">No external data sharing</td>
                                     </tr>
-                                    <tr className="bg-white">
-                                        <td className="px-4 py-3 font-medium">Setup</td>
-                                        <td className="px-4 py-3">Zero-config</td>
-                                        <td className="px-4 py-3">Requires RPC URL</td>
-                                    </tr>
                                 </tbody>
                             </table>
                         </div>
-
-                        <h3 className="font-bold text-lg mb-3">Implementation</h3>
-                        <CodeBlock code={`const withMicropay = createX402Middleware({
-    walletAddress: 'YOUR_WALLET',
-    network: 'devnet',
-    price: '1000000',
-    // ⚡️ Enable Self-Sovereign Mode
-    rpcUrl: process.env.NEXT_PUBLIC_RPC_URL 
-});`} />
                     </section>
 
                     {/* Installation */}
