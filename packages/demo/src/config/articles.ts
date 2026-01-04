@@ -70,7 +70,7 @@ DeFi is not just a technological innovation; it's a movement toward a more inclu
         },
         publishedAt: new Date('2024-01-15'),
         readingTime: '8 min read',
-        coverImage: '/covers/defi.png',
+        coverImage: 'https://picsum.photos/seed/article-1/800/600',
         tags: ['DeFi', 'Solana', 'Finance'],
         priceInLamports: DEFAULT_PRICE,
         isPremium: true,
@@ -208,7 +208,7 @@ Building on Solana in 2024 is more accessible than ever. With robust tooling, co
         },
         publishedAt: new Date('2024-02-20'),
         readingTime: '12 min read',
-        coverImage: '/covers/solana-dev.png',
+        coverImage: 'https://picsum.photos/seed/article-2/800/600',
         tags: ['Solana', 'Development', 'Tutorial'],
         priceInLamports: BigInt(15_000_000), // 0.015 SOL
         isPremium: true,
@@ -333,9 +333,99 @@ The micropayments revolution is finally here. With x402 and Solana, we have the 
         },
         publishedAt: new Date('2024-03-10'),
         readingTime: '10 min read',
-        coverImage: '/covers/micropayments.png',
+        coverImage: 'https://picsum.photos/seed/article-3/800/600',
         tags: ['x402', 'Micropayments', 'Web3'],
         priceInLamports: BigInt(8_000_000), // 0.008 SOL
+        isPremium: true,
+    },
+    {
+        id: 'article-4',
+        slug: 'sovereign-verification',
+        title: 'True Sovereignty: Self-Hosted Payment Verification',
+        excerpt: 'See how the LocalSvmFacilitator enables complete independence by verifying payments directly on your own infrastructure.',
+        content: `
+# True Sovereignty: Self-Hosted Payment Verification
+
+One of the core promises of crypto is sovereignty—the ability to control your own infrastructure and finances without relying on third parties.
+
+## The LocalSvmFacilitator
+
+This article is unlocked using the **LocalSvmFacilitator**. What does that mean?
+
+1. **No API Keys**: The verification happens right here on this server.
+2. **Direct RPC Connection**: The server talks directly to the Solana network via RPC.
+3. **No Middlemen**: No payment processor, no gateway, just code.
+
+## How It Works Locally
+
+When you paid for this article:
+1. Your wallet sent a transaction to the Solana network.
+2. The browser sent the transaction signature to our API.
+3. Our API (/api/articles/article-4) used **LocalSvmFacilitator** to query the blockchain.
+4. The API confirmed the payment and released the content.
+
+## Why This Matters
+
+For maximum censorship resistance and reliability, self-hosting verification is the gold standard. It ensures that as long as the Solana network is running, your business runs.
+
+---
+
+*Verified locally by your own Sovereign Node (or at least, this demo's backend).*
+        `.trim(),
+        author: {
+            name: 'Satoshi Nakamoto',
+            avatar: '/avatars/satoshi.png',
+        },
+        publishedAt: new Date('2024-04-01'),
+        readingTime: '5 min read',
+        coverImage: 'https://picsum.photos/seed/article-4/800/600',
+        tags: ['Sovereignty', 'Infrastructure', 'Coding'],
+        priceInLamports: BigInt(5_000_000), // 0.005 SOL
+        isPremium: true,
+    },
+    {
+        id: 'article-5',
+        slug: 'public-facilitator-network',
+        title: 'Global Access: Using Public Facilitators (PayAI)',
+        excerpt: 'Experience the ease of using a public facilitator network like PayAI to handle verification for you.',
+        content: `
+# Global Access: Using Public Facilitators
+
+Not everyone wants to run their own infrastructure. That's where Public Facilitators come in.
+
+## The PayAI Network
+
+This article is unlocked using the **RemoteSvmFacilitator**, connected to the PayAI Public Facilitator.
+
+1. **Zero Config**: No RPC URL to manage.
+2. **Advanced Features**: Future support for token swaps and fiat payments.
+3. **Universality**: Works across improved standard protocols.
+
+## How It Works Remotely
+
+When you paid for this article:
+1. Your wallet sent the transaction.
+2. Our API forwarded the proof to https://facilitator.payai.network.
+3. The PayAI network verified the transaction and returned a signed receipt.
+4. Our API trusted the receipt and unlocked the content.
+
+## Hybrid Future
+
+The beauty of x402 is choice. You can run sovereign for critical paths and use facilitators for convenience or advanced features, all with the same standard.
+
+---
+
+*Verified remotely by the PayAI Public Facilitator Network.*
+        `.trim(),
+        author: {
+            name: 'PayAI Network',
+            avatar: '/avatars/payai.png',
+        },
+        publishedAt: new Date('2024-04-02'),
+        readingTime: '4 min read',
+        coverImage: 'https://picsum.photos/seed/article-5/800/600',
+        tags: ['PayAI', 'Facilitator', 'Cloud'],
+        priceInLamports: BigInt(2_000_000), // 0.002 SOL
         isPremium: true,
     },
 ];

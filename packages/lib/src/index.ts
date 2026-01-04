@@ -16,6 +16,7 @@ export * from '@x402/svm';
 
 // SVM Facilitator (Manual Verification Support)
 export { LocalSvmFacilitator } from './svm/LocalSvmFacilitator';
+export { RemoteSvmFacilitator } from './svm/RemoteSvmFacilitator';
 
 // Agent payment utilities (Unique Feature)
 export * from './agent';

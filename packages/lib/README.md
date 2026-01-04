@@ -133,6 +133,32 @@ const withMicropay = createX402Middleware({
 | **Setup** | Zero-config | Requires RPC URL |
 | **Best For** | Quick startups, MVPs | Production, High-Volume, Agents |
 
+## 🌐 Public Facilitator Mode (New in v3.3.12)
+
+Use a public facilitator service like [x402.org](https://x402.org) or [PayAI Network](https://facilitator.payai.network) without running your own RPC node:
+
+```typescript
+import { RemoteSvmFacilitator } from '@alleyboss/micropay-solana-x402-paywall';
+
+// Use a public facilitator for verification
+const facilitator = new RemoteSvmFacilitator('https://x402.org/facilitator');
+
+// Or in middleware config
+const withMicropay = createX402Middleware({
+    walletAddress: 'YOUR_WALLET',
+    network: 'mainnet-beta',
+    facilitatorUrl: 'https://facilitator.payai.network'
+    // No rpcUrl = uses remote facilitator
+});
+```
+
+### 🆚 Verification Modes Comparison
+
+| Mode | Class | Best For |
+|------|-------|----------|
+| **Self-Sovereign** | `LocalSvmFacilitator` | Full control, privacy, production |
+| **Public Facilitator** | `RemoteSvmFacilitator` | Quick setup, no RPC management |
+
 ## 🤖 AI Agent Payments
 
 Enable autonomous AI agents to pay for premium API access.

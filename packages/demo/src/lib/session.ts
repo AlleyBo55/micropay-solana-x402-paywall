@@ -1,14 +1,13 @@
 // Next.js session integration wrapper
 // This wraps the framework-agnostic session core from the library with Next.js cookie handling
 import { cookies } from 'next/headers';
-import {
-    createSession as createSessionCore,
+createSession as createSessionCore,
     validateSession as validateSessionCore,
     addArticleToSession as addArticleCore,
     isArticleUnlocked as isArticleUnlockedCore,
     type SessionData,
-    type SessionValidation,
-} from '@alleyboss/micropay-solana-x402-paywall';
+        type SessionValidation,
+} from '@alleyboss/micropay-solana-x402-paywall/session';
 
 const SESSION_COOKIE_NAME = 'x402_session';
 
