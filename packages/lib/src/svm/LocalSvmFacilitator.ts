@@ -91,6 +91,16 @@ export class LocalSvmFacilitator implements FacilitatorClient {
                 return { isValid: false, invalidReason: 'Missing signature in payment payload' };
             }
 
+            // 2. Verify Recipient and Amount
+            // We look for a transfer instruction to the payTo address
+            const payTo = requirements.payTo;
+            // Handle both precise amount and maxAmountRequired (from x402 config)
+            const amountVal = requirements.amount || (requirements as any).maxAmountRequired || '0';
+            const requiredAmount = BigInt(amountVal);
+
+            console.log(`[LocalSvmFacilitator] Verifying signature: ${signature}`);
+            console.log(`[LocalSvmFacilitator] Required Amount: ${requiredAmount}, PayTo: ${payTo}`);
+
             // 1. Fetch transaction
             const tx = await this.connection.getParsedTransaction(signature, {
                 maxSupportedTransactionVersion: 0,
@@ -98,13 +108,11 @@ export class LocalSvmFacilitator implements FacilitatorClient {
             });
 
             if (!tx) {
+                console.error('[LocalSvmFacilitator] Transaction not found or not confirmed');
                 return { isValid: false, invalidReason: 'Transaction not found or not confirmed' };
             }
 
-            // 2. Verify Recipient and Amount
-            // We look for a transfer instruction to the payTo address
-            const payTo = requirements.payTo;
-            const requiredAmount = BigInt(requirements.amount);
+            console.log('[LocalSvmFacilitator] Transaction found. Parsing instructions...');
 
             // Allow for a small margin of error if needed, but 'exact' scheme usually means exact or more
             // Parse instructions
@@ -120,6 +128,7 @@ export class LocalSvmFacilitator implements FacilitatorClient {
                     const parsed = (ix as any).parsed;
                     if (parsed.type === 'transfer') {
                         const info = parsed.info;
+                        console.log(`[LocalSvmFacilitator] Found transfer: ${info.lamports} lamports to ${info.destination}`);
                         if (info.destination === payTo) {
                             paidAmount += BigInt(info.lamports);
                             if (!payer) payer = info.source;
@@ -128,14 +137,18 @@ export class LocalSvmFacilitator implements FacilitatorClient {
                 }
             }
 
+            console.log(`[LocalSvmFacilitator] Total Paid Correctly: ${paidAmount}`);
+
             // Check correctness
             if (paidAmount >= requiredAmount) {
+                console.log('[LocalSvmFacilitator] Verification SUCCESS');
                 return {
                     isValid: true,
                     payer: payer || tx.transaction.message.accountKeys[0].pubkey.toBase58()
                 };
             }
 
+            console.error(`[LocalSvmFacilitator] Verification FAILED. Paid: ${paidAmount}, Required: ${requiredAmount}`);
             return {
                 isValid: false,
                 invalidReason: `Insufficient payment. Required: ${requiredAmount}, Found: ${paidAmount}`,

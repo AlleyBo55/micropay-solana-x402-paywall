@@ -286,6 +286,63 @@ if (result.success) {
                         <div className="p-4 bg-yellow-50 border border-yellow-100 rounded-xl mb-6 text-sm text-yellow-800">
                             <strong>Note:</strong> This mode runs verification logic inside your backend, making it fully self-contained.
                         </div>
+
+                        <h3 className="font-bold text-lg mb-4">Verification Flow</h3>
+                        <div className="mb-6">
+                            <CodeBlock language="mermaid" code={`sequenceDiagram
+    participant User
+    participant App
+    participant Lib as x402 Lib
+    participant RPC as Solana RPC
+    
+    User->>App: Request Premium Content
+    App->>Lib: Create Payment Options
+    Lib-->>User: Return 402 + Payment Link
+    User->>RPC: Submit Transaction
+    User->>App: Send Receipt/Signature
+    App->>Lib: Verify Transaction
+    Lib->>RPC: Get Transaction Status (Local)
+    RPC-->>Lib: Confirmed
+    Lib-->>App: Valid Session Token
+    App-->>User: Unlock Content`} />
+                        </div>
+
+                        <h3 className="font-bold text-lg mb-4">Hosted vs. Self-Sovereign</h3>
+                        <div className="overflow-x-auto mb-8 border border-black/5 rounded-xl">
+                            <table className="w-full text-sm text-left">
+                                <thead className="bg-gray-50 text-gray-500 font-medium">
+                                    <tr>
+                                        <th className="px-4 py-3">Feature</th>
+                                        <th className="px-4 py-3">Hosted Mode (Default)</th>
+                                        <th className="px-4 py-3">Self-Sovereign Mode</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-black/5">
+                                    <tr className="bg-white">
+                                        <td className="px-4 py-3 font-medium">Verification</td>
+                                        <td className="px-4 py-3">Verified by x402.org</td>
+                                        <td className="px-4 py-3">Verified by <span className="font-bold text-purple-600">You</span> (Local RPC)</td>
+                                    </tr>
+                                    <tr className="bg-white">
+                                        <td className="px-4 py-3 font-medium">Trust</td>
+                                        <td className="px-4 py-3">Trust x402 Facilitator</td>
+                                        <td className="px-4 py-3">Trustless / Your Node</td>
+                                    </tr>
+                                    <tr className="bg-white">
+                                        <td className="px-4 py-3 font-medium">Privacy</td>
+                                        <td className="px-4 py-3">Metadata sent to facilitator</td>
+                                        <td className="px-4 py-3">No external data sharing</td>
+                                    </tr>
+                                    <tr className="bg-white">
+                                        <td className="px-4 py-3 font-medium">Setup</td>
+                                        <td className="px-4 py-3">Zero-config</td>
+                                        <td className="px-4 py-3">Requires RPC URL</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <h3 className="font-bold text-lg mb-3">Implementation</h3>
                         <CodeBlock code={`const withMicropay = createX402Middleware({
     walletAddress: 'YOUR_WALLET',
     network: 'devnet',

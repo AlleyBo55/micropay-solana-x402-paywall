@@ -8,6 +8,9 @@ import ArrowRight01Icon from 'hugeicons-react/dist/esm/icons/arrow_right_01_icon
 import ZapIcon from 'hugeicons-react/dist/esm/icons/zap_icon';
 import SourceCodeIcon from 'hugeicons-react/dist/esm/icons/source_code_icon';
 import Shield02Icon from 'hugeicons-react/dist/esm/icons/shield_02_icon';
+import Share01Icon from 'hugeicons-react/dist/esm/icons/share_01_icon';
+import Settings01Icon from 'hugeicons-react/dist/esm/icons/settings_01_icon';
+import Database01Icon from 'hugeicons-react/dist/esm/icons/database_01_icon';
 import Globe02Icon from 'hugeicons-react/dist/esm/icons/globe_02_icon';
 import LockPasswordIcon from 'hugeicons-react/dist/esm/icons/lock_password_icon';
 import Copy01Icon from 'hugeicons-react/dist/esm/icons/copy_01_icon';
@@ -89,7 +92,7 @@ export async function POST(req) {
                                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
                                 <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
                             </span>
-                            <span className="text-xs font-medium text-gray-600">v3.0.4 Stable Release</span>
+                            <span className="text-xs font-medium text-gray-600">v3.1.0 · Self-Sovereign Mode</span>
                         </motion.div>
 
                         <motion.h1
@@ -181,10 +184,10 @@ export async function POST(req) {
                             <div className="bg-[#FAFAFA] rounded-3xl p-10 border border-black/5 shadow-sm flex flex-col justify-between hover:shadow-md transition-all duration-300 group">
                                 <div>
                                     <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center mb-6 text-[#1D1D1F] shadow-sm border border-black/5">
-                                        <Globe02Icon className="w-6 h-6" />
+                                        <Database01Icon className="w-6 h-6" />
                                     </div>
-                                    <h3 className="text-2xl font-semibold mb-3 text-[#1D1D1F]">Global Payments</h3>
-                                    <p className="text-gray-500 leading-relaxed">Accept payments from anyone, anywhere, instantly. No region locks.</p>
+                                    <h3 className="text-2xl font-semibold mb-3 text-[#1D1D1F]">Self-Sovereign</h3>
+                                    <p className="text-gray-500 leading-relaxed">Verify payments locally on your own RPC node. No dependency on external APIs. Trustless.</p>
                                 </div>
                             </div>
 

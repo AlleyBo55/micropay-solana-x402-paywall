@@ -104,6 +104,13 @@ export function PaywallOverlay({
                                 Secured by Solana
                             </p>
                         </div>
+
+                        <div className="mt-4 flex justify-center">
+                            <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-md bg-yellow-50 text-yellow-700 text-[10px] font-bold tracking-wide uppercase border border-yellow-100/50">
+                                <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                                Self-Sovereign Mode
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>

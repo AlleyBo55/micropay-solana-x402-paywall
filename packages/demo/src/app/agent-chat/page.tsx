@@ -183,7 +183,12 @@ export default function AgentChat() {
                     <span className="text-sm font-semibold tracking-tight">Agent Active</span>
                 </div>
 
-                <div className="w-24" /> {/* Spacer for balance */}
+                <div className="flex items-center gap-2">
+                    <span className="hidden md:inline-flex items-center gap-1.5 px-2 py-1 rounded-md bg-yellow-50 text-yellow-700 text-[10px] font-bold tracking-wide uppercase border border-yellow-100/50">
+                        <Zap size={10} />
+                        Self-Sovereign Mode
+                    </span>
+                </div>
             </header>
 
             {/* Main Chat Area */}
