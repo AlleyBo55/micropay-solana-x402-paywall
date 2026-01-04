@@ -92,16 +92,16 @@ export async function POST(req) {
                                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
                                 <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
                             </span>
-                            <span className="text-xs font-medium text-gray-600">v3.1.0 · Self-Sovereign Mode</span>
+                            <span className="text-xs font-medium text-gray-600">v3.3.13 · Self-Sovereign Mode</span>
                         </motion.div>
 
                         <motion.h1
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.6, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-                            className="text-6xl md:text-7xl lg:text-8xl font-bold tracking-tighter text-[#1D1D1F] mb-8 max-w-5xl mx-auto leading-[0.95]"
+                            className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight text-[#1D1D1F] mb-6 sm:mb-8 max-w-5xl mx-auto leading-[1.05] sm:leading-[0.95]"
                         >
-                            Monetize the <br />
+                            Monetize the <br className="sm:hidden" />
                             <span className="bg-clip-text text-transparent bg-gradient-to-r from-gray-900 via-gray-600 to-gray-900 animate-gradient">
                                 AI Agent Economy
                             </span>
@@ -111,7 +111,7 @@ export async function POST(req) {
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.6, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-                            className="text-xl text-gray-500 mb-12 max-w-2xl mx-auto leading-relaxed"
+                            className="text-lg sm:text-xl text-gray-500 mb-10 sm:mb-12 max-w-2xl mx-auto leading-relaxed px-4 sm:px-0"
                         >
                             The standard for HTTP 402 Micropayments. <br className="hidden sm:block" />
                             Streamline API billing, gate premium content, and enable autonomous agent-to-agent transactions on Solana.
@@ -137,40 +137,40 @@ export async function POST(req) {
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             transition={{ duration: 1, delay: 0.8 }}
-                            className="mt-24 pt-10 border-t border-black/5 flex flex-wrap items-center justify-center gap-12 sm:gap-16 opacity-80"
+                            className="mt-16 sm:mt-24 pt-8 sm:pt-10 border-t border-black/5 flex items-center justify-start sm:justify-center gap-8 sm:gap-16 opacity-80 overflow-x-auto pb-4 no-scrollbar -mx-6 px-6 sm:mx-0 sm:px-0"
                         >
                             {/* Solana Logo - Standard */}
-                            <div className="flex items-center gap-2.5 font-bold text-xl text-black">
-                                <img src="https://upload.wikimedia.org/wikipedia/en/b/b9/Solana_logo.png" className="w-8 h-8 object-contain" alt="Solana" />
+                            <div className="flex items-center gap-2.5 font-bold text-lg sm:text-xl text-black flex-shrink-0">
+                                <img src="https://upload.wikimedia.org/wikipedia/en/b/b9/Solana_logo.png" className="w-6 h-6 sm:w-8 sm:h-8 object-contain" alt="Solana" />
                                 <span>Solana</span>
                             </div>
 
                             {/* Next.js Logo - Standard */}
-                            <div className="flex items-center gap-2.5 font-bold text-xl text-black">
-                                <svg className="w-8 h-8" viewBox="0 0 180 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <div className="flex items-center gap-2.5 font-bold text-lg sm:text-xl text-black flex-shrink-0">
+                                <svg className="w-6 h-6 sm:w-8 sm:h-8" viewBox="0 0 180 180" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path fillRule="evenodd" clipRule="evenodd" d="M90 180C139.706 180 180 139.706 180 90C180 40.2944 139.706 0 90 0C40.2944 0 0 40.2944 0 90C0 139.706 40.2944 180 90 180ZM128.496 148.974L56.7483 55.4571H48.5143V124.543H60.0571V70.7351L120.309 148.974H128.496ZM131.486 124.543V55.4571H119.943V124.543H131.486Z" fill="black" />
                                 </svg>
                                 <span>Next.js</span>
                             </div>
 
                             {/* TypeScript Logo - Standard */}
-                            <div className="flex items-center gap-2.5 font-bold text-xl text-[#3178C6]">
-                                <svg className="w-8 h-8 rounded-md" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <div className="flex items-center gap-2.5 font-bold text-lg sm:text-xl text-[#3178C6] flex-shrink-0">
+                                <svg className="w-6 h-6 sm:w-8 sm:h-8 rounded-md" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M0 0H24V24H0V0Z" fill="#3178C6" />
                                     <path d="M11.8 7.5H6.2V9.16H8.2V16.5H9.8V9.16H11.8V7.5Z" fill="white" />
-                                    <path d="M12.5 14.8C12.5 15.6 13.1 15.82 13.8 15.82C14.7 15.82 15.1 15.42 15.1 14.82C15.1 14.52 14.9 14.12 13.8 13.72L13.1 13.52C11.9 13.12 11.4 12.32 11.4 11.42C11.4 9.92 12.6 9.02 14 9.02C15.6 9.02 16.5 10.02 16.5 11.32H15C15 10.72 14.6 10.42 14.1 10.42C13.5 10.42 13 10.82 13 11.32C13 11.72 13.3 12.02 13.9 12.22L14.6 12.42C16 12.92 16.6 13.62 16.6 14.72C16.6 16.42 15.3 17.32 13.7 17.32C12 17.32 10.9 16.22 10.9 14.82H12.5V14.8Z" fill="white" />
+                                    <path d="M12.5 14.8C12.5 15.6 13.1 15.82 13.8 15.82C14.7 15.82 15.1 14.82 15.1 14.82C15.1 14.52 14.9 14.12 13.8 13.72L13.1 13.52C11.9 13.12 11.4 12.32 11.4 11.42C11.4 9.92 12.6 9.02 14 9.02C15.6 9.02 16.5 10.02 16.5 11.32H15C15 10.72 14.6 10.42 14.1 10.42C13.5 10.42 13 10.82 13 11.32C13 11.72 13.3 12.02 13.9 12.22L14.6 12.42C16 12.92 16.6 13.62 16.6 14.72C16.6 16.42 15.3 17.32 13.7 17.32C12 17.32 10.9 16.22 10.9 14.82H12.5V14.8Z" fill="white" />
                                 </svg>
                                 <span>TypeScript</span>
                             </div>
 
                             {/* Express Logo */}
-                            <div className="flex items-center gap-2.5 font-bold text-xl text-black">
-                                <img src="https://upload.wikimedia.org/wikipedia/commons/6/64/Expressjs.png" className="h-6 w-auto object-contain" alt="Express.js" />
-                                {/* <span>Express</span> */}
+                            <div className="flex items-center gap-2.5 font-bold text-lg sm:text-xl text-black flex-shrink-0">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/6/64/Expressjs.png" className="h-4 sm:h-6 w-auto object-contain" alt="Express.js" />
                             </div>
+
                             {/* NPM Logo */}
-                            <div className="flex items-center gap-2.5 font-bold text-xl text-[#CB3837]">
-                                <svg className="w-8 h-8" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <div className="flex items-center gap-2.5 font-bold text-lg sm:text-xl text-[#CB3837] flex-shrink-0">
+                                <svg className="w-6 h-6 sm:w-8 sm:h-8" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M0 256V0H256V256H0Z" fill="#CB3837" />
                                     <path d="M48 48V208H208V48H48ZM176 176H144V96H112V176H80V80H176V176Z" fill="white" />
                                 </svg>
@@ -181,52 +181,52 @@ export async function POST(req) {
                 </section>
 
                 {/* Bento Grid Features - Apple Style */}
-                <section className="py-32 bg-white rounded-[3rem] shadow-[0_-20px_40px_-20px_rgba(0,0,0,0.05)] mx-4 md:mx-8">
-                    <div className="max-w-7xl mx-auto px-6">
-                        <div className="max-w-2xl mb-16">
-                            <h2 className="text-4xl font-bold tracking-tight mb-4 text-[#1D1D1F]">Built for the machine economy.</h2>
-                            <p className="text-lg text-gray-500 leading-relaxed">Traditional subscriptions don't work for AI agents or casual users. Micropay opens up a new revenue model: Pay-per-task.</p>
+                <section className="py-20 sm:py-32 bg-white rounded-[2rem] sm:rounded-[3rem] shadow-[0_-20px_40px_-20px_rgba(0,0,0,0.05)] mx-3 sm:mx-8">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6">
+                        <div className="max-w-2xl mb-12 sm:mb-16 text-center sm:text-left">
+                            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight mb-4 text-[#1D1D1F]">Built for the machine economy.</h2>
+                            <p className="text-base sm:text-lg text-gray-500 leading-relaxed">Traditional subscriptions don't work for AI agents or casual users. Micropay opens up a new revenue model: Pay-per-task.</p>
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                             {/* Feature 1 */}
-                            <div className="md:col-span-2 bg-[#FAFAFA] rounded-3xl p-10 border border-black/5 shadow-sm relative overflow-hidden group hover:shadow-md transition-all duration-300">
-                                <div className="absolute top-0 right-0 p-10 opacity-[0.03] group-hover:opacity-[0.06] transition-opacity transform group-hover:scale-110 duration-500 pointer-events-none">
+                            <div className="md:col-span-2 bg-[#FAFAFA] rounded-3xl p-8 sm:p-10 border border-black/5 shadow-sm relative overflow-hidden group hover:shadow-md transition-all duration-300">
+                                <div className="absolute top-0 right-0 p-10 opacity-[0.03] group-hover:opacity-[0.06] transition-opacity transform group-hover:scale-110 duration-500 pointer-events-none hidden sm:block">
                                     <SourceCodeIcon size={300} className="text-black" />
                                 </div>
                                 <div className="relative z-10">
-                                    <div className="w-12 h-12 bg-black rounded-2xl flex items-center justify-center mb-6 text-white shadow-lg shadow-black/10">
-                                        <SourceCodeIcon className="w-6 h-6" />
+                                    <div className="w-10 h-10 sm:w-12 sm:h-12 bg-black rounded-2xl flex items-center justify-center mb-6 text-white shadow-lg shadow-black/10">
+                                        <SourceCodeIcon className="w-5 h-5 sm:w-6 sm:h-6" />
                                     </div>
-                                    <h3 className="text-2xl font-semibold mb-3 text-[#1D1D1F]">API Monetization</h3>
-                                    <p className="text-gray-500 max-w-md text-lg leading-relaxed">Charge LLMs and Agents per request. No credit cards needed. Just a wallet signature and 0.00005 SOL.</p>
+                                    <h3 className="text-xl sm:text-2xl font-semibold mb-3 text-[#1D1D1F]">API Monetization</h3>
+                                    <p className="text-gray-500 max-w-md text-base sm:text-lg leading-relaxed">Charge LLMs and Agents per request. No credit cards needed. Just a wallet signature and 0.00005 SOL.</p>
                                 </div>
                             </div>
 
                             {/* Feature 2 */}
-                            <div className="bg-[#FAFAFA] rounded-3xl p-10 border border-black/5 shadow-sm flex flex-col justify-between hover:shadow-md transition-all duration-300 group">
+                            <div className="bg-[#FAFAFA] rounded-3xl p-8 sm:p-10 border border-black/5 shadow-sm flex flex-col justify-between hover:shadow-md transition-all duration-300 group">
                                 <div>
-                                    <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center mb-6 text-[#1D1D1F] shadow-sm border border-black/5">
-                                        <Shield02Icon className="w-6 h-6" />
+                                    <div className="w-10 h-10 sm:w-12 sm:h-12 bg-white rounded-2xl flex items-center justify-center mb-6 text-[#1D1D1F] shadow-sm border border-black/5">
+                                        <Shield02Icon className="w-5 h-5 sm:w-6 sm:h-6" />
                                     </div>
-                                    <h3 className="text-2xl font-semibold mb-3 text-[#1D1D1F]">Stateless Auth</h3>
-                                    <p className="text-gray-500 leading-relaxed">No database required. JWT sessions carry the proof of payment cryptographically.</p>
+                                    <h3 className="text-xl sm:text-2xl font-semibold mb-3 text-[#1D1D1F]">Stateless Auth</h3>
+                                    <p className="text-gray-500 leading-relaxed text-sm sm:text-base">No database required. JWT sessions carry the proof of payment cryptographically.</p>
                                 </div>
                             </div>
 
                             {/* Feature 3 */}
-                            <div className="bg-[#FAFAFA] rounded-3xl p-10 border border-black/5 shadow-sm flex flex-col justify-between hover:shadow-md transition-all duration-300 group">
+                            <div className="bg-[#FAFAFA] rounded-3xl p-8 sm:p-10 border border-black/5 shadow-sm flex flex-col justify-between hover:shadow-md transition-all duration-300 group">
                                 <div>
-                                    <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center mb-6 text-[#1D1D1F] shadow-sm border border-black/5">
-                                        <Database01Icon className="w-6 h-6" />
+                                    <div className="w-10 h-10 sm:w-12 sm:h-12 bg-white rounded-2xl flex items-center justify-center mb-6 text-[#1D1D1F] shadow-sm border border-black/5">
+                                        <Database01Icon className="w-5 h-5 sm:w-6 sm:h-6" />
                                     </div>
-                                    <h3 className="text-2xl font-semibold mb-3 text-[#1D1D1F]">Self-Sovereign</h3>
-                                    <p className="text-gray-500 leading-relaxed">Verify payments locally on your own RPC node. No dependency on external APIs. Trustless.</p>
+                                    <h3 className="text-xl sm:text-2xl font-semibold mb-3 text-[#1D1D1F]">Self-Sovereign</h3>
+                                    <p className="text-gray-500 leading-relaxed text-sm sm:text-base">Verify payments locally on your own RPC node. No dependency on external APIs. Trustless.</p>
                                 </div>
                             </div>
 
                             {/* Feature 4 (Code Reveal) */}
-                            <div className="md:col-span-3 bg-[#111111] rounded-3xl p-8 md:p-12 shadow-2xl overflow-hidden text-gray-400 font-mono text-sm relative group ring-1 ring-white/10">
+                            <div className="md:col-span-3 bg-[#111111] rounded-[2rem] sm:rounded-3xl p-6 sm:p-12 shadow-2xl overflow-hidden text-gray-400 font-mono text-xs sm:text-sm relative group ring-1 ring-white/10">
                                 {/* Status Lights */}
                                 <div className="absolute top-6 right-6 flex gap-2">
                                     <div className="w-3 h-3 rounded-full bg-red-500/20 shadow-[0_0_10px_rgba(239,68,68,0.2)]" />
@@ -240,12 +240,12 @@ export async function POST(req) {
                                     className="absolute top-6 left-6 p-2 rounded-lg bg-white/5 hover:bg-white/10 transition-colors text-gray-400 hover:text-white group/copy flex items-center gap-2"
                                     title="Copy to clipboard"
                                 >
-                                    {copied ? <Tick01Icon size={16} className="text-green-400" /> : <Copy01Icon size={16} />}
-                                    <span className="text-xs font-medium">{copied ? 'Copied!' : 'Copy'}</span>
+                                    {copied ? <Tick01Icon size={14} className="text-green-400" /> : <Copy01Icon size={14} />}
+                                    <span className="text-[10px] sm:text-xs font-medium">{copied ? 'Copied!' : 'Copy'}</span>
                                 </button>
 
-                                <div className="mt-8 overflow-x-auto">
-                                    <pre className="text-sm md:text-base leading-relaxed"><code className="language-typescript">
+                                <div className="mt-12 sm:mt-8 overflow-x-auto no-scrollbar">
+                                    <pre className="text-xs sm:text-base leading-relaxed"><code className="language-typescript">
                                         <span className="text-purple-400">import</span> <span className="text-yellow-300">{`{`}</span> <span className="text-blue-400">verifyX402Payment</span> <span className="text-yellow-300">{`}`}</span> <span className="text-purple-400">from</span> <span className="text-green-400">'@alleyboss/micropay'</span>;{'\n'}
                                         {'\n'}
                                         <span className="text-purple-400">export async function</span> <span className="text-blue-400">POST</span>(req) <span className="text-yellow-300">{`{`}</span>{'\n'}
@@ -274,91 +274,116 @@ export async function POST(req) {
                     </div>
                 </section>
 
-                {/* Inspiration Gallery - Apple/Airbnb Aesthetic */}
-                <section className="py-32 bg-[#F5F5F7] mx-4 md:mx-8 rounded-[3rem]">
-                    <div className="max-w-7xl mx-auto px-6">
-                        <div className="max-w-2xl mb-16">
-                            <h2 className="text-4xl font-bold tracking-tight mb-4 text-[#1D1D1F]">Infinite possibilities.</h2>
-                            <p className="text-lg text-gray-500 leading-relaxed">From gated APIs to autonomous agent marketplaces. See what you can build with x402.</p>
+                {/* Inspiration Gallery - Apple/SF Startup Aesthetic */}
+                <section className="py-24 sm:py-40 bg-[#F5F5F7] mx-3 sm:mx-8 rounded-[2.5rem] sm:rounded-[4rem] overflow-hidden">
+                    <div className="max-w-7xl mx-auto px-6 sm:px-12">
+                        <div className="max-w-3xl mb-16 sm:mb-24">
+                            <motion.div
+                                initial={{ opacity: 0, y: 20 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-black/5 text-[10px] font-bold uppercase tracking-widest text-black/50 mb-6"
+                            >
+                                <SparklesIcon size={12} />
+                                Inspiration
+                            </motion.div>
+                            <h2 className="text-4xl sm:text-6xl font-bold tracking-tight mb-6 text-[#1D1D1F] leading-[1.1]">
+                                Infinite possibilities. <br />
+                                <span className="text-black/30">Built with x402.</span>
+                            </h2>
+                            <p className="text-lg sm:text-xl text-gray-500 leading-relaxed max-w-xl">
+                                From autonomous agent marketplaces to gated silicon compute.
+                                The future of micropayments is here.
+                            </p>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div className="grid grid-cols-1 md:grid-cols-12 gap-4 sm:gap-6 lg:auto-rows-[240px]">
                             {[
                                 {
                                     icon: <Globe02Icon className="w-5 h-5" />,
                                     title: "Gated APIs",
-                                    desc: "Monetize per-request.",
-                                    image: "/inspiration-gated.png",
+                                    desc: "Monetize every request with zero friction. Perfect for LLM providers and serverless endpoints.",
+                                    image: "/inspiration-gated-new.png",
+                                    className: "md:col-span-8 md:row-span-2",
                                     color: "from-blue-500/80 to-blue-600/80"
                                 },
                                 {
                                     icon: <SparklesIcon className="w-5 h-5" />,
-                                    title: "Agent Hierarchies",
+                                    title: "Hierarchies",
                                     desc: "Agents hiring agents.",
-                                    image: "/inspiration-silk.png",
+                                    image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=1200&auto=format&fit=crop",
+                                    className: "md:col-span-4 md:row-span-1",
                                     color: "from-purple-500/80 to-purple-600/80"
                                 },
                                 {
                                     icon: <ZapIcon className="w-5 h-5" />,
                                     title: "Metered Compute",
                                     desc: "Pay for GPU ms.",
-                                    image: "/inspiration-metered.png",
+                                    image: "https://images.unsplash.com/photo-1639322537228-f710d846310a?q=80&w=1200&auto=format&fit=crop",
+                                    className: "md:col-span-4 md:row-span-2",
                                     color: "from-orange-500/80 to-orange-600/80"
                                 },
                                 {
                                     icon: <Share01Icon className="w-5 h-5" />,
-                                    title: "Data Marketplace",
-                                    desc: "Buy datasets autonomously.",
-                                    image: "/inspiration-spheres.png",
+                                    title: "Data Markets",
+                                    desc: "Autonomous datasets.",
+                                    image: "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?q=80&w=1200&auto=format&fit=crop",
+                                    className: "md:col-span-4 md:row-span-1",
                                     color: "from-green-500/80 to-green-600/80"
                                 },
                                 {
                                     icon: <Settings01Icon className="w-5 h-5" />,
                                     title: "Tool Rental",
-                                    desc: "Rent premium tools.",
-                                    image: "/inspiration-tools.png",
+                                    desc: "On-demand high precision.",
+                                    image: "https://images.unsplash.com/photo-1614728263952-84ea256f9679?q=80&w=1200&auto=format&fit=crop",
+                                    className: "md:col-span-4 md:row-span-1",
                                     color: "from-pink-500/80 to-pink-600/80"
                                 },
                                 {
                                     icon: <LockPasswordIcon className="w-5 h-5" />,
-                                    title: "Model Access",
-                                    desc: "Gate fine-tuned models.",
-                                    image: "/inspiration-data.png",
+                                    title: "Model Fine-tuning Access",
+                                    desc: "Gate specialized intelligence with on-chain verification and anti-replay protection.",
+                                    image: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1200&auto=format&fit=crop",
+                                    className: "md:col-span-8 md:row-span-1",
                                     color: "from-indigo-500/80 to-indigo-600/80"
                                 }
                             ].map((item, i) => (
                                 <motion.div
-                                    initial={{ opacity: 0, y: 20 }}
+                                    initial={{ opacity: 0, y: 30 }}
                                     whileInView={{ opacity: 1, y: 0 }}
                                     viewport={{ once: true }}
-                                    transition={{ delay: i * 0.1 }}
+                                    transition={{ delay: i * 0.1, duration: 0.8, ease: [0.23, 1, 0.32, 1] }}
                                     key={i}
-                                    className="group relative h-64 rounded-[2rem] overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 cursor-default bg-white"
+                                    className={`group relative min-h-[320px] md:min-h-0 rounded-[2rem] overflow-hidden bg-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_50px_rgba(0,0,0,0.1)] transition-all duration-700 hover:-translate-y-1 cursor-default ${item.className}`}
                                 >
-                                    {/* Background Image with Zoom */}
+                                    {/* Background Image with sophisticated zoom and parallax-ish feel */}
                                     <div className="absolute inset-0">
                                         <Image
                                             src={item.image}
                                             alt={item.title}
                                             fill
-                                            className="object-cover transition-transform duration-700 group-hover:scale-110"
+                                            className="object-cover transition-transform duration-1000 ease-out group-hover:scale-105"
                                         />
-                                        <div className="absolute inset-0 bg-white/10 backdrop-blur-[2px]" />
+                                        <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                                        {/* Subtle overlay to ensure text readability */}
+                                        <div className="absolute inset-0 bg-gradient-to-b from-black/0 via-black/5 to-black/60 pointer-events-none" />
                                     </div>
 
                                     {/* Content Overlay */}
-                                    <div className="absolute inset-x-0 bottom-0 p-6 bg-gradient-to-t from-black/60 via-black/30 to-transparent pt-20">
-                                        <div className="relative z-10">
-                                            <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${item.color} backdrop-blur-md flex items-center justify-center mb-3 text-white shadow-lg`}>
+                                    <div className="absolute inset-0 flex flex-col justify-end p-8 sm:p-10">
+                                        <div className="relative z-10 translate-y-4 group-hover:translate-y-0 transition-transform duration-500 ease-out">
+                                            <div className={`w-12 h-12 rounded-2xl bg-white/10 backdrop-blur-xl border border-white/20 flex items-center justify-center mb-4 text-white shadow-xl opacity-0 group-hover:opacity-100 scale-90 group-hover:scale-100 transition-all duration-500`}>
                                                 {item.icon}
                                             </div>
-                                            <h3 className="text-xl font-bold text-white mb-1 tracking-tight">{item.title}</h3>
-                                            <p className="text-white/80 text-sm font-medium leading-relaxed">{item.desc}</p>
+                                            <h3 className="text-xl sm:text-2xl font-bold text-white mb-2 tracking-tight group-hover:mb-3 transition-all duration-500">{item.title}</h3>
+                                            <p className="text-white/70 text-sm sm:text-base font-medium leading-relaxed max-w-sm opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                                                {item.desc}
+                                            </p>
                                         </div>
                                     </div>
 
-                                    {/* Shine Effect */}
-                                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 bg-gradient-to-tr from-white/10 to-transparent transition-opacity duration-500 pointer-events-none" />
+                                    {/* Premium Border Shine */}
+                                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none ring-1 ring-inset ring-white/20 rounded-[2rem]" />
                                 </motion.div>
                             ))}
                         </div>
@@ -384,31 +409,31 @@ export async function POST(req) {
                         {/* Agent Chat Demo Banner - Apple/Gemini Aesthetic */}
                         <Link
                             href="/agent-chat"
-                            className="mb-16 block group relative overflow-hidden rounded-[2.5rem] bg-white border border-gray-100 shadow-[0_8px_40px_-12px_rgba(0,0,0,0.08)] hover:shadow-[0_20px_60px_-16px_rgba(0,0,0,0.12)] transition-all duration-500 hover:-translate-y-1"
+                            className="mb-12 sm:mb-16 block group relative overflow-hidden rounded-[2rem] sm:rounded-[2.5rem] bg-white border border-gray-100 shadow-[0_8px_40px_-12px_rgba(0,0,0,0.08)] hover:shadow-[0_20px_60px_-16px_rgba(0,0,0,0.12)] transition-all duration-500 hover:-translate-y-1"
                         >
                             <div className="absolute inset-0 bg-gradient-to-br from-blue-50/50 via-white to-purple-50/30 opacity-100" />
 
-                            <div className="relative z-10 flex flex-col md:flex-row items-center justify-between p-10 md:p-14 gap-10">
-                                <div className="max-w-2xl">
+                            <div className="relative z-10 flex flex-col md:flex-row items-center justify-between p-8 sm:p-14 gap-8 sm:gap-10">
+                                <div className="max-w-2xl text-center md:text-left">
                                     <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-black/5 backdrop-blur-md mb-6 border border-black/5">
                                         <SparklesIcon size={14} className="text-black" />
-                                        <span className="text-[11px] font-semibold tracking-wide uppercase text-gray-600">Autonomous Agent</span>
+                                        <span className="text-[10px] sm:text-[11px] font-semibold tracking-wide uppercase text-gray-600">Autonomous Agent</span>
                                     </div>
 
-                                    <h3 className="text-4xl md:text-5xl font-semibold text-[#1D1D1F] tracking-tight mb-4 leading-[1.1]">
-                                        Experience the future <br />
+                                    <h3 className="text-3xl sm:text-5xl font-semibold text-[#1D1D1F] tracking-tight mb-4 leading-[1.1]">
+                                        Experience the future <br className="hidden sm:block" />
                                         <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">of AI commerce.</span>
                                     </h3>
 
-                                    <p className="text-xl text-gray-500 font-light leading-relaxed max-w-lg">
+                                    <p className="text-base sm:text-xl text-gray-500 font-light leading-relaxed max-w-lg">
                                         Chat with an agent that pays its own way. <br className="hidden md:block" />
                                         Zero friction. Autonomous execution.
                                     </p>
                                 </div>
 
-                                <div className="relative group-hover:scale-105 transition-transform duration-700 ease-[0.16,1,0.3,1]">
+                                <div className="relative group-hover:scale-105 transition-transform duration-700 ease-[0.16,1,0.3,1] scale-90 sm:scale-100">
                                     {/* Abstract UI representation */}
-                                    <div className="w-64 aspect-[4/3] rounded-2xl bg-white shadow-2xl border border-gray-100 p-4 flex flex-col gap-3 rotate-3 group-hover:rotate-6 transition-transform duration-500">
+                                    <div className="w-56 sm:w-64 aspect-[4/3] rounded-2xl bg-white shadow-2xl border border-gray-100 p-4 flex flex-col gap-3 rotate-3 group-hover:rotate-6 transition-transform duration-500">
                                         <div className="flex gap-2 mb-2">
                                             <div className="w-2 h-2 rounded-full bg-red-400/20" />
                                             <div className="w-2 h-2 rounded-full bg-yellow-400/20" />
@@ -422,9 +447,9 @@ export async function POST(req) {
                                         </div>
                                     </div>
 
-                                    <div className="absolute -bottom-6 -right-6">
-                                        <div className="h-14 w-14 rounded-full bg-black text-white flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform duration-300">
-                                            <ArrowRight01Icon size={24} />
+                                    <div className="absolute -bottom-4 -right-4 sm:-bottom-6 sm:-right-6">
+                                        <div className="h-12 w-12 sm:h-14 sm:w-14 rounded-full bg-black text-white flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform duration-300">
+                                            <ArrowRight01Icon size={20} className="sm:size-24" />
                                         </div>
                                     </div>
                                 </div>

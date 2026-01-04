@@ -59,7 +59,7 @@ const OrbLoader = () => (
             transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
             className="absolute inset-0 rounded-full bg-gradient-to-tr from-blue-500 via-purple-500 to-pink-500 blur-sm opacity-60"
         />
-        <div className="relative w-2 h-2 bg-white rounded-full shadow-[0_0_10px_rgba(255,255,255,0.8)] animate-pulse" />
+        <div className="relative w-2 h-2 bg-blue-600 rounded-full shadow-[0_0_10px_rgba(37,99,235,0.4)] animate-pulse" />
     </div>
 );
 
@@ -292,7 +292,7 @@ export default function AgentChat() {
                 </div>
 
                 {/* Wallet Balance */}
-                <div className="flex items-center gap-1.5 sm:gap-3">
+                <div className="flex items-center gap-1 sm:gap-3">
                     <motion.button
                         whileHover={{ rotate: 180 }}
                         transition={{ duration: 0.5 }}
@@ -301,10 +301,10 @@ export default function AgentChat() {
                     >
                         <RefreshCw size={12} className={`sm:w-3.5 sm:h-3.5 text-gray-400 group-hover:text-gray-600 ${isLoadingBalance ? 'animate-spin' : ''}`} />
                     </motion.button>
-                    <div className="flex items-center gap-1 sm:gap-2">
-                        <Wallet size={12} className="sm:w-3.5 sm:h-3.5 text-gray-400" />
-                        <span className="text-[10px] sm:text-xs font-medium tabular-nums whitespace-nowrap">
-                            {walletBalance?.balanceSol?.toFixed(4) ?? '0.000'} SOL
+                    <div className="flex items-center gap-1 sm:gap-2 bg-black/5 px-2.5 py-1 rounded-full border border-black/5 shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)]">
+                        <Wallet size={10} className="sm:w-3 sm:h-3 text-gray-400" />
+                        <span className="text-[10px] sm:text-xs font-semibold tabular-nums whitespace-nowrap text-black/80">
+                            {walletBalance?.balanceSol?.toFixed(3) ?? '0.000'} <span className="text-[8px] opacity-40">SOL</span>
                         </span>
                     </div>
                 </div>
@@ -330,39 +330,39 @@ export default function AgentChat() {
                                 {/* Hero Icon */}
                                 <motion.div
                                     whileHover={{ scale: 1.05 }}
-                                    className="w-24 h-24 rounded-3xl bg-black/5 shadow-2xl flex items-center justify-center mb-8 relative overflow-hidden group cursor-pointer"
+                                    className="w-20 h-20 sm:w-24 sm:h-24 rounded-[2rem] sm:rounded-3xl bg-black/5 shadow-2xl flex items-center justify-center mb-8 relative overflow-hidden group cursor-pointer"
                                 >
                                     <SiriOrb variant={demoMode === 'agent-to-agent' ? 'dual' : 'single'} />
                                 </motion.div>
 
-                                <h1 className="text-3xl font-semibold tracking-tight text-[#1D1D1F] mb-3">
+                                <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-[#1D1D1F] mb-3 px-4">
                                     {demoMode === 'agent-to-agent' ? 'Agent Collaboration' : 'Micropayment Intelligence'}
                                 </h1>
-                                <p className="text-gray-500 max-w-sm mx-auto text-base leading-relaxed mb-12">
+                                <p className="text-gray-500 max-w-sm mx-auto text-sm sm:text-base leading-relaxed mb-8 sm:mb-12 px-6">
                                     {demoMode === 'agent-to-agent' ? (
-                                        <span className="block text-sm max-w-md mx-auto mt-2 text-gray-500">
+                                        <span className="block text-xs sm:text-sm max-w-md mx-auto mt-2 text-gray-500">
                                             This demo simulates an <strong>Autonomous Agent Economy</strong>.
                                             <br className="mb-2" />
-                                            You are chatting with a <strong>Research Agent</strong>. If you ask for expert advice, it will autonomously <strong>hire & pay</strong> a specialized <strong>Analysis Agent</strong> (0.001 SOL) to do the work.
+                                            Ask for expert advice, and the agent will autonomously <strong>hire & pay</strong> specialists (0.001 SOL).
                                         </span>
                                     ) : (
-                                        <span className="block text-sm max-w-md mx-auto mt-2 text-gray-500">
+                                        <span className="block text-xs sm:text-sm max-w-md mx-auto mt-2 text-gray-500">
                                             This demo simulates <strong>Consumer-to-Agent Payments</strong>.
                                             <br className="mb-2" />
-                                            Ask for <strong>"Premium Analysis"</strong> and the AI will autonomously request a <strong>micropayment</strong> (0.002 SOL) from your wallet before generating high-value insights.
+                                            Ask for <strong>"Premium Analysis"</strong> and the AI will request a <strong>micropayment</strong> (0.002 SOL) before delivering.
                                         </span>
                                     )}
                                 </p>
 
                                 {/* Quick Prompts */}
-                                <div className="grid grid-cols-2 gap-3 w-full max-w-sm">
+                                <div className="grid grid-cols-2 gap-2 sm:gap-3 w-[90%] sm:w-full max-w-sm">
                                     {examplePrompts.map((prompt, i) => (
                                         <motion.button
                                             key={i}
                                             whileHover={{ scale: 1.02, backgroundColor: "rgba(255,255,255,0.9)" }}
                                             whileTap={{ scale: 0.98 }}
                                             onClick={() => setInput(prompt)}
-                                            className="px-4 py-3 bg-white/60 border border-white/60 shadow-sm rounded-2xl text-xs font-medium text-gray-600 hover:text-black transition-colors text-left"
+                                            className="px-3 py-2.5 sm:px-4 sm:py-3 bg-white/60 border border-white/60 shadow-sm rounded-2xl text-[10px] sm:text-xs font-semibold text-gray-600 hover:text-black transition-colors text-left"
                                         >
                                             {prompt}
                                         </motion.button>
@@ -373,95 +373,137 @@ export default function AgentChat() {
                     </AnimatePresence>
 
                     {/* Chat Messages */}
-                    <div className="space-y-8 flex flex-col w-full relative z-10">
+                    <div className="space-y-12 flex flex-col w-full relative z-10 pb-12">
                         {messages.map((message) => (
                             <motion.div
                                 layout
                                 key={message.id}
-                                initial={{ opacity: 0, y: 20, scale: 0.95 }}
+                                initial={{ opacity: 0, y: 30, scale: 0.98 }}
                                 animate={{ opacity: 1, y: 0, scale: 1 }}
-                                transition={{ type: "spring", bounce: 0.4, duration: 0.6 }}
-                                className={`relative z-10 ${message.role === 'user' ? 'self-end' : 'self-start w-full'}`}
+                                transition={{ type: "spring", bounce: 0.3, duration: 0.8 }}
+                                className={`flex flex-col ${message.role === 'user' ? 'items-end' : 'items-start'} w-full transition-all duration-500`}
                             >
                                 {message.role === 'user' ? (
-                                    // User Message: Solid Color (Apple gray)
-                                    <motion.div
-                                        layoutId={`message-${message.id}`}
-                                        className="bg-[#2C2C2E] text-white px-5 py-3 rounded-[1.5rem] shadow-sm max-w-[85%] ml-auto text-[15px] leading-relaxed font-medium tracking-wide"
-                                    >
-                                        {message.content}
-                                    </motion.div>
+                                    <div className="max-w-[85%] group">
+                                        <div className="flex items-center gap-2 mb-2 justify-end pr-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                            <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">You</span>
+                                        </div>
+                                        <motion.div
+                                            layoutId={`message-${message.id}`}
+                                            className="bg-white/90 backdrop-blur-md text-[#1D1D1F] px-6 py-4 rounded-[2rem] shadow-[0_4px_12px_rgba(0,0,0,0.05)] text-[16px] leading-[1.5] font-semibold tracking-tight border border-black/5"
+                                        >
+                                            {message.content}
+                                        </motion.div>
+                                    </div>
                                 ) : (
-                                    // Agent Message: Clean Glass/Solid
-                                    <div className="max-w-full group">
-                                        <div className="flex items-center gap-3 mb-3 pl-4">
-                                            {/* Agent Identity: Solid Colors */}
-                                            <div className={`w-6 h-6 rounded-full flex items-center justify-center shadow-sm ${message.agentName === 'Analysis Agent'
-                                                ? 'bg-orange-500 text-white'
-                                                : 'bg-black text-white'
+                                    <div className="w-full group">
+                                        <div className="flex items-center gap-3 mb-4 pl-1">
+                                            <div className={`w-8 h-8 rounded-xl flex items-center justify-center shadow-lg transform transition-transform group-hover:scale-110 ${message.agentName === 'Research Agent'
+                                                ? 'bg-gradient-to-br from-indigo-500 to-purple-600'
+                                                : 'bg-gradient-to-br from-blue-500 to-cyan-600'
                                                 }`}>
-                                                {message.agentName === 'Analysis Agent' ? <Cpu size={12} /> : <Sparkles size={12} />}
+                                                {message.agentName === 'Research Agent' ? <Users size={16} className="text-[#1D1D1F]" /> : <Sparkles size={16} className="text-[#1D1D1F]" />}
                                             </div>
-                                            <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                                                {message.agentName || 'Intelligence'}
-                                            </span>
+                                            <div className="flex flex-col">
+                                                <span className="text-[11px] font-bold text-[#1D1D1F] uppercase tracking-widest">
+                                                    {message.agentName || 'x402 Intelligence'}
+                                                </span>
+                                                <span className="text-[9px] text-[#1D1D1F]/40 font-medium tracking-wide">AI AGENT · SOLANA PROTOCOL</span>
+                                            </div>
                                         </div>
 
                                         <motion.div
                                             layout
-                                            className="relative bg-white/80 backdrop-blur-xl border border-white/50 shadow-[0_8px_30px_rgba(0,0,0,0.04)] rounded-[2rem] p-8 w-fit min-w-0 max-w-full"
+                                            className="relative bg-white/70 backdrop-blur-2xl border border-white/80 shadow-[0_20px_50px_rgba(0,0,0,0.05)] rounded-[2.5rem] p-6 sm:p-10 w-full overflow-hidden transition-all duration-500 hover:shadow-[0_30px_60px_rgba(0,0,0,0.08)] ring-1 ring-black/5"
                                         >
-                                            {/* Glowing edge only for active thinking, simplified */}
+                                            {/* Gemini-style subtle aurora shimmer */}
                                             <AnimatePresence>
-                                                {(message.thinkingSteps?.some(s => s.type === 'thinking' || s.type === 'paying') || message.isPremium) && (
+                                                {(isLoading || message.isPremium) && (
                                                     <motion.div
-                                                        key="glow"
+                                                        key="aurora"
                                                         initial={{ opacity: 0 }}
                                                         animate={{ opacity: 1 }}
                                                         exit={{ opacity: 0 }}
+                                                        className="absolute inset-0 pointer-events-none overflow-hidden"
                                                     >
-                                                        <SiriGlow />
+                                                        <div className="absolute -inset-[100%] opacity-[0.08] animate-[spin_20s_linear_infinite] bg-[conic-gradient(from_0deg,transparent_0deg,#3b82f6_60deg,#8b5cf6_120deg,#ec4899_180deg,#8b5cf6_240deg,#3b82f6_300deg,transparent_360deg)] blur-[100px]" />
                                                     </motion.div>
                                                 )}
                                             </AnimatePresence>
 
-                                            {/* Content */}
-                                            <div className="relative z-10 w-full">
-                                                {/* Collapsible Thinking Process */}
+                                            <div className="relative z-10">
+                                                {/* Perplexity-style Thinking Process */}
                                                 {message.thinkingSteps && message.thinkingSteps.length > 0 && (
                                                     <ThinkingProcess steps={message.thinkingSteps} />
                                                 )}
 
-
-                                                {/* Markdown Content */}
+                                                {/* OpenAI-style Crisp Content */}
                                                 {message.content ? (
-                                                    <motion.div layout className="prose prose-sm max-w-none prose-p:leading-relaxed prose-headings:text-gray-900 prose-p:text-gray-700">
-                                                        {message.content.split('\n').map((line, i) => (
-                                                            <div key={i}>
-                                                                {line.startsWith('**') ? (
-                                                                    <p className="mt-4 mb-2 font-semibold text-black">{line.replace(/\*\*/g, '')}</p>
-                                                                ) : (
-                                                                    <p className="mb-2">{line}</p>
-                                                                )}
-                                                            </div>
-                                                        ))}
-                                                    </motion.div>
+                                                    <div
+                                                        className="prose-chat prose-lg max-w-none"
+                                                    >
+                                                        {message.content.split('\n').map((line, i) => {
+                                                            const trimmedLine = line.trim();
+                                                            if (!trimmedLine) return <div key={i} className="h-4" />;
+
+                                                            if (trimmedLine.startsWith('###')) {
+                                                                return <h3 key={i} className="text-[19px] sm:text-xl mt-10 mb-5 tracking-tight">{trimmedLine.replace('###', '').trim()}</h3>;
+                                                            }
+                                                            if (trimmedLine.startsWith('##')) {
+                                                                return <h2 key={i} className="text-[22px] sm:text-2xl mt-12 mb-6 tracking-tight">{trimmedLine.replace('##', '').trim()}</h2>;
+                                                            }
+                                                            if (trimmedLine.startsWith('- ') || trimmedLine.startsWith('* ')) {
+                                                                return (
+                                                                    <div key={i} className="flex gap-4 items-start mb-4 group/item">
+                                                                        <div className="w-1.5 h-1.5 rounded-full bg-blue-600 mt-[11px] transition-transform group-hover/item:scale-125 shadow-[0_0_8px_rgba(37,99,235,0.4)]" />
+                                                                        <p className="m-0 flex-1 font-medium">
+                                                                            {trimmedLine.substring(2).split(/(\*\*.*?\*\*)/).map((part, j) => {
+                                                                                if (part.startsWith('**') && part.endsWith('**')) {
+                                                                                    return <strong key={j}>{part.slice(2, -2)}</strong>;
+                                                                                }
+                                                                                return part;
+                                                                            })}
+                                                                        </p>
+                                                                    </div>
+                                                                );
+                                                            }
+                                                            return (
+                                                                <p key={i} className="mb-5 font-medium leading-relaxed">
+                                                                    {trimmedLine.split(/(\*\*.*?\*\*)/).map((part, j) => {
+                                                                        if (part.startsWith('**') && part.endsWith('**')) {
+                                                                            return <strong key={j} className="tracking-tight">{part.slice(2, -2)}</strong>;
+                                                                        }
+                                                                        return part;
+                                                                    })}
+                                                                </p>
+                                                            );
+                                                        })}
+                                                    </div>
                                                 ) : !message.thinkingSteps?.length && (
-                                                    <OrbLoader />
+                                                    <div className="flex items-center gap-4 text-[#1D1D1F]/40">
+                                                        <OrbLoader />
+                                                        <span className="text-[11px] font-black uppercase tracking-[0.2em] animate-pulse">Initializing Neural Link...</span>
+                                                    </div>
                                                 )}
 
-                                                {/* Premium Footer: Solid Color */}
+                                                {/* Premium Footer with x402 Branding */}
                                                 {message.isPremium && (
                                                     <motion.div
                                                         layout
                                                         initial={{ opacity: 0, y: 10 }}
                                                         animate={{ opacity: 1, y: 0 }}
-                                                        className="mt-6 flex items-center gap-2 pt-4 border-t border-black/5"
+                                                        className="mt-12 flex items-center justify-between pt-6 border-t border-black/5"
                                                     >
-                                                        <div className="h-5 px-2 bg-black rounded text-[10px] font-bold text-white flex items-center tracking-wide uppercase">
-                                                            Premium
+                                                        <div className="flex items-center gap-3">
+                                                            <div className="px-3 py-1 bg-[#1D1D1F] rounded-lg text-[10px] font-black text-gray-400 tracking-tighter uppercase">
+                                                                x402 UNLOCKED
+                                                            </div>
+                                                            <span className="text-[11px] text-[#1D1D1F]/50 font-bold tracking-tight">PREMIUM INTELLIGENCE</span>
                                                         </div>
-                                                        <span className="text-[10px] text-gray-400 font-medium">Unlocked via x402 Micropayment</span>
+                                                        <div className="flex items-center gap-2 opacity-30 hover:opacity-100 transition-opacity">
+                                                            <CheckCircle2 size={12} className="text-green-600" />
+                                                            <span className="text-[9px] font-bold uppercase tracking-widest">Verified on Solana</span>
+                                                        </div>
                                                     </motion.div>
                                                 )}
                                             </div>
@@ -477,25 +519,22 @@ export default function AgentChat() {
 
             {/* Input Floating Bar (Apple Intelligence Style) */}
             <div className="fixed bottom-8 left-0 right-0 px-4 md:px-0 z-50">
-                <div className={`max-w-2xl mx-auto transition-all duration-500 ${isLoading ? 'scale-95 opacity-80 pointer-events-none' : 'scale-100 opacity-100'}`}>
+                <div className={`max-w-2xl mx-auto transition-all duration-700 ${isLoading ? 'scale-[0.98] opacity-80' : 'scale-100 opacity-100'}`}>
                     <form
                         onSubmit={handleSubmit}
-                        className="relative group bg-white/80 hover:bg-white/90 focus-within:bg-white backdrop-blur-[20px] rounded-[2rem] shadow-[0_20px_40px_-12px_rgba(0,0,0,0.12)] border border-white/20 ring-1 ring-black/5 transition-all duration-300 overflow-hidden"
+                        className="relative group bg-white/70 hover:bg-white/80 focus-within:bg-white/90 backdrop-blur-[32px] rounded-[2.5rem] shadow-[0_20px_50px_-12px_rgba(0,0,0,0.15)] border border-white/40 ring-1 ring-black/5 transition-all duration-500"
                     >
-                        {/* Glowing Border Animation on Focus/Active */}
-                        <div className="absolute inset-x-0 bottom-0 h-[2px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 opacity-0 group-focus-within:opacity-100 transition-opacity duration-500" />
-
-                        <div className="relative flex items-center px-2 py-2">
-                            <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-400 group-focus-within:text-purple-600 transition-colors">
-                                <Command size={18} />
+                        <div className="relative flex items-center px-3 py-2.5">
+                            <div className="w-12 h-12 rounded-full bg-black/[0.03] flex items-center justify-center text-gray-400 group-focus-within:text-indigo-600 transition-all duration-500">
+                                <Command size={20} className="transform group-focus-within:rotate-12" />
                             </div>
 
                             <input
                                 type="text"
                                 value={input}
                                 onChange={(e) => setInput(e.target.value)}
-                                placeholder={demoMode === 'agent-to-agent' ? "Ask the Research Agent..." : "Ask x402 Intelligence..."}
-                                className="flex-1 bg-transparent px-4 py-3 text-[17px] placeholder-gray-400 text-gray-900 focus:outline-none font-medium tracking-tight"
+                                placeholder={demoMode === 'agent-to-agent' ? "Analyze market and collaborate..." : "Request premium intelligence..."}
+                                className="flex-1 bg-transparent px-5 py-4 text-[17px] placeholder-gray-500 text-[#1D1D1F] focus:outline-none font-medium leading-relaxed tracking-tight"
                                 disabled={isLoading}
                                 autoFocus
                             />
@@ -503,17 +542,23 @@ export default function AgentChat() {
                             <motion.button
                                 type="submit"
                                 disabled={!input.trim()}
-                                whileHover={{ scale: 1.05 }}
+                                whileHover={{ scale: 1.05, y: -2 }}
                                 whileTap={{ scale: 0.95 }}
-                                className="w-10 h-10 rounded-full bg-black text-white flex items-center justify-center disabled:opacity-0 disabled:scale-75 transition-all duration-200 shadow-lg shadow-black/20"
+                                className="w-12 h-12 rounded-full bg-[#1D1D1F] text-gray-400 flex items-center justify-center disabled:opacity-0 disabled:scale-75 transition-all duration-300 shadow-xl shadow-black/20 group-hover:shadow-black/30"
                             >
-                                <ArrowUp size={20} strokeWidth={2.5} />
+                                <ArrowUp size={22} strokeWidth={3} />
                             </motion.button>
                         </div>
                     </form>
-                    <p className="text-center text-[10px] text-gray-400 mt-4 font-medium tracking-wide uppercase opacity-60">
-                        x402 Protocol · Solana Devnet
-                    </p>
+                    <div className="flex justify-center gap-6 mt-6">
+                        <p className="text-[10px] text-gray-400 font-black tracking-[0.2em] uppercase opacity-40">
+                            Powered by x402 Protocol
+                        </p>
+                        <div className="h-3 w-px bg-gray-300 opacity-20" />
+                        <p className="text-[10px] text-gray-400 font-black tracking-[0.2em] uppercase opacity-40">
+                            Solana Mainnet Parity
+                        </p>
+                    </div>
                 </div>
             </div>
 
@@ -527,22 +572,26 @@ const ThinkingProcess = ({ steps }: { steps: ThinkingStep[] }) => {
     const isError = steps.some(s => s.type === 'error');
 
     return (
-        <div className="mb-6 w-full">
+        <div className="mb-10 w-full group/process">
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="flex items-center gap-2 text-xs font-semibold text-gray-500 hover:text-black transition-colors mb-2 group"
+                className="flex items-center gap-3 py-2 px-4 rounded-xl bg-black/[0.03] hover:bg-black/[0.06] transition-all duration-300 w-fit border border-black/[0.02]"
             >
-                {isError ? (
-                    <XCircle size={14} className="text-red-500" />
-                ) : isComplete ? (
-                    <CheckCircle2 size={14} className="text-green-500" />
-                ) : (
-                    <Loader2 size={14} className="animate-spin text-blue-500" />
-                )}
-                <span>
-                    {isError ? 'Process failed' : isComplete ? 'Process complete' : 'Thinking...'}
+                <div className="flex items-center justify-center w-5 h-5">
+                    {isError ? (
+                        <XCircle size={14} className="text-red-500" />
+                    ) : isComplete ? (
+                        <CheckCircle2 size={14} className="text-green-500" />
+                    ) : (
+                        <Loader2 size={14} className="animate-spin text-blue-500" />
+                    )}
+                </div>
+                <span className="text-[11px] font-black uppercase tracking-[0.15em] text-[#1D1D1F]/50 group-hover/process:text-[#1D1D1F] transition-colors">
+                    {isError ? 'PROCESS FAILED' : isComplete ? 'CHAIN EXECUTION COMPLETE' : 'AI THOUGHT PROCESS'}
                 </span>
-                {isOpen ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
+                <div className={`transition-transform duration-500 ${isOpen ? 'rotate-180' : 'rotate-0'}`}>
+                    <ChevronDown size={14} className="text-[#1D1D1F]/40" />
+                </div>
             </button>
 
             <AnimatePresence>
@@ -551,26 +600,45 @@ const ThinkingProcess = ({ steps }: { steps: ThinkingStep[] }) => {
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: 'auto' }}
                         exit={{ opacity: 0, height: 0 }}
-                        className="pl-2 border-l-2 border-gray-100 space-y-2 overflow-hidden"
+                        className="mt-4 pl-4 space-y-3 overflow-hidden"
                     >
                         {steps.map((step, idx) => (
                             <motion.div
                                 key={step.id || idx}
                                 initial={{ opacity: 0, x: -10 }}
                                 animate={{ opacity: 1, x: 0 }}
-                                className="flex items-center gap-3 py-1"
+                                transition={{ delay: idx * 0.05 }}
+                                className="flex items-start gap-4 py-1.5 relative group/step"
                             >
-                                <div className="text-gray-400">
-                                    {step.type === 'thinking' && <Loader2 size={12} className="animate-spin" />}
-                                    {step.type === 'paying' && <CreditCard size={12} className="text-purple-500" />}
-                                    {step.type === 'confirmed' && <CheckCircle2 size={12} className="text-green-500" />}
-                                    {step.type === 'error' && <XCircle size={12} className="text-red-500" />}
-                                    {step.type === 'complete' && <Sparkles size={12} className="text-blue-500" />}
+                                {/* Vertical Connecting Line */}
+                                {idx !== steps.length - 1 && (
+                                    <div className="absolute left-[9px] top-6 bottom-[-12px] w-px bg-gradient-to-b from-gray-200 to-gray-200/20" />
+                                )}
+
+                                <div className={`relative z-10 flex items-center justify-center w-[18px] h-[18px] rounded-full bg-gray-100 shadow-sm ring-1 ring-black/5 transition-transform group-hover/step:scale-110 shrink-0 mt-0.5`}>
+                                    {step.type === 'thinking' && <Loader2 size={10} className="animate-spin text-blue-500" />}
+                                    {step.type === 'paying' && <CreditCard size={10} className="text-purple-500" />}
+                                    {step.type === 'confirmed' && <CheckCircle2 size={10} className="text-green-500" />}
+                                    {step.type === 'error' && <XCircle size={10} className="text-red-500" />}
+                                    {step.type === 'complete' && <Sparkles size={10} className="text-blue-500" />}
                                 </div>
-                                <span className="text-xs text-gray-600">
-                                    {step.agent && <strong className="text-gray-900 mr-1">{step.agent}</strong>}
-                                    {step.message}
-                                </span>
+                                <div className="flex flex-col">
+                                    <div className="flex items-center gap-2">
+                                        {step.agent && (
+                                            <span className="text-[10px] font-black text-indigo-600 uppercase tracking-widest bg-indigo-50 px-1.5 py-0.5 rounded">
+                                                {step.agent}
+                                            </span>
+                                        )}
+                                        <span className="text-[13px] text-gray-700 font-medium leading-none">
+                                            {step.message}
+                                        </span>
+                                    </div>
+                                    {step.signature && (
+                                        <div className="mt-1 font-mono text-[9px] text-gray-500 group-hover/step:text-blue-500 transition-colors">
+                                            TX: {step.signature.slice(0, 16)}...
+                                        </div>
+                                    )}
+                                </div>
                             </motion.div>
                         ))}
                     </motion.div>
