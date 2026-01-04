@@ -22,6 +22,7 @@ npm install @alleyboss/micropay-solana-x402-paywall @x402/core @x402/svm @solana
 |---------|-------------|--------|
 | 💰 **SOL & USDC** | Native SOL and SPL tokens (USDC, USDT) | ✅ Verified by `@x402/svm` |
 | 🔐 **x402 Protocol** | Full HTTP 402 compliance | ✅ Powered by `@x402/core` |
+| 🌐 **PayAI Format** | Multi-chain payment format support | ✅ Built-in |
 | 🔑 **JWT Sessions** | "Pay once, unlock for 24h" logic | ✅ Built-in (Hybrid Support) |
 | 🛡️ **Replay Protection** | Prevent double-spend / replay attacks | ✅ Managed by x402 Facilitator |
 | 🔌 **Express Integration** | Middleware for Express/Node.js | ✅ Built-in |
@@ -132,6 +133,35 @@ const withMicropay = createX402Middleware({
 | **Privacy** | Metadata sent to facilitator | No external data sharing |
 | **Setup** | Zero-config | Requires RPC URL |
 | **Best For** | Quick startups, MVPs | Production, High-Volume, Agents |
+
+## 🌐 PayAI Format Support (New in v3.3.13)
+
+Native support for the **PayAI payment format** - a universal payment protocol that works across Solana, Ethereum, Base, and other chains.
+
+```typescript
+// PayAI format is automatically detected and processed
+const payaiPayload = {
+  scheme: 'exact-svm',
+  networkId: 'solana-devnet',
+  authorization: {
+    signatures: ['5j8...']
+  }
+};
+
+const response = await fetch('/api/premium', {
+  headers: {
+    'Authorization': `x402 ${btoa(JSON.stringify(payaiPayload))}`
+  }
+});
+```
+
+**Features:**
+- ✅ Automatic format detection and transformation
+- ✅ Multi-chain ready (Solana, Ethereum, Base)
+- ✅ Full TypeScript support
+- ✅ Backward compatible with x402 format
+
+**Learn more:** [PayAI Integration Guide](https://github.com/AlleyBo55/micropay-solana-x402-paywall/blob/main/docs/PAYAI_INTEGRATION.md)
 
 ## 🌐 Public Facilitator Mode (New in v3.3.12)
 

@@ -20,33 +20,42 @@ export function getAgentKeypair(): Keypair {
         throw new Error('AGENT_KEYPAIR_SECRET not configured');
     }
 
-    const trimmed = secretStr.trim();
+    // Clean up input string - remove quotes, brackets, and whitespace
+    const cleaned = secretStr.trim().replace(/^['"]|['"]$/g, '').replace(/^\[|\]$/g, '');
 
-    // Try Base58 format first (most common from CLI tools)
-    if (!trimmed.includes(',') && trimmed.length >= 80) {
+    // Try Base58 format (no commas, long string)
+    if (!cleaned.includes(',') && cleaned.length >= 80) {
         try {
-            const decoded = bs58.decode(trimmed);
+            const decoded = bs58.decode(cleaned);
             if (decoded.length === 64) {
                 return Keypair.fromSecretKey(decoded);
             }
         } catch {
-            // Not valid Base58, try comma format
+            // Not valid Base58, fall through to try comma format
         }
     }
 
     // Try comma-separated format
-    const bytes = trimmed.split(',').map(n => parseInt(n.trim(), 10));
+    try {
+        const bytes = cleaned.split(',').map(n => {
+            const val = parseInt(n.trim(), 10);
+            if (isNaN(val)) throw new Error('Invalid number');
+            return val;
+        });
 
-    if (bytes.length !== 64 || bytes.some(isNaN)) {
+        if (bytes.length !== 64) {
+            throw new Error(`Invalid secret key length. Expected 64 bytes, got ${bytes.length}`);
+        }
+
+        return Keypair.fromSecretKey(Uint8Array.from(bytes));
+    } catch (e) {
         throw new Error(
             'Invalid AGENT_KEYPAIR_SECRET format. Expected either:\n' +
             '1. Base58 encoded secret key (88 chars), or\n' +
-            '2. 64 comma-separated numbers\n\n' +
-            `Received: ${trimmed.substring(0, 20)}... (length: ${trimmed.length})`
+            '2. 64 comma-separated numbers (JSON array or raw)\n\n' +
+            `Received start: ${secretStr.substring(0, 20)}...`
         );
     }
-
-    return Keypair.fromSecretKey(Uint8Array.from(bytes));
 }
 
 /**

@@ -15,17 +15,16 @@ export function createX402AuthorizationHeader(signature: string, paymentRequired
     // Handle array or single object requirement
     const accepts = Array.isArray(required.accepts) ? required.accepts[0] : required.accepts;
 
+    // Use the x402 SDK's expected format
     const payload = {
-        accepted: accepts,
-        client: {
-            scheme: accepts.scheme, // TypeScript knows this exists on PaymentRequirements
-            network: accepts.network,
-        },
-        payment: {
+        scheme: accepts.scheme,
+        network: accepts.network,
+        payload: {
             signature
         }
     };
 
+    // Let the SDK encode it properly
     const token = encodePaymentSignatureHeader(payload as any);
     return `x402 ${token}`;
 }

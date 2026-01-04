@@ -14,4 +14,5 @@ export interface Article {
     tags: string[];
     priceInLamports: bigint;
     isPremium: boolean;
+    mode?: 'sovereign' | 'platform' | 'hybrid' | 'payai';
 }

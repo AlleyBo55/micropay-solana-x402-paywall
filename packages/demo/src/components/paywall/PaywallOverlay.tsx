@@ -9,6 +9,7 @@ interface PaywallOverlayProps {
     articleTitle: string;
     priceInLamports: bigint;
     recipientWallet: string;
+    mode?: 'sovereign' | 'platform' | 'hybrid' | 'payai';
     /** 
      * Called when user clicks Pay button.
      * Can be async - used directly by the new hook pattern 
@@ -25,10 +26,18 @@ export function PaywallOverlay({
     recipientWallet: _recipientWallet,
     onUnlock,
     children,
+    mode = 'sovereign',
 }: PaywallOverlayProps) {
     const [isUnlocking, setIsUnlocking] = useState(false);
 
     const priceInSol = Number(priceInLamports) / LAMPORTS_PER_SOL;
+
+    // Debug: Log the price conversion
+    console.log('[PaywallOverlay] Price Debug:', {
+        priceInLamports: priceInLamports?.toString(),
+        LAMPORTS_PER_SOL,
+        priceInSol,
+    });
 
     const handlePayClick = async () => {
         setIsUnlocking(true);
@@ -107,10 +116,27 @@ export function PaywallOverlay({
                         </div>
 
                         <div className="mt-4 flex justify-center">
-                            <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-md bg-yellow-50 text-yellow-700 text-[10px] font-bold tracking-wide uppercase border border-yellow-100/50">
-                                <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
-                                Self-Sovereign Mode
-                            </span>
+                            {mode === 'platform' ? (
+                                <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-md bg-purple-50 text-purple-700 text-[10px] font-bold tracking-wide uppercase border border-purple-100/50">
+                                    <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
+                                    Platform Verification
+                                </span>
+                            ) : mode === 'hybrid' ? (
+                                <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-md bg-orange-50 text-orange-700 text-[10px] font-bold tracking-wide uppercase border border-orange-100/50">
+                                    <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z" /></svg>
+                                    Hybrid Split-Payment
+                                </span>
+                            ) : mode === 'payai' ? (
+                                <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-md bg-red-50 text-red-700 text-[10px] font-bold tracking-wide uppercase border border-red-100/50">
+                                    <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+                                    PayAI Network
+                                </span>
+                            ) : (
+                                <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-md bg-blue-50 text-blue-700 text-[10px] font-bold tracking-wide uppercase border border-blue-100/50">
+                                    <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                                    Self-Sovereign Mode
+                                </span>
+                            )}
                         </div>
                     </div>
                 </div>
@@ -118,4 +144,3 @@ export function PaywallOverlay({
         </div>
     );
 }
-

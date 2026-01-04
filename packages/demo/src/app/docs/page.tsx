@@ -29,6 +29,7 @@ const sections = [
     { id: 'intro', title: 'Introduction' },
     { id: 'demo-features', title: 'Features Demonstrated' },
     { id: 'agent-chat', title: 'AI Agent Payments' },
+    { id: 'payai-format', title: 'PayAI Format' },
     { id: 'installation', title: 'Installation' },
     { id: 'self-sovereign', title: 'Self-Sovereign Mode' },
     { id: 'quick-start', title: 'Quick Start' },
@@ -70,8 +71,8 @@ function CodeBlock({ code, language = 'typescript' }: { code: string; language?:
             >
                 {copied ? <CheckmarkCircle01Icon size={16} className="text-green-400" /> : <Copy01Icon size={16} className="text-gray-400" />}
             </button>
-            <div className="bg-[#0D0D0D] rounded-xl p-5 font-mono text-sm overflow-x-auto shadow-xl ring-1 ring-white/10">
-                <pre className="whitespace-pre-wrap text-gray-300">
+            <div className="bg-[#0D0D0D] rounded-xl p-3 sm:p-5 font-mono text-xs sm:text-sm overflow-x-auto shadow-xl ring-1 ring-white/10 max-w-full">
+                <pre className="text-gray-300 min-w-0">
                     {code}
                 </pre>
             </div>
@@ -162,7 +163,7 @@ export default function DocsPage() {
                 </aside>
 
                 {/* Main Content */}
-                <main className="flex-1 lg:ml-64 p-6 md:p-12 md:max-w-4xl mx-auto">
+                <main className="flex-1 lg:ml-64 px-4 py-6 md:px-12 md:py-12 w-full max-w-full lg:max-w-4xl">
 
                     {/* Introduction */}
                     <section id="intro" className="mb-20 pt-10">
@@ -274,6 +275,68 @@ const result = await executeAgentPayment({
 if (result.success) {
   console.log('Payment confirmed:', result.signature);
 }`} />
+                    </section>
+
+                    {/* PayAI Format - NEW */}
+                    <section id="payai-format" className="mb-20 scroll-mt-24">
+                        <div className="flex items-center gap-3 mb-6">
+                            <div className="p-2 bg-indigo-100 text-indigo-600 rounded-lg"><Globe02Icon size={20} /></div>
+                            <h2 className="text-2xl font-bold text-[#1D1D1F]">PayAI Format Support</h2>
+                        </div>
+                        <p className="text-gray-600 mb-6">
+                            The middleware automatically supports the PayAI payment format for multi-chain compatibility.
+                        </p>
+
+                        <h3 className="font-bold text-lg mb-4">PayAI Request Format</h3>
+                        <CodeBlock code={`{
+  "scheme": "exact-svm",
+  "networkId": "solana-devnet",
+  "paymentDetails": { /* from 402 response */ },
+  "authorization": {
+    "signatures": ["5j8..."]
+  }
+}`} />
+
+                        <h3 className="font-bold text-lg mb-4 mt-6">Client Usage</h3>
+                        <CodeBlock code={`const payaiPayload = {
+  scheme: 'exact-svm',
+  networkId: 'solana-devnet',
+  authorization: { signatures: [signature] }
+};
+
+const response = await fetch('/api/protected', {
+  headers: {
+    'Authorization': \`x402 \${btoa(JSON.stringify(payaiPayload))}\`
+  }
+});`} />
+
+                        <h3 className="font-bold text-lg mb-4 mt-6">Network Mapping</h3>
+                        <div className="overflow-x-auto border border-black/5 rounded-xl">
+                            <table className="w-full text-sm">
+                                <thead className="bg-gray-50">
+                                    <tr>
+                                        <th className="px-4 py-3 text-left font-medium">PayAI Network</th>
+                                        <th className="px-4 py-3 text-left font-medium">CAIP-2 Format</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-black/5">
+                                    <tr className="bg-white">
+                                        <td className="px-4 py-3 font-mono text-xs">solana</td>
+                                        <td className="px-4 py-3 font-mono text-xs">solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp</td>
+                                    </tr>
+                                    <tr className="bg-white">
+                                        <td className="px-4 py-3 font-mono text-xs">solana-devnet</td>
+                                        <td className="px-4 py-3 font-mono text-xs">solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div className="bg-blue-50 border border-blue-100 rounded-xl p-4 mt-6">
+                            <p className="text-sm text-blue-800">
+                                <strong>Note:</strong> PayAI format is automatically detected and transformed. No code changes needed in your handlers.
+                            </p>
+                        </div>
                     </section>
 
                     {/* Self-Sovereign Mode */}
@@ -596,6 +659,6 @@ const { solPrice } = await getSolPrice();`} />
                     </footer>
                 </main>
             </div>
-        </div>
+        </div >
     );
 }

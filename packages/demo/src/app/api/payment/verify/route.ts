@@ -43,13 +43,14 @@ export async function POST(request: NextRequest) {
             };
 
         // Construct standard payload for facilitator
-        const paymentPayload: PaymentPayload = {
+        // Cast to any because SDK types may not match our extended structure
+        const paymentPayload = {
             scheme: 'exact',
-            network: requirement.network || x402Network,
+            network: x402Network,
             payload: { signature },
-        };
+        } as any;
 
-        const facilitator = new LocalSvmFacilitator(config.rpcUrl);
+        const facilitator = new LocalSvmFacilitator(config.rpcUrl || 'https://api.devnet.solana.com');
 
         // Reconstruct auth header manually (optional, but good for conformity)
         const token = Buffer.from(JSON.stringify(paymentPayload)).toString('base64');

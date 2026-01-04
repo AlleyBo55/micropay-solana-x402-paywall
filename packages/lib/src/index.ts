@@ -21,6 +21,9 @@ export { RemoteSvmFacilitator } from './svm/RemoteSvmFacilitator';
 // Agent payment utilities (Unique Feature)
 export * from './agent';
 
+// PayAI Format Types
+export * from './types/payai';
+
 // Pricing helpers (Utility)
 export {
     getSolPrice,
