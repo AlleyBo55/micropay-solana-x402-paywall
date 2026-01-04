@@ -4,13 +4,10 @@ import { validateSession, createSession } from '@alleyboss/micropay-solana-x402-
 import { getArticleById } from '@/config/articles';
 import { getCreatorWallet, getSolanaConfig, getDefaultPrice } from '@/lib/config';
 
-// Initialize middleware
-const solanaConfig = getSolanaConfig();
-const withMicropay = createX402Middleware({
-    walletAddress: getCreatorWallet(),
-    network: solanaConfig.network,
-    price: getDefaultPrice().toString()
-});
+console.log('[API Debug] Module Loading: /api/articles/[id]/route.ts');
+// Initialize middleware logic moved inside handler to prevent boot crashes
+// const solanaConfig = getSolanaConfig();
+// const withMicropay = ...
 
 const SESSION_SECRET = process.env.SESSION_SECRET || 'demo-session-secret-change-me-longer-than-32-chars';
 
@@ -33,30 +30,45 @@ async function paidHandler(
     // In a real app, you'd extract wallet from the signature verification result
     // Here we'll use a placeholder or extract from header if available
     // Use a placeholder valid address if header is missing (e.g. System Program)
+    // We'll use a placeholder or extract from header if available
     const walletAddress = req.headers.get('x-wallet-address') || '11111111111111111111111111111111';
+    console.log('[API Debug] Wallet:', walletAddress);
 
-    const { token } = await createSession(walletAddress, article.id, {
-        secret: SESSION_SECRET,
-        durationHours: 24,
-    });
+    try {
+        console.log('[API Debug] Creating session...');
+        const sessionResult = await createSession(walletAddress, article.id, {
+            secret: SESSION_SECRET,
+            durationHours: 24,
+        });
+        console.log('[API Debug] Session created. Token length:', sessionResult.token.length);
 
-    const response = NextResponse.json({
-        article: {
-            ...article,
-            priceInLamports: article.priceInLamports.toString(),
-            content: article.content
-        }
-    });
+        console.log('[API Debug] Serializing article...');
+        const responseData = {
+            article: {
+                ...article,
+                priceInLamports: article.priceInLamports.toString(),
+                content: article.content
+            }
+        };
+        console.log('[API Debug] Article serialized.');
 
-    // Set cookie
-    response.cookies.set('x402_session', token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict',
-        maxAge: 60 * 60 * 24 // 24 hours
-    });
+        const response = NextResponse.json(responseData);
+        console.log('[API Debug] Response object created.');
 
-    return response;
+        // Set cookie
+        response.cookies.set('x402_session', sessionResult.token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'strict',
+            maxAge: 60 * 60 * 24 // 24 hours
+        });
+        console.log('[API Debug] Cookie set.');
+
+        return response;
+    } catch (innerError) {
+        console.error('[API Debug] Critical error in paidHandler:', innerError);
+        throw innerError;
+    }
 }
 
 // 1. Wrap the handler with x402 middleware
@@ -72,6 +84,16 @@ export async function GET(
     props: { params: Promise<{ id: string }> }
 ) {
     const params = await props.params;
+    console.log('[API Debug] GET request matched for ID:', params.id);
+
+    // Initialize config early
+    const solanaConfig = getSolanaConfig();
+    const withMicropay = createX402Middleware({
+        walletAddress: getCreatorWallet(),
+        network: solanaConfig.network,
+        price: getDefaultPrice().toString(),
+        rpcUrl: solanaConfig.rpcUrl
+    });
 
     // A. Check Session
     const sessionToken = req.cookies.get('x402_session')?.value;
@@ -82,10 +104,15 @@ export async function GET(
         console.log('[API] Session validation:', validation.valid);
         if (validation.valid && validation.session?.unlockedArticles.includes(params.id)) {
             // Valid session -> Serve Content Directly
-            return paidHandler(req, params); // Re-use handler logic (without setting new cookie necessarily, or refresh it)
+            console.log('[API] Invoking paidHandler for session-authorized request');
+            try {
+                return await paidHandler(req, params);
+            } catch (err) {
+                console.error('[API] paidHandler failed:', err);
+                return Response.json({ error: 'Internal Server Error' }, { status: 500 });
+            }
         }
     }
-
     // B. Fallback to Payment
     const article = getArticleById(params.id);
     if (!article) {
@@ -98,6 +125,8 @@ export async function GET(
         : 'solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1';
 
     // Create a dynamic handler for THIS article's price
+    // Config initialized at top of function
+
     const dynamicHandler = withMicropay(
         async (req: any, ctx: any) => paidHandler(req, params), // reuse resolved params
         {

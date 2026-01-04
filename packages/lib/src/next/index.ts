@@ -2,6 +2,7 @@ import { withX402 as originalWithX402 } from '@x402/next';
 import { x402ResourceServer } from '@x402/core/server';
 import { HTTPFacilitatorClient } from '@x402/core/http';
 import { registerExactSvmScheme } from '@x402/svm/exact/server';
+import { LocalSvmFacilitator } from '../svm/LocalSvmFacilitator';
 
 export { x402ResourceServer };
 
@@ -17,18 +18,31 @@ export interface X402Config {
     price?: string | number;
     /** Network (mainnet-beta or devnet) */
     network?: 'mainnet-beta' | 'devnet';
+    /** RPC URL for local verification (optional, enables self-contained validation) */
+    rpcUrl?: string;
 }
 
 /**
  * Create a specialized Next.js middleware with Solana support pre-configured
  */
 export function createX402Middleware(config: X402Config) {
-    const facilitatorUrl = config.facilitatorUrl || 'https://x402.org/facilitator';
-    const client = new HTTPFacilitatorClient({ url: facilitatorUrl });
-    const server = new x402ResourceServer(client);
+    let facilitatorClient;
 
-    // Auto-register Solana scheme
-    registerExactSvmScheme(server, {});
+    if (config.rpcUrl) {
+        // Use local verification if RPC is provided
+        facilitatorClient = new LocalSvmFacilitator(config.rpcUrl);
+    } else {
+        // Fallback to hosted facilitator
+        const facilitatorUrl = config.facilitatorUrl || 'https://x402.org/facilitator';
+        facilitatorClient = new HTTPFacilitatorClient({
+            url: facilitatorUrl,
+        });
+    }
+
+    const server = new x402ResourceServer(facilitatorClient);
+
+    // Auto-register Solana scheme with default configuration
+    registerExactSvmScheme(server);
 
     // Return a wrapped withX402 that injects the server instance
     return function withMicropay(handler: any, routeConfig?: any) {

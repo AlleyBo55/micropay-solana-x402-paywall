@@ -29,6 +29,7 @@ const sections = [
     { id: 'demo-features', title: 'Features Demonstrated' },
     { id: 'agent-chat', title: 'AI Agent Payments' },
     { id: 'installation', title: 'Installation' },
+    { id: 'self-sovereign', title: 'Self-Sovereign Mode' },
     { id: 'quick-start', title: 'Quick Start' },
     { id: 'configuration', title: 'Configuration' },
     { id: 'payment-flow', title: 'The x402 Flow' },
@@ -123,7 +124,7 @@ export default function DocsPage() {
                         Micropay Docs
                     </Link>
                     <div className="flex items-center gap-4">
-                        <span className="hidden md:inline text-xs font-mono bg-green-100 text-green-700 px-2 py-1 rounded-full">v3.0.4</span>
+                        <span className="hidden md:inline text-xs font-mono bg-green-100 text-green-700 px-2 py-1 rounded-full">v3.0.6</span>
                         <a href="https://www.npmjs.com/package/@alleyboss/micropay-solana-x402-paywall" target="_blank" className="p-2 hover:bg-black/5 rounded-lg transition-colors text-gray-500 hover:text-black">
                             <Share01Icon size={18} />
                         </a>
@@ -217,6 +218,7 @@ export default function DocsPage() {
                                 <ul className="space-y-2 text-sm text-gray-600">
                                     <li className="flex items-start gap-2"><span className="w-1.5 h-1.5 rounded-full bg-gray-300 mt-1.5"></span><strong>AI Agent Payments</strong></li>
                                     <li className="flex items-start gap-2"><span className="w-1.5 h-1.5 rounded-full bg-gray-300 mt-1.5"></span>Hybrid Session Management</li>
+                                    <li className="flex items-start gap-2"><span className="w-1.5 h-1.5 rounded-full bg-gray-300 mt-1.5"></span><strong>Self-Sovereign Mode</strong> (No External Facilitator)</li>
                                     <li className="flex items-start gap-2"><span className="w-1.5 h-1.5 rounded-full bg-gray-300 mt-1.5"></span>Replay Protection (via Facilitator)</li>
                                 </ul>
                             </div>
@@ -272,6 +274,27 @@ if (result.success) {
 }`} />
                     </section>
 
+                    {/* Self-Sovereign Mode */}
+                    <section id="self-sovereign" className="mb-20 scroll-mt-24">
+                        <div className="flex items-center gap-3 mb-6">
+                            <div className="p-2 bg-yellow-100 text-yellow-600 rounded-lg"><ShieldKeyIcon size={20} /></div>
+                            <h2 className="text-2xl font-bold text-[#1D1D1F]">Self-Sovereign Verification</h2>
+                        </div>
+                        <p className="text-gray-600 mb-6">
+                            Remove dependency on external hosted facilitators. Verify payments directly against your own Solana RPC node.
+                        </p>
+                        <div className="p-4 bg-yellow-50 border border-yellow-100 rounded-xl mb-6 text-sm text-yellow-800">
+                            <strong>Note:</strong> This mode runs verification logic inside your backend, making it fully self-contained.
+                        </div>
+                        <CodeBlock code={`const withMicropay = createX402Middleware({
+    walletAddress: 'YOUR_WALLET',
+    network: 'devnet',
+    price: '1000000',
+    // ⚡️ Enable Self-Sovereign Mode
+    rpcUrl: process.env.NEXT_PUBLIC_RPC_URL 
+});`} />
+                    </section>
+
                     {/* Installation */}
                     <section id="installation" className="mb-20 scroll-mt-24">
                         <div className="flex items-center gap-3 mb-6">
@@ -279,6 +302,23 @@ if (result.success) {
                             <h2 className="text-2xl font-bold text-[#1D1D1F]">Installation</h2>
                         </div>
                         <CodeBlock code="npm install @alleyboss/micropay-solana-x402-paywall @solana/web3.js" />
+                    </section>
+
+                    {/* Configuration */}
+                    <section id="configuration" className="mb-20 scroll-mt-24">
+                        <div className="flex items-center gap-3 mb-6">
+                            <div className="p-2 bg-blue-100 text-blue-600 rounded-lg"><Settings01Icon size={20} /></div>
+                            <h2 className="text-2xl font-bold text-[#1D1D1F]">Configuration</h2>
+                        </div>
+                        <p className="text-gray-600 mb-6">
+                            Configure your environment for Mainnet or custom x402 facilitators.
+                        </p>
+                        <h3 className="font-bold text-lg mb-3">Mainnet Setup (Next.js)</h3>
+                        <CodeBlock code={`// .env.local
+NEXT_PUBLIC_SOLANA_NETWORK=mainnet-beta
+NEXT_PUBLIC_RPC_URL=https://api.mainnet-beta.solana.com
+# Optional: Custom Facilitator
+# X402_FACILITATOR_URL=https://facilitator.pro-provider.com/v1/MY_KEY`} />
                     </section>
 
                     {/* Quick Start */}

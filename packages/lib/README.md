@@ -66,7 +66,9 @@ import { createX402Middleware } from '@alleyboss/micropay-solana-x402-paywall/ne
 
 const withMicropay = createX402Middleware({
     walletAddress: 'YOUR_WALLET_ADDRESS',
-    network: 'devnet'
+    network: 'devnet',
+    // Optional: Custom Facilitator (e.g. for Mainnet Pro)
+    // facilitatorUrl: 'https://facilitator.pro-provider.com/v1/MY_KEY'
 });
 
 const handler = (req) => {
@@ -102,6 +104,22 @@ import { createSession, validateSession } from '@alleyboss/micropay-solana-x402-
 
 // Client Helpers
 import { createPaymentFlow } from '@alleyboss/micropay-solana-x402-paywall/client';
+```
+
+## 🛡️ Self-Sovereign Verification (New in v3.1)
+
+By default, the library uses the `x402.org` hosted facilitator for convenience. However, you can opt for **Self-Sovereign Mode** to verify payments directly against your own Solana RPC node, removing reliance on any external API services.
+
+```typescript
+// app/api/articles/[id]/route.ts
+const withMicropay = createX402Middleware({
+    walletAddress: 'YOUR_WALLET',
+    network: 'devnet',
+    price: '1000000',
+    // ⚡️ Enable Self-Sovereign Mode
+    // The library will verify transactions locally using this RPC connection.
+    rpcUrl: process.env.NEXT_PUBLIC_RPC_URL 
+});
 ```
 
 ## 🤖 AI Agent Payments
