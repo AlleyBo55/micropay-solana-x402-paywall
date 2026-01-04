@@ -1,6 +1,6 @@
 # @alleyboss/micropay-solana-x402-paywall
 
-> Production-ready Solana micropayments library implementing the x402 protocol.
+> Production-ready Solana micropayments library wrapper for the official x402 SDK.
 
 [![npm](https://img.shields.io/npm/v/@alleyboss/micropay-solana-x402-paywall)](https://www.npmjs.com/package/@alleyboss/micropay-solana-x402-paywall)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
@@ -8,158 +8,106 @@
 
 ## 🚀 What It Does
 
-Turn any content into paid content with **one-time micropayments** on Solana. No subscriptions, no recurring charges—just pay to unlock.
+Turn any content into paid content with **one-time micropayments** on Solana. fully compatible with the official [x402.org](https://x402.org) protocol.
+
+This library enhances the official SDK with features like **AI Agent Payments**, **Hybrid Sessions**, and **Express.js Middleware**.
 
 ```bash
-npm install @alleyboss/micropay-solana-x402-paywall @solana/web3.js
+npm install @alleyboss/micropay-solana-x402-paywall @x402/core @x402/svm @solana/web3.js
 ```
 
 ## ✨ Features
 
-| Feature | Description |
-|---------|-------------|
-| 💰 **SOL & USDC Payments** | Native SOL and SPL tokens (USDC, USDT) |
-| 🔐 **x402 Protocol** | Full HTTP 402 compliance with `X-Payment-Required` headers |
-| 🔑 **JWT Sessions** | Secure unlock tracking with anti-replay |
-| 🛡️ **Signature Store** | Prevent double-spend at app layer |
-| 🔌 **Express & Next.js** | Zero-boilerplate middleware |
-| 💵 **Price Conversion** | USD↔SOL with multi-provider fallback |
-| 🌳 **Tree-Shakeable** | Import only what you need |
-| 🔄 **RPC Fallback** | Automatic failover on RPC errors |
-| ⚡ **Priority Fees** | Land transactions faster |
-| 📦 **Versioned Tx** | Full v0 transaction support |
+| Feature | Description | Status |
+|---------|-------------|--------|
+| 💰 **SOL & USDC** | Native SOL and SPL tokens (USDC, USDT) | ✅ Verified by `@x402/svm` |
+| 🔐 **x402 Protocol** | Full HTTP 402 compliance | ✅ Powered by `@x402/core` |
+| 🔑 **JWT Sessions** | "Pay once, unlock for 24h" logic | ✅ Built-in (Hybrid Support) |
+| 🛡️ **Replay Protection** | Prevent double-spend / replay attacks | ✅ Managed by x402 Facilitator |
+| 🔌 **Express Integration** | Middleware for Express/Node.js | ✅ Built-in |
+| 💵 **Price Conversion** | USD↔SOL with multi-provider fallback | ✅ Built-in |
+| 🤖 **AI Agents** | Autonomous payment execution for agents | ✅ Built-in |
+| ⚡ **Priority Fees** | Compute unit price optimization | ✅ Supported (Agent Module) |
+| 📦 **Versioned Tx** | v0 Transaction support | ✅ Native (x402 SDK) |
+| 🌳 **Tree-Shakeable** | Modular exports | ✅ Built-in |
 
-## 📦 Quick Example
+## 📦 Quick Example (Express.js)
 
 ```typescript
-import { verifyPayment, createSession } from '@alleyboss/micropay-solana-x402-paywall';
+import express from 'express';
+import { x402ResourceServer } from '@x402/core/server';
+import { x402Middleware } from '@alleyboss/micropay-solana-x402-paywall/express';
 
-// Verify on-chain payment
-const result = await verifyPayment({
-  signature: 'tx...',
-  expectedRecipient: 'CreatorWallet',
-  expectedAmount: 10_000_000n, // 0.01 SOL
-  clientConfig: { network: 'mainnet-beta' },
+const app = express();
+// The x402ResourceServer handles protocol logic and facilitator communication
+const server = new x402ResourceServer({
+    facilitatorUrl: process.env.X402_FACILITATOR_URL,
+    serviceId: process.env.X402_SERVICE_ID,
 });
 
-// Create session for unlocked content
-if (result.valid) {
-  const { token } = await createSession(
-    result.from!,
-    'article-123',
-    { secret: process.env.SESSION_SECRET!, durationHours: 24 }
-  );
-}
+app.get('/premium', x402Middleware(server, {
+    accepts: {
+        scheme: 'exact',
+        amount: '1000000', // 0.001 SOL
+        network: 'solana-mainnet'
+    },
+    description: 'Premium Article'
+}), (req, res) => {
+    // Session token or payment proof is available
+    res.send('Thank you for your payment!');
+});
 ```
 
 ## 🔧 Modules
 
-9 tree-shakeable entry points for minimal bundle size:
+Import only what you need:
 
 ```typescript
-// Core verification
-import { verifyPayment, verifySPLPayment } from '@alleyboss/micropay-solana-x402-paywall/solana';
+// Express Middleware
+import { x402Middleware } from '@alleyboss/micropay-solana-x402-paywall/express';
 
-// Session management  
+// AI Agent Payments
+import { executeAgentPayment } from '@alleyboss/micropay-solana-x402-paywall/agent';
+
+// Pricing Utilities
+import { getSolPrice, lamportsToUsd } from '@alleyboss/micropay-solana-x402-paywall/pricing';
+
+// Session Management (Hybrid)
 import { createSession, validateSession } from '@alleyboss/micropay-solana-x402-paywall/session';
 
-// x402 protocol
-import { buildPaymentRequirement } from '@alleyboss/micropay-solana-x402-paywall/x402';
-
-// Express/Next.js middleware
-import { createExpressMiddleware, createPaywallMiddleware } from '@alleyboss/micropay-solana-x402-paywall/middleware';
-
-// Anti-replay signature store
-import { createMemoryStore, createRedisStore } from '@alleyboss/micropay-solana-x402-paywall/store';
-
-// Client-side helpers
-import { createPaymentFlow, buildSolanaPayUrl } from '@alleyboss/micropay-solana-x402-paywall/client';
-
-// Price conversion (4-provider rotation)
-import { getSolPrice, formatPriceDisplay, configurePricing } from '@alleyboss/micropay-solana-x402-paywall/pricing';
-
-// Retry utilities
-import { withRetry } from '@alleyboss/micropay-solana-x402-paywall/utils';
+// Client Helpers
+import { createPaymentFlow } from '@alleyboss/micropay-solana-x402-paywall/client';
 ```
 
-## 🔥 New in v2.2.0
+## 🤖 AI Agent Payments
 
-### x402 Protocol Compliance
-
-Full compliance with the [x402.org](https://x402.org) specification:
+Enable autonomous AI agents to pay for premium API access.
 
 ```typescript
-import { create402Response, parsePaymentHeader, encodePaymentRequirement } from '@alleyboss/micropay-solana-x402-paywall/x402';
+import { executeAgentPayment } from '@alleyboss/micropay-solana-x402-paywall/agent';
+import { Keypair, Connection } from '@solana/web3.js';
 
-// Create 402 response with X-Payment-Required header
-const response = create402Response({
-  scheme: 'exact',
-  network: 'solana-mainnet',
-  maxAmountRequired: '10000000',
-  payTo: 'CreatorWallet...',
-  resource: '/api/premium',
-  description: 'Premium content access',
-  maxTimeoutSeconds: 300,
-  asset: 'native',
-});
-// Response includes: X-Payment-Required: <base64-encoded-requirement>
+const agentKeypair = Keypair.fromSecretKey(/* ... */);
 
-// Parse X-Payment header from client
-const payload = parsePaymentHeader(request.headers.get('x-payment'));
-```
-
-### Previous Features (v2.1.x)
-
-- **RPC Fallback Support** — Automatic failover on primary RPC failure
-- **Priority Fees** — Compute budget instructions for landing transactions faster
-- **Versioned Transactions** — Full v0 transaction support with lookup tables
-- **TDD Test Suite** — Comprehensive tests with vitest
-
-```typescript
-// Priority fees
-import { createPriorityFeeInstructions } from '@alleyboss/micropay-solana-x402-paywall/solana';
-
-const instructions = createPriorityFeeInstructions({
-  enabled: true,
-  microLamports: 5000,
-  computeUnits: 200_000,
+const result = await executeAgentPayment({
+  connection: new Connection('https://api.mainnet-beta.solana.com'),
+  agentKeypair,
+  recipientAddress: 'CREATOR_WALLET',
+  amountLamports: 2_000_000n, 
+  priorityFee: { enabled: true, microLamports: 10000 }, // Priority Fees Supported
 });
 
-// Versioned transactions
-import { buildVersionedTransaction } from '@alleyboss/micropay-solana-x402-paywall/solana';
-
-const { transaction } = await buildVersionedTransaction({
-  connection,
-  payer: wallet.publicKey,
-  instructions: [transferIx],
-  priorityFee: { enabled: true },
-});
-```
-
-## 🛠️ RPC Providers
-
-Works with any Solana RPC provider:
-
-```typescript
-const config = {
-  network: 'mainnet-beta',
-  // Tatum.io
-  tatumApiKey: 'your-key',
-  // Or custom (Helius, QuickNode, etc.)
-  rpcUrl: 'https://your-rpc.com',
-  // Optional: enable fallback
-  enableFallback: true,
-  fallbackRpcUrls: ['https://backup.rpc.com'],
-};
+if (result.success) {
+  console.log('Payment confirmed:', result.signature);
+}
 ```
 
 ## 📚 Documentation
 
-**Full documentation, API reference, and examples:**
-
-👉 **[solana-x402-paywall.vercel.app/docs](https://solana-x402-paywall.vercel.app/docs)**
+For full documentation:
+- **Library Docs**: [solana-x402-paywall.vercel.app/docs](https://solana-x402-paywall.vercel.app/docs)
+- **Protocol Docs**: [x402.org](https://docs.x402.org)
 
 ## 📄 License
 
 MIT © AlleyBoss
-

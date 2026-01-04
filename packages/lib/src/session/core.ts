@@ -2,7 +2,7 @@
 // SECURITY: Uses jose library with HS256, constant-time validation, input sanitization
 import { SignJWT, jwtVerify } from 'jose';
 import { v4 as uuidv4 } from 'uuid';
-import type { SessionData, SessionConfig, SessionValidation, SessionJWTPayload } from '../types';
+import type { SessionData, SessionConfig, SessionValidation, SessionJWTPayload } from './types';
 
 // Maximum articles per session to prevent unbounded growth
 const MAX_ARTICLES_PER_SESSION = 100;

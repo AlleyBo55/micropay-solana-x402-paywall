@@ -1,56 +1,21 @@
 // Main entry point for @alleyboss/micropay-solana-x402-paywall
+// Wraps official x402 SDK with Solana optimizations and Agent capabilities
 
-// Types
-export type {
-    PaymentRequirement,
-    PaymentPayload,
-    VerificationRequest,
-    VerificationResponse,
-    PaymentStatus,
-    ArticlePaymentConfig,
-    X402Network,
-    SolanaNetwork,
-    PaymentAsset,
-    SPLTokenAsset,
-    SessionData,
-    SessionConfig,
-    SessionValidation,
-    SessionJWTPayload,
-} from './types';
+// Re-export Official x402 Core Types & Utils
+export * from '@x402/core';
+export * from '@x402/core/types';
+export * from '@x402/core/client';
 
-// Constants
-export { TOKEN_MINTS } from './types';
+// Re-export Solana (SVM) Module
+export * from '@x402/svm';
 
-// Solana client and verification (includes SPL)
-export * from './solana';
+// Client-side helpers (browser-safe, no Node.js deps)
+export * from './client';
 
-// Session management
-export * from './session';
+// Agent payment utilities (Unique Feature)
+export * from './agent';
 
-// x402 protocol helpers
-export * from './x402';
-
-// Signature store interface
-export type { SignatureStore, SignatureUsage, StoreConfig } from './store';
-export { createMemoryStore, createRedisStore } from './store';
-
-// Middleware
-export type { PaywallMiddlewareConfig, MiddlewareResult } from './middleware';
-export { createPaywallMiddleware, withPaywall, checkPaywallAccess } from './middleware';
-
-// Utilities
-export { withRetry, isRetryableRPCError, type RetryOptions } from './utils';
-
-// Client-side helpers (browser-safe)
-export {
-    createPaymentFlow,
-    buildSolanaPayUrl,
-    createPaymentReference,
-    type PaymentFlowConfig,
-    type SolanaPayUrlParams,
-} from './client';
-
-// Pricing helpers
+// Pricing helpers (Utility)
 export {
     getSolPrice,
     lamportsToUsd,
