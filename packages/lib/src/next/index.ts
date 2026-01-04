@@ -55,7 +55,6 @@ export function createX402Middleware(config: X402Config) {
                 network: config.network === 'mainnet-beta'
                     ? 'solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp'
                     : 'solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1',
-                asset: 'native',
             }
         };
 

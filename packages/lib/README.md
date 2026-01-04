@@ -120,26 +120,8 @@ const withMicropay = createX402Middleware({
     // The library will verify transactions locally using this RPC connection.
     rpcUrl: process.env.NEXT_PUBLIC_RPC_URL 
 });
-### 🛡️ Verification Flow (Self-Sovereign Mode)
-
-```mermaid
-sequenceDiagram
-    participant User
-    participant App
-    participant Lib as x402 Lib
-    participant RPC as Solana RPC
-    
-    User->>App: Request Premium Content
-    App->>Lib: Create Payment Options
-    Lib-->>User: Return 402 + Payment Link
-    User->>RPC: Submit Transaction
-    User->>App: Send Receipt/Signature
-    App->>Lib: Verify Transaction
-    Lib->>RPC: Get Transaction Status (Local)
-    RPC-->>Lib: Confirmed
-    Lib-->>App: Valid Session Token
-    App-->>User: Unlock Content
 ```
+
 
 ### 🆚 Hosted vs. Self-Sovereign Mode
 

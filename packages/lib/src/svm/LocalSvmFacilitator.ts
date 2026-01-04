@@ -99,7 +99,8 @@ export class LocalSvmFacilitator implements FacilitatorClient {
             const requiredAmount = BigInt(amountVal);
 
             console.log(`[LocalSvmFacilitator] Verifying signature: ${signature}`);
-            console.log(`[LocalSvmFacilitator] Required Amount: ${requiredAmount}, PayTo: ${payTo}`);
+            console.log(`[LocalSvmFacilitator] Requirements - Amount: ${requiredAmount}, PayTo: ${payTo}`);
+            console.log(`[LocalSvmFacilitator] Full Requirements:`, JSON.stringify(requirements));
 
             // 1. Fetch transaction
             const tx = await this.connection.getParsedTransaction(signature, {
@@ -126,6 +127,8 @@ export class LocalSvmFacilitator implements FacilitatorClient {
                 // Check if it's a parsed system instruction
                 if ('program' in ix && ix.program === 'system') {
                     const parsed = (ix as any).parsed;
+                    console.log(`[LocalSvmFacilitator] Inspecting IX:`, JSON.stringify(parsed));
+
                     if (parsed.type === 'transfer') {
                         const info = parsed.info;
                         console.log(`[LocalSvmFacilitator] Found transfer: ${info.lamports} lamports to ${info.destination}`);
