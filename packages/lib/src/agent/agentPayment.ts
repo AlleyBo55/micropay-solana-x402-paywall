@@ -10,6 +10,8 @@ import {
     LAMPORTS_PER_SOL,
 } from '@solana/web3.js';
 import { buildVersionedTransaction, type PriorityFeeConfig } from './solanaHelpers';
+import bs58 from 'bs58';
+// server-side only
 
 /** Parameters for executing an agent payment */
 export interface ExecuteAgentPaymentParams {
@@ -212,11 +214,12 @@ export async function getAgentBalance(
 export async function hasAgentSufficientBalance(
     connection: Connection,
     agentKeypair: Keypair,
-    requiredLamports: bigint
+    requiredLamports: bigint,
+    feeBufferLamports: bigint = 5_000_000n // 0.005 SOL default buffer for priority fees
 ): Promise<{ sufficient: boolean; balance: bigint; required: bigint }> {
     const { balance } = await getAgentBalance(connection, agentKeypair);
-    // Add buffer for transaction fees (~5000 lamports)
-    const totalRequired = requiredLamports + 10000n;
+    // Add buffer for transaction fees + priority fees (mainnet can require 1-5M lamports)
+    const totalRequired = requiredLamports + feeBufferLamports;
     return {
         sufficient: balance >= totalRequired,
         balance,
@@ -233,12 +236,13 @@ export async function hasAgentSufficientBalance(
  * ```
  */
 export function keypairFromBase58(base58Secret: string): Keypair {
-    // Dynamic import to avoid bundling bs58 in client code
-    // For server-side use, install bs58 as a dependency
-    const bytes = Buffer.from(base58Secret, 'base64');
-
-    // Try base58 decode if base64 fails
-    if (bytes.length !== 64) {
+    try {
+        const bytes = bs58.decode(base58Secret);
+        if (bytes.length !== 64) {
+            throw new Error('Invalid secret key length. Expected 64 bytes.');
+        }
+        return Keypair.fromSecretKey(bytes);
+    } catch (error) {
         // Fallback: assume it's a comma-separated array of numbers
         const parts = base58Secret.split(',').map(n => parseInt(n.trim(), 10));
         if (parts.length === 64) {
@@ -246,8 +250,6 @@ export function keypairFromBase58(base58Secret: string): Keypair {
         }
         throw new Error('Invalid secret key format. Expected base58 string or comma-separated bytes.');
     }
-
-    return Keypair.fromSecretKey(bytes);
 }
 
 /**

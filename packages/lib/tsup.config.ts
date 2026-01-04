@@ -20,5 +20,5 @@ export default defineConfig({
     minify: false,
     target: 'node18',
     outDir: 'dist',
-    external: ['@solana/web3.js', '@x402/core', '@x402/svm'],
+    external: ['@solana/web3.js', '@x402/core', '@x402/svm', 'react', 'react-dom'],
 });

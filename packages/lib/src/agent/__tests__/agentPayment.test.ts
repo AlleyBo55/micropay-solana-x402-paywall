@@ -127,7 +127,7 @@ describe('agent/agentPayment', () => {
                 getBalance: vi.fn().mockResolvedValue(100_000), // Exactly requested
             } as unknown as Connection;
 
-            // Should fail because buffer (10000 lamports) not included
+            // Should fail because buffer (5M lamports) not included
             const result = await hasAgentSufficientBalance(
                 mockConnection,
                 testKeypair,
@@ -135,7 +135,7 @@ describe('agent/agentPayment', () => {
             );
 
             expect(result.sufficient).toBe(false);
-            expect(result.required).toBe(110_000n); // 100000 + 10000 buffer
+            expect(result.required).toBe(5_100_000n); // 100000 + 5M buffer for priority fees
         });
     });
 

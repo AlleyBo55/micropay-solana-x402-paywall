@@ -133,7 +133,7 @@ export async function GET(
             accepts: {
                 scheme: 'exact',
                 payTo: getCreatorWallet(),
-                amount: article.priceInLamports.toString(),
+                price: article.priceInLamports.toString(),
                 network: networkId,
             }
         }

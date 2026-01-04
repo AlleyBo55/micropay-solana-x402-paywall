@@ -51,7 +51,7 @@ export function createX402Middleware(config: X402Config) {
             accepts: {
                 scheme: 'exact',
                 payTo: config.walletAddress,
-                amount: config.price?.toString() || '0',
+                price: config.price?.toString() || '0',
                 network: config.network === 'mainnet-beta'
                     ? 'solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp'
                     : 'solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1',

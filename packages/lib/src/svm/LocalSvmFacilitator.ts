@@ -1,9 +1,5 @@
 
-import {
-    Connection,
-    PublicKey,
-    LAMPORTS_PER_SOL
-} from '@solana/web3.js';
+import { Connection } from '@solana/web3.js';
 import {
     Network,
     PaymentPayload,
@@ -35,6 +31,7 @@ export class LocalSvmFacilitator implements FacilitatorClient {
     private connection: Connection;
 
     constructor(rpcUrl: string) {
+        console.log('[LocalSvmFacilitator] Initialized with RPC:', rpcUrl);
         this.connection = new Connection(rpcUrl, 'confirmed');
     }
 
@@ -42,34 +39,52 @@ export class LocalSvmFacilitator implements FacilitatorClient {
      * Get supported payment kinds
      * Mocking the response of the /supported endpoint
      */
-    async getSupported(extensionKeys: string[] = []): Promise<SupportedResponse> {
-        return {
+    // Network Constants - CAIP-2 format for x402 v2
+    private readonly NETWORKS = {
+        DEVNET: 'solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1',
+        MAINNET: 'solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp'
+    } as const;
+
+    // Dummy fee payer address (System Program) - not used in local verification
+    // but required by x402 protocol for supported kinds
+    private readonly DUMMY_FEE_PAYER = '11111111111111111111111111111111';
+
+    /**
+     * Get supported payment kinds
+     * Returns x402 v2 compatible response with CAIP-2 network identifiers
+     */
+    async getSupported(_extensionKeys: string[] = []): Promise<SupportedResponse> {
+        console.log('[LocalSvmFacilitator] getSupported called');
+
+        const supported: SupportedResponse = {
             kinds: [
                 {
-                    x402Version: 1,
+                    x402Version: 2,
                     scheme: 'exact',
-                    network: 'solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1', // Devnet
-                    extra: {}
+                    network: this.NETWORKS.DEVNET,
+                    extra: { feePayer: this.DUMMY_FEE_PAYER }
                 },
                 {
-                    x402Version: 1,
+                    x402Version: 2,
                     scheme: 'exact',
-                    network: 'solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp', // Mainnet
-                    extra: {}
+                    network: this.NETWORKS.MAINNET,
+                    extra: { feePayer: this.DUMMY_FEE_PAYER }
                 }
             ],
             extensions: [],
             signers: {
-                'solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1': [],
-                'solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp': []
+                'solana:*': [this.DUMMY_FEE_PAYER]
             }
         };
+
+        console.log('[LocalSvmFacilitator] Returning supported:', JSON.stringify(supported));
+        return supported;
     }
 
     /**
      * Get mechanism-specific extra data
      */
-    getExtra(network: Network): Record<string, unknown> | undefined {
+    getExtra(_network: Network): Record<string, unknown> | undefined {
         // No extra data needed for simple transfers
         return undefined;
     }
@@ -77,9 +92,14 @@ export class LocalSvmFacilitator implements FacilitatorClient {
     /**
      * Get default signers (not used for local verification usually, but required by interface)
      */
-    getSigners(network: string): string[] {
+    getSigners(_network: string): string[] {
         return [];
     }
+
+    /**
+     * Enable debug logging (disable in production)
+     */
+    private debug = process.env.NODE_ENV === 'development';
 
     /**
      * Verify a payment on-chain
@@ -91,82 +111,118 @@ export class LocalSvmFacilitator implements FacilitatorClient {
                 return { isValid: false, invalidReason: 'Missing signature in payment payload' };
             }
 
-            // 2. Verify Recipient and Amount
-            // We look for a transfer instruction to the payTo address
+            // Verify Recipient and Amount
             const payTo = requirements.payTo;
-            // Handle both precise amount and maxAmountRequired (from x402 config)
             const amountVal = requirements.amount || (requirements as any).maxAmountRequired || '0';
             const requiredAmount = BigInt(amountVal);
 
-            console.log(`[LocalSvmFacilitator] Verifying signature: ${signature}`);
-            console.log(`[LocalSvmFacilitator] Requirements - Amount: ${requiredAmount}, PayTo: ${payTo}`);
-            console.log(`[LocalSvmFacilitator] Full Requirements:`, JSON.stringify(requirements));
+            // Log only non-sensitive info (signature prefix for debugging)
+            if (this.debug) {
+                console.log(`[LocalSvmFacilitator] Verifying tx: ${signature.slice(0, 8)}...`);
+            }
 
-            // 1. Fetch transaction
-            const tx = await this.connection.getParsedTransaction(signature, {
-                maxSupportedTransactionVersion: 0,
-                commitment: 'confirmed'
-            });
+            // Fetch transaction with retry logic
+            const tx = await this.fetchTransactionWithRetry(signature, 3);
 
             if (!tx) {
-                console.error('[LocalSvmFacilitator] Transaction not found or not confirmed');
                 return { isValid: false, invalidReason: 'Transaction not found or not confirmed' };
             }
 
-            console.log('[LocalSvmFacilitator] Transaction found. Parsing instructions...');
-
-            // Allow for a small margin of error if needed, but 'exact' scheme usually means exact or more
             // Parse instructions
             const instructions = tx.transaction.message.instructions;
             let paidAmount = 0n;
             let payer: string | undefined = undefined;
 
-            // Simple parser for SystemProgram.transfer
-            // In a robust impl, we'd check inner instructions too
+            // Check SystemProgram transfers
             for (const ix of instructions) {
-                // Check if it's a parsed system instruction
                 if ('program' in ix && ix.program === 'system') {
                     const parsed = (ix as any).parsed;
-                    console.log(`[LocalSvmFacilitator] Inspecting IX:`, JSON.stringify(parsed));
-
-                    if (parsed.type === 'transfer') {
-                        const info = parsed.info;
-                        console.log(`[LocalSvmFacilitator] Found transfer: ${info.lamports} lamports to ${info.destination}`);
-                        if (info.destination === payTo) {
-                            paidAmount += BigInt(info.lamports);
-                            if (!payer) payer = info.source;
+                    if (parsed?.type === 'transfer' && parsed.info?.destination === payTo) {
+                        paidAmount += BigInt(parsed.info.lamports);
+                        if (!payer) payer = parsed.info.source;
+                    }
+                }
+                // Also check SPL Token transfers
+                if ('program' in ix && (ix.program === 'spl-token' || ix.program === 'spl-token-2022')) {
+                    const parsed = (ix as any).parsed;
+                    if (parsed?.type === 'transferChecked' || parsed?.type === 'transfer') {
+                        // For SPL tokens, verify the mint and destination match requirements
+                        // This is a simplified check - production should verify ATA derivation
+                        if (this.debug) {
+                            console.log(`[LocalSvmFacilitator] Found SPL transfer`);
                         }
                     }
                 }
             }
 
-            console.log(`[LocalSvmFacilitator] Total Paid Correctly: ${paidAmount}`);
-
             // Check correctness
             if (paidAmount >= requiredAmount) {
-                console.log('[LocalSvmFacilitator] Verification SUCCESS');
+                if (this.debug) {
+                    console.log(`[LocalSvmFacilitator] Verification SUCCESS for tx: ${signature.slice(0, 8)}...`);
+                }
                 return {
                     isValid: true,
                     payer: payer || tx.transaction.message.accountKeys[0].pubkey.toBase58()
                 };
             }
 
-            console.error(`[LocalSvmFacilitator] Verification FAILED. Paid: ${paidAmount}, Required: ${requiredAmount}`);
             return {
                 isValid: false,
-                invalidReason: `Insufficient payment. Required: ${requiredAmount}, Found: ${paidAmount}`,
+                invalidReason: 'Insufficient payment amount',
                 payer: payer
             };
 
-        } catch (error: any) {
-            console.error('[LocalSvmFacilitator] Verify error:', error);
-            // Return VerifyError for protocol compliance
-            // We mock a 500 status code since this is a local internal error
+        } catch (error: unknown) {
+            const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+            // Don't log full error details in production
+            if (this.debug) {
+                console.error('[LocalSvmFacilitator] Verify error:', errorMessage);
+            }
             throw new VerifyError(500, {
                 isValid: false,
-                invalidReason: error.message
+                invalidReason: errorMessage
             });
         }
+    }
+
+    /**
+     * Fetch transaction with exponential backoff retry
+     */
+    private async fetchTransactionWithRetry(
+        signature: string,
+        maxRetries: number = 3
+    ): Promise<any> {
+        let lastError: Error | undefined;
+
+        for (let attempt = 0; attempt < maxRetries; attempt++) {
+            try {
+                const tx = await this.connection.getParsedTransaction(signature, {
+                    maxSupportedTransactionVersion: 0,
+                    commitment: 'confirmed'
+                });
+                if (tx) return tx;
+
+                // Transaction not found yet, wait with exponential backoff
+                if (attempt < maxRetries - 1) {
+                    await this.sleep(Math.pow(2, attempt) * 1000);
+                }
+            } catch (error) {
+                lastError = error instanceof Error ? error : new Error('RPC error');
+                if (attempt < maxRetries - 1) {
+                    await this.sleep(Math.pow(2, attempt) * 1000);
+                }
+            }
+        }
+
+        if (lastError) throw lastError;
+        return null;
+    }
+
+    /**
+     * Sleep helper
+     */
+    private sleep(ms: number): Promise<void> {
+        return new Promise(resolve => setTimeout(resolve, ms));
     }
 
     /**

@@ -36,6 +36,7 @@ const sections = [
     { id: 'middleware', title: 'Middleware' },
     { id: 'pricing', title: 'Price Conversion' },
     { id: 'client-helpers', title: 'Client Helpers' },
+    { id: 'roadmap', title: '🗺️ Roadmap' },
     { id: 'api-reference', title: 'Full API Reference' },
 ];
 
@@ -124,7 +125,7 @@ export default function DocsPage() {
                         Micropay Docs
                     </Link>
                     <div className="flex items-center gap-4">
-                        <span className="hidden md:inline text-xs font-mono bg-green-100 text-green-700 px-2 py-1 rounded-full">v3.0.6</span>
+                        <span className="hidden md:inline text-xs font-mono bg-green-100 text-green-700 px-2 py-1 rounded-full">v3.3.0</span>
                         <a href="https://www.npmjs.com/package/@alleyboss/micropay-solana-x402-paywall" target="_blank" className="p-2 hover:bg-black/5 rounded-lg transition-colors text-gray-500 hover:text-black">
                             <Share01Icon size={18} />
                         </a>
@@ -418,6 +419,56 @@ app.get('/premium', x402Middleware(server, {
                         <CodeBlock code={`import { getSolPrice, lamportsToUsd } from '@alleyboss/micropay-solana-x402-paywall/pricing';
 
 const { solPrice } = await getSolPrice();`} />
+                    </section>
+
+                    {/* Roadmap */}
+                    <section id="roadmap" className="mb-20 scroll-mt-24">
+                        <div className="flex items-center gap-3 mb-6">
+                            <div className="p-2 bg-gradient-to-br from-purple-100 to-indigo-100 text-purple-600 rounded-lg">🗺️</div>
+                            <h2 className="text-2xl font-bold text-[#1D1D1F]">Roadmap</h2>
+                        </div>
+                        <p className="text-gray-600 mb-6">
+                            We&apos;re actively building the future of micropayments on Solana:
+                        </p>
+                        <div className="grid md:grid-cols-2 gap-4 mb-6">
+                            <div className="bg-gradient-to-br from-purple-50 to-indigo-50 border border-purple-100 rounded-2xl p-5">
+                                <div className="flex items-center gap-2 mb-3">
+                                    <span className="text-lg">⚡</span>
+                                    <h3 className="font-bold">Jupiter Swap-on-Pay</h3>
+                                    <span className="text-xs bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded-full">Coming Soon</span>
+                                </div>
+                                <p className="text-sm text-gray-600">Pay with any token. Auto-swap to SOL/USDC behind the scenes.</p>
+                            </div>
+                            <div className="bg-gradient-to-br from-pink-50 to-rose-50 border border-pink-100 rounded-2xl p-5">
+                                <div className="flex items-center gap-2 mb-3">
+                                    <span className="text-lg">🖼️</span>
+                                    <h3 className="font-bold">NFT/Token-Gating</h3>
+                                    <span className="text-xs bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded-full">Coming Soon</span>
+                                </div>
+                                <p className="text-sm text-gray-600">Verify NFT ownership for access discounts or exclusive content.</p>
+                            </div>
+                            <div className="bg-gradient-to-br from-green-50 to-emerald-50 border border-green-100 rounded-2xl p-5">
+                                <div className="flex items-center gap-2 mb-3">
+                                    <span className="text-lg">📊</span>
+                                    <h3 className="font-bold">Payment Analytics</h3>
+                                    <span className="text-xs bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded-full">Coming Soon</span>
+                                </div>
+                                <p className="text-sm text-gray-600">Webhooks & callbacks for tracking payment events in real-time.</p>
+                            </div>
+                            <div className="bg-gradient-to-br from-blue-50 to-cyan-50 border border-blue-100 rounded-2xl p-5">
+                                <div className="flex items-center gap-2 mb-3">
+                                    <span className="text-lg">🌳</span>
+                                    <h3 className="font-bold">Compressed NFT Access</h3>
+                                    <span className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full">Planned</span>
+                                </div>
+                                <p className="text-sm text-gray-600">Scalable access tokens via cNFTs for high-volume applications.</p>
+                            </div>
+                        </div>
+                        <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 text-center">
+                            <p className="text-sm text-gray-600">
+                                Want to contribute or sponsor a feature? <a href="https://github.com/AlleyBo55/micropay-solana-x402-paywall" target="_blank" className="text-purple-600 hover:underline font-medium">Open an issue on GitHub</a>
+                            </p>
+                        </div>
                     </section>
 
                     {/* API Reference */}

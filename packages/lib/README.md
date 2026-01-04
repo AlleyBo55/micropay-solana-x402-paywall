@@ -166,6 +166,36 @@ if (result.success) {
 }
 ```
 
+## 🎣 React Hooks (New in v3.2.2)
+
+```typescript
+import { usePricing, useFormatPrice } from '@alleyboss/micropay-solana-x402-paywall/client';
+
+function PaywallBanner({ priceInLamports }) {
+  const { formatted, isLoading } = useFormatPrice(priceInLamports);
+  
+  return (
+    <div className="paywall">
+      <span>Unlock for {isLoading ? '...' : formatted}</span>
+    </div>
+  );
+}
+```
+
+## 🗺️ Roadmap
+
+We're actively working on these exciting features:
+
+| Feature | Status | Description |
+|---------|--------|-------------|
+| ⚡ **Jupiter Swap-on-Pay** | 🔜 Coming Soon | Pay with any token, auto-swap to SOL/USDC |
+| 🖼️ **NFT/Token-Gating** | 🔜 Coming Soon | Verify NFT ownership for access discounts |
+| 📊 **Payment Analytics** | 🔜 Coming Soon | Webhooks & callbacks for payment events |
+| 🌳 **Compressed NFTs** | 🔜 Planned | Scalable access tokens via cNFTs |
+| 🔄 **Payment Streaming** | 🔜 Planned | Pay-as-you-consume for APIs |
+
+Want to contribute or sponsor a feature? Open an issue on [GitHub](https://github.com/AlleyBo55/micropay-solana-x402-paywall)!
+
 ## 📚 Documentation
 
 For full documentation:
