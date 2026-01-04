@@ -8,6 +8,7 @@ export default defineConfig({
         'client/index': 'src/client/index.ts',
         'session/index': 'src/session/index.ts',
         'express/index': 'src/express/index.ts',
+        'next/index': 'src/next/index.ts',
     },
 
     format: ['esm', 'cjs'],

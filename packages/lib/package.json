@@ -1,6 +1,6 @@
 {
     "name": "@alleyboss/micropay-solana-x402-paywall",
-    "version": "3.0.2",
+    "version": "3.0.3",
     "description": "Production-ready Solana micropayments library wrapper for official x402 SDK",
     "author": "AlleyBoss",
     "license": "MIT",
@@ -40,6 +40,16 @@
             "require": {
                 "types": "./dist/express/index.d.cts",
                 "default": "./dist/express/index.cjs"
+            }
+        },
+        "./next": {
+            "import": {
+                "types": "./dist/next/index.d.ts",
+                "default": "./dist/next/index.js"
+            },
+            "require": {
+                "types": "./dist/next/index.d.cts",
+                "default": "./dist/next/index.cjs"
             }
         },
         "./agent": {
@@ -99,6 +109,7 @@
     },
     "dependencies": {
         "@x402/core": "^2.1.0",
+        "@x402/next": "^2.1.0",
         "@x402/svm": "^2.1.0",
         "jose": "^6.1.3"
     },

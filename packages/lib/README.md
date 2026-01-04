@@ -60,26 +60,27 @@ app.get('/premium', x402Middleware(server, {
 
 ## 📦 Next.js (App Router)
 
-Use the official `@x402/next` adapter with our session management:
-
 ```typescript
 // app/api/premium/route.ts
-import { withX402 } from '@x402/next';
-import { x402ResourceServer } from '@x402/core/server';
+import { createX402Middleware } from '@alleyboss/micropay-solana-x402-paywall/next';
 
-const server = new x402ResourceServer({ ... });
+const withMicropay = createX402Middleware({
+    walletAddress: 'YOUR_WALLET_ADDRESS',
+    network: 'devnet'
+});
 
 const handler = (req) => {
-  return Response.json({ content: "Premium Data" });
+    return Response.json({ content: "Premium Data" });
 };
 
-export const GET = withX402(handler, {
-  accepts: { 
-    scheme: 'exact', 
-    amount: '1000000',
-    network: 'solana-mainnet' 
-  }
-}, server);
+// Protect the route
+export const GET = withMicropay(handler, {
+    description: "Unlock Premium Content",
+    accepts: {
+        amount: "1000000", // 0.001 SOL
+        scheme: "exact"
+    }
+});
 ```
 
 ## 🔧 Modules
