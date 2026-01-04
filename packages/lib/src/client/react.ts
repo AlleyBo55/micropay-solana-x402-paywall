@@ -84,16 +84,27 @@ export function usePaywallResource<T = any>({
                 const wwwAuth = res.headers.get('WWW-Authenticate');
                 if (wwwAuth) {
                     setPaymentHeader(wwwAuth);
-                    // Parse minimal requirements for UI
-                    // (Assuming standard x402 header format)
+                    // Parse requirements from x402 header using proper decoder
                     try {
-                        const match = wwwAuth.match(/amount="([^"]+)",\s*payTo="([^"]+)"/);
-                        if (match) {
-                            setPrice(BigInt(match[1]));
-                            setRecipient(match[2]);
+                        // Import the decoder
+                        const { decodePaymentRequiredHeader } = await import('@x402/core/http');
+                        // Strip 'x402 ' or 'X402 ' prefix if present
+                        const cleanHeader = wwwAuth.replace(/^[Xx]402\s+/, '');
+                        const decoded = decodePaymentRequiredHeader(cleanHeader);
+
+                        // Handle array or single object requirement
+                        const accepts = Array.isArray(decoded.accepts)
+                            ? decoded.accepts[0]
+                            : decoded.accepts;
+
+                        if (accepts) {
+                            // Get amount - could be 'amount' or 'maxAmountRequired' depending on version
+                            const amountStr = accepts.amount || (accepts as any).maxAmountRequired || '0';
+                            setPrice(BigInt(amountStr));
+                            setRecipient(accepts.payTo);
                         }
                     } catch (e) {
-                        console.warn('Failed to parse 402 details from header', e);
+                        console.warn('[usePaywallResource] Failed to parse x402 header:', e);
                     }
                 }
                 setIsLocked(true);
