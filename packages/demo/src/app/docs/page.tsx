@@ -72,11 +72,11 @@ function CodeBlock({ code, language = 'typescript' }: { code: string; language?:
             const parts = line.split(/([A-Z_]+=)/);
             return parts.map((p, i) => /^[A-Z_]+=$/.test(p) ? <span key={i} className="text-yellow-400">{p}</span> : p);
         }
-        
-        const tokens: JSX.Element[] = [];
+
+        const tokens: React.ReactNode[] = [];
         let i = 0;
         const keywords = /\b(import|from|const|let|var|function|async|await|return|if|else|export|interface|type|class|new|throw|try|catch|default|as)\b/;
-        
+
         while (i < line.length) {
             if (line.slice(i).match(/^\/\/.*/)) {
                 tokens.push(<span key={i} className="text-gray-500">{line.slice(i)}</span>);
@@ -176,7 +176,7 @@ export default function DocsPage() {
                         <span className="text-sm md:text-[15px]">Micropay</span>
                     </Link>
                     <div className="flex items-center gap-2 md:gap-3">
-                        <span className="hidden sm:inline text-[10px] md:text-xs font-mono bg-emerald-50 text-emerald-700 px-2 py-0.5 md:px-2.5 md:py-1 rounded-md border border-emerald-200">v3.3.0</span>
+                        <span className="hidden sm:inline text-[10px] md:text-xs font-mono bg-emerald-50 text-emerald-700 px-2 py-0.5 md:px-2.5 md:py-1 rounded-md border border-emerald-200">v3.3.13</span>
                         <a href="https://www.npmjs.com/package/@alleyboss/micropay-solana-x402-paywall" target="_blank" className="hidden sm:flex p-1.5 md:p-2 hover:bg-gray-100 rounded-md transition-colors text-gray-600 hover:text-black">
                             <Share01Icon size={16} className="md:w-[18px] md:h-[18px]" />
                         </a>
@@ -205,9 +205,8 @@ export default function DocsPage() {
                                     <button
                                         key={section.id}
                                         onClick={() => scrollToSection(section.id)}
-                                        className={`w-full text-left px-4 py-3 text-sm font-medium rounded-lg transition-all flex items-center gap-3 ${
-                                            activeSection === section.id ? 'bg-gray-100 text-black' : 'text-gray-600 hover:text-black hover:bg-gray-50'
-                                        }`}
+                                        className={`w-full text-left px-4 py-3 text-sm font-medium rounded-lg transition-all flex items-center gap-3 ${activeSection === section.id ? 'bg-gray-100 text-black' : 'text-gray-600 hover:text-black hover:bg-gray-50'
+                                            }`}
                                     >
                                         <Icon size={18} className="flex-shrink-0" />
                                         {section.title}
@@ -254,7 +253,7 @@ export default function DocsPage() {
                     <section id="intro" className="mb-16 md:mb-24 pt-6 md:pt-10">
                         <div className="inline-flex items-center gap-2 px-2.5 py-1 md:px-3 md:py-1.5 bg-gray-50 border border-purple-100 rounded-full text-xs md:text-sm font-medium text-purple-700 mb-4 md:mb-6">
                             <span className="w-1.5 h-1.5 md:w-2 md:h-2 bg-green-500 rounded-full animate-pulse"></span>
-                            <span className="whitespace-nowrap">Production Ready • v3.3.0</span>
+                            <span className="whitespace-nowrap">Production Ready • v3.3.13</span>
                         </div>
                         <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-4 md:mb-6 text-[#1D1D1F] leading-tight">
                             Build Micropayment Apps
@@ -263,7 +262,7 @@ export default function DocsPage() {
                         <p className="text-base md:text-lg lg:text-xl text-gray-600 leading-relaxed mb-6 md:mb-8">
                             Production-ready Solana micropayments with <strong>x402 protocol</strong>. Enable AI agents to pay autonomously, accept SOL/USDC, and protect your APIs with zero-config middleware.
                         </p>
-                        
+
                         <div className="flex flex-col sm:flex-row flex-wrap gap-3 md:gap-4 mb-8 md:mb-12">
                             <Link href="/agent-chat" className="inline-flex items-center justify-center gap-2 px-5 py-2.5 md:px-6 md:py-3 bg-black text-white rounded-full font-medium hover:bg-gray-800 transition-all text-sm md:text-base">
                                 <Sparkles size={18} />
@@ -318,7 +317,7 @@ export default function DocsPage() {
                         <p className="text-lg text-gray-600 mb-8">
                             Building crypto payment systems is complex. We've done the heavy lifting so you don't have to.
                         </p>
-                        
+
                         <div className="grid md:grid-cols-2 gap-6 mb-8">
                             <div className="bg-white p-6 rounded-2xl border border-black/5 shadow-sm">
                                 <div className="flex items-center gap-3 mb-4">
@@ -485,7 +484,7 @@ export default function DocsPage() {
                         <p className="text-lg text-gray-600 mb-6">
                             Get started in seconds with npm or yarn.
                         </p>
-                        
+
                         <div className="space-y-4">
                             <div>
                                 <h3 className="font-semibold mb-3 flex items-center gap-2">
@@ -683,7 +682,7 @@ function PaymentButton() {
                                 <span>📝</span> Article Paywall Flow
                             </h3>
                             <p className="text-gray-600 mb-6">How users unlock premium content with one-time payments:</p>
-                            
+
                             <div className="bg-white border-2 border-indigo-100 rounded-2xl p-8 shadow-lg mb-6">
                                 <div className="space-y-4">
                                     {[
@@ -814,7 +813,7 @@ function PaymentButton() {
                                 <span>🤖</span> Autonomous Agent Payment Flow
                             </h3>
                             <p className="text-gray-600 mb-6">Complete step-by-step breakdown of how AI agents autonomously pay for API access:</p>
-                            
+
                             <div className="bg-white border-2 border-purple-100 rounded-2xl p-4 md:p-8 shadow-lg mb-6">
                                 <div className="space-y-2 md:space-y-4">
                                     {[

@@ -206,6 +206,36 @@ body {
   color: #000000 !important;
 }
 
+/* Chat-specific prose for AI bubbles with light backgrounds */
+.prose-chat {
+  color: #1D1D1F !important;
+}
+
+.prose-chat h1,
+.prose-chat h2,
+.prose-chat h3,
+.prose-chat h4,
+.prose-chat h5,
+.prose-chat h6 {
+  color: #1D1D1F !important;
+  font-weight: 700 !important;
+}
+
+.prose-chat p,
+.prose-chat li {
+  color: #1D1D1F !important;
+  opacity: 0.9;
+}
+
+.prose-chat strong {
+  color: #1D1D1F !important;
+  font-weight: 800 !important;
+}
+
+.prose-chat li::marker {
+  color: #2563eb !important;
+}
+
 /* Wallet adapter - Vercel style */
 .wallet-adapter-button {
   background: var(--foreground) !important;

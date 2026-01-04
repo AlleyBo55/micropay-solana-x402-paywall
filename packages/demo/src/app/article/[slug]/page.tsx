@@ -98,36 +98,36 @@ export default function ArticlePage() {
                         <span className="font-bold tracking-tight text-sm text-black">Micropay</span>
                     </div>
 
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-2 sm:gap-4">
                         {!isLoading && (
                             isLocked ? (
                                 <button
                                     onClick={unlock}
-                                    className="px-3 py-1.5 text-xs font-medium rounded-full bg-black text-white hover:bg-gray-800 transition-colors flex items-center gap-1.5"
+                                    className="px-2.5 py-1.5 sm:px-3 sm:py-1.5 text-[10px] sm:text-xs font-bold rounded-full bg-black text-white hover:bg-gray-800 transition-all flex items-center gap-1.5 shadow-sm active:scale-95"
                                 >
                                     <LockPasswordIcon size={12} />
                                     Unlock
                                 </button>
                             ) : (
-                                <span className="px-3 py-1.5 text-xs font-semibold rounded-full bg-green-50 text-green-700 border border-green-100 flex items-center gap-1.5">
+                                <span className="px-2.5 py-1.5 sm:px-3 sm:py-1.5 text-[10px] sm:text-xs font-bold rounded-full bg-green-50 text-green-700 border border-green-100 flex items-center gap-1.5">
                                     <Tick01Icon size={12} />
-                                    Unlocked
+                                    <span className="hidden xs:inline">Unlocked</span>
                                 </span>
                             )
                         )}
-                        <ClientWalletMultiButton style={{ height: '32px', borderRadius: '9999px', fontSize: '12px', padding: '0 12px', backgroundColor: '#000' }} />
+                        <ClientWalletMultiButton style={{ height: '30px', borderRadius: '9999px', fontSize: '10px', padding: '0 10px', backgroundColor: '#000', minWidth: 'auto' }} />
                     </div>
                 </div>
             </nav>
 
             <div className="w-full max-w-3xl mx-auto px-6 pt-16 pb-24">
                 {/* Hero Section */}
-                <header className="mb-12 text-center md:text-left">
+                <header className="mb-10 sm:mb-12 text-center md:text-left">
                     {/* Tags */}
                     {article.tags && article.tags.length > 0 && (
-                        <div className="flex flex-wrap gap-3 justify-center md:justify-start mb-6">
+                        <div className="flex flex-wrap gap-2 sm:gap-3 justify-center md:justify-start mb-6">
                             {article.tags.map((tag: string) => (
-                                <span key={tag} className="text-[10px] uppercase tracking-widest font-bold text-black/60">
+                                <span key={tag} className="text-[9px] sm:text-[10px] uppercase tracking-[0.15em] font-bold text-black/50 bg-black/5 px-2 py-0.5 rounded">
                                     {tag}
                                 </span>
                             ))}
@@ -135,25 +135,25 @@ export default function ArticlePage() {
                     )}
 
                     {/* Title */}
-                    <h1 className="text-4xl md:text-6xl font-serif font-bold text-black mb-6 leading-[1.1] tracking-tight">
+                    <h1 className="text-3xl sm:text-4xl md:text-6xl font-serif font-bold text-black mb-6 leading-[1.15] sm:leading-[1.1] tracking-tight px-2 sm:px-0">
                         {article.title}
                     </h1>
 
                     {/* Excerpt */}
-                    <p className="text-xl md:text-2xl text-black/70 leading-relaxed font-light mb-8 max-w-2xl">
+                    <p className="text-lg sm:text-xl md:text-2xl text-black/70 leading-relaxed font-light mb-8 max-w-2xl px-4 sm:px-0">
                         {article.excerpt}
                     </p>
 
                     {/* Author Meta */}
-                    <div className="flex items-center justify-center md:justify-start gap-3 border-t border-b border-gray-100 py-6">
-                        <div className="w-10 h-10 rounded-full bg-gray-200 overflow-hidden">
+                    <div className="flex items-center justify-center md:justify-start gap-3 border-t border-b border-gray-100 py-6 mx-4 sm:mx-0">
+                        <div className="w-10 h-10 rounded-full bg-gray-100 overflow-hidden ring-1 ring-black/5">
                             {article.author.avatar && (
                                 <img src={article.author.avatar} alt={article.author.name} className="w-full h-full object-cover" />
                             )}
                         </div>
                         <div className="text-left">
                             <div className="font-bold text-sm text-black">{article.author.name}</div>
-                            <div className="text-xs text-black/60 font-medium">
+                            <div className="text-[11px] sm:text-xs text-black/40 font-medium">
                                 {new Date(article.publishedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })} · {article.readingTime}
                             </div>
                         </div>
