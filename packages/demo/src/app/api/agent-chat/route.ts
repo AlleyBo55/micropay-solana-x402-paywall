@@ -283,8 +283,9 @@ export async function POST(req: NextRequest) {
 
                                     send({ type: 'thinking', id: 'v_ok', stepType: 'confirmed', message: confirmMsg, agent: 'Research Agent' });
                                 } else {
-                                    send({ type: 'thinking', id: 'v_fail', stepType: 'error', message: `Verification Failed by ${VERIFIER_NAME}`, agent: 'Research Agent' });
-                                    send({ type: 'content', content: `❌ **Verification Denied:** The facilitator rejected the payment signature. Execution halted.`, isPremium: false });
+                                    const reason = verifyData.invalidReason || 'Unknown Reason';
+                                    send({ type: 'thinking', id: 'v_fail', stepType: 'error', message: `Verification Failed: ${reason}`, agent: 'Research Agent' });
+                                    send({ type: 'content', content: `❌ **Verification Denied:** ${reason}. Execution halted.`, isPremium: false });
                                     close();
                                     return;
                                 }
