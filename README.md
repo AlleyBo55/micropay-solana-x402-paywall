@@ -6,9 +6,11 @@ A production-ready, per-article paywall system using the **x402 protocol** and *
 [![Solana](https://img.shields.io/badge/Solana-Devnet%20%7C%20Mainnet-purple)](https://solana.com)
 [![x402](https://img.shields.io/badge/x402-Protocol-blue)](https://x402.org)
 
-<div align="center">
   <a href="https://solana-x402-paywall.vercel.app/docs">
     <img src="https://img.shields.io/badge/📖_Read_Docs-000000?style=for-the-badge&logo=readthedocs&logoColor=white" alt="Read Docs" height="40"/>
+  </a>
+  <a href="https://solana-x402-paywall.vercel.app/docs/deploy">
+    <img src="https://img.shields.io/badge/🚀_Deploy_One--Click-000000?style=for-the-badge&logo=railway&logoColor=white" alt="One-Click Deploy" height="40"/>
   </a>
   <a href="https://solana-x402-paywall.vercel.app">
     <img src="https://img.shields.io/badge/⚡_View_Demo-000000?style=for-the-badge&logo=vercel&logoColor=white" alt="View Demo" height="40"/>

@@ -5,6 +5,7 @@
 [![npm](https://img.shields.io/npm/v/@alleyboss/micropay-solana-x402-paywall)](https://www.npmjs.com/package/@alleyboss/micropay-solana-x402-paywall)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Bundle Size](https://img.shields.io/badge/bundle-38KB-green)](https://bundlephobia.com/package/@alleyboss/micropay-solana-x402-paywall)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-solana--x402--paywall.vercel.app-black)](https://solana-x402-paywall.vercel.app)
 
 ## 🚀 What It Does
 
@@ -161,7 +162,7 @@ const response = await fetch('/api/premium', {
 - ✅ Full TypeScript support
 - ✅ Backward compatible with x402 format
 
-**Learn more:** [PayAI Integration Guide](https://github.com/AlleyBo55/micropay-solana-x402-paywall/blob/main/docs/PAYAI_INTEGRATION.md)
+**Learn more:** [PayAI Network](https://payai.network) | [Integration Guide](https://solana-x402-paywall.vercel.app/docs#payai-format)
 
 ## 🌐 Public Facilitator Mode (New in v3.3.12)
 

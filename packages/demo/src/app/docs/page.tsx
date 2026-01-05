@@ -57,6 +57,7 @@ const sections = [
     { id: 'demo-features', title: 'Demos', Icon: GameController01Icon },
     { id: 'installation', title: 'Installation', Icon: PackageIcon },
     { id: 'quick-start', title: 'Quick Start', Icon: ZapIcon },
+    { id: 'deployment', title: 'Deployment', Icon: RocketIcon },
     { id: 'payment-flow', title: 'How It Works', Icon: WorkflowCircle03Icon },
     { id: 'wallet-topology', title: 'Wallet Topology', Icon: Database01Icon },
     { id: 'agent-chat', title: 'AI Payments', Icon: AiBrain01Icon },
@@ -241,7 +242,7 @@ export default function DocsPage() {
                         <span className="text-[15px] tracking-tight text-[#1D1D1F]">Micropay <span className="text-gray-400 font-normal">Docs</span></span>
                     </Link>
                     <div className="flex items-center gap-3 md:gap-4">
-                        <span className="hidden sm:inline-flex text-[11px] font-mono bg-gray-50 text-gray-500 px-2 py-1 rounded-md border border-gray-100">v3.3.13</span>
+                        <span className="hidden sm:inline-flex text-[11px] font-mono bg-gray-50 text-gray-500 px-2 py-1 rounded-md border border-gray-100">v3.3.14</span>
                         <Link href="/" className="hidden sm:inline-flex text-[13px] font-medium px-4 py-1.5 bg-[#1D1D1F] text-white rounded-full hover:bg-black transition-all shadow-sm active:scale-95">
                             Live Demo
                         </Link>
@@ -321,7 +322,7 @@ export default function DocsPage() {
                     <section id="intro" className="mb-16 md:mb-24 mt-4 scroll-mt-24">
                         <div className="inline-flex items-center gap-2 px-3 py-1 bg-white border border-[#D2D2D7] rounded-full mb-6 md:mb-8 shadow-sm">
                             <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
-                            <span className="text-[10px] md:text-[11px] font-bold text-gray-400 uppercase tracking-widest leading-none mt-0.5">Production Ready • v3.3.13</span>
+                            <span className="text-[10px] md:text-[11px] font-bold text-gray-400 uppercase tracking-widest leading-none mt-0.5">Production Ready • v3.3.14</span>
                         </div>
 
                         <h1 className="text-[32px] md:text-[64px] font-bold tracking-tight text-[#1D1D1F] leading-[1.1] mb-6 md:mb-8">
@@ -655,6 +656,48 @@ function PaymentButton() {
                         </div>
                     </section>
 
+                    {/* Deployment Section */}
+                    <section id="deployment" className="mb-16 md:mb-24 scroll-mt-24">
+                        <div className="flex items-center gap-3 mb-8 md:mb-10">
+                            <div className="p-2 bg-purple-100 text-purple-600 rounded-lg text-lg">🚀</div>
+                            <h2 className="text-2xl md:text-3xl font-bold text-[#1D1D1F]">Deployment</h2>
+                        </div>
+
+                        <div className="bg-[#1D1D1F] rounded-[32px] p-8 md:p-12 relative overflow-hidden group">
+                            <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-blue-600/20 to-purple-600/20 blur-3xl rounded-full -mr-32 -mt-32 pointer-events-none" />
+
+                            <div className="relative z-10">
+                                <h3 className="text-2xl md:text-3xl font-bold text-white mb-4">Self-Host Your Facilitator</h3>
+                                <p className="text-lg text-gray-400 mb-8 max-w-2xl leading-relaxed">
+                                    For production, you need a high-performance verification node.
+                                    Deploy your own instance in one click with zero configuration.
+                                </p>
+
+                                <div className="grid sm:grid-cols-3 gap-4 mb-10">
+                                    <div className="bg-white/5 border border-white/10 p-4 rounded-2xl backdrop-blur-sm">
+                                        <div className="font-bold text-white mb-1">Railway</div>
+                                        <div className="text-gray-400 text-xs">Production Ready</div>
+                                    </div>
+                                    <div className="bg-white/5 border border-white/10 p-4 rounded-2xl backdrop-blur-sm">
+                                        <div className="font-bold text-white mb-1">Heroku</div>
+                                        <div className="text-gray-400 text-xs">One-Click Setup</div>
+                                    </div>
+                                    <div className="bg-white/5 border border-white/10 p-4 rounded-2xl backdrop-blur-sm">
+                                        <div className="font-bold text-white mb-1">Render</div>
+                                        <div className="text-gray-400 text-xs">Docker Runtime</div>
+                                    </div>
+                                </div>
+
+                                <Link
+                                    href="/docs/deploy"
+                                    className="inline-flex items-center gap-2 bg-white text-[#1D1D1F] px-6 py-3 rounded-full font-bold hover:bg-gray-100 transition-all active:scale-95 shadow-lg shadow-white/10"
+                                >
+                                    View Deployment Guide <ArrowRight01Icon size={16} />
+                                </Link>
+                            </div>
+                        </div>
+                    </section>
+
                     {/* How It Works */}
                     <section id="payment-flow" className="mb-16 md:mb-24 scroll-mt-24">
                         <div className="flex items-center gap-3 mb-8 md:mb-10">
@@ -901,17 +944,21 @@ function PaymentButton() {
                         <div className="bg-[#F5F5F7] border border-[#D2D2D7] rounded-3xl md:rounded-[32px] p-6 md:p-12 mb-10 md:mb-12">
                             <div className="max-w-3xl text-center md:text-left mx-auto md:mx-0">
                                 <h3 className="text-xl md:text-2xl font-bold text-[#1D1D1F] mb-4">The Universal Standard.</h3>
-                                <p className="text-gray-500 text-sm md:text-base leading-relaxed font-medium mb-8">
-                                    Native support for the PayAI payment format - a universal protocol that enables cross-chain payment discovery.
+                                <p className="text-gray-500 text-sm md:text-base leading-relaxed font-medium mb-6">
+                                    Native support for the <a href="https://payai.network" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline font-semibold">PayAI payment format</a> - a universal protocol that enables cross-chain payment discovery.
                                     Micropay automatically detects and transforms PayAI payloads into x402 compliant authorizations.
                                 </p>
-                                <div className="flex flex-wrap justify-center md:justify-start gap-3">
+                                <div className="flex flex-wrap justify-center md:justify-start gap-3 mb-6">
                                     {['Multi-chain', 'Stateless', 'Async', 'Universal'].map((tag) => (
                                         <div key={tag} className="px-3 py-1.5 md:px-4 md:py-2 bg-white rounded-xl border border-gray-100 text-[9px] md:text-[11px] font-bold text-gray-400 uppercase tracking-widest text-center shadow-sm">
                                             {tag}
                                         </div>
                                     ))}
                                 </div>
+                                <a href="https://payai.network" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-full text-[12px] font-bold text-[#1D1D1F] hover:bg-gray-50 transition-all shadow-sm">
+                                    Learn more at payai.network
+                                    <ArrowRight01Icon size={14} />
+                                </a>
                             </div>
                         </div>
 
@@ -981,11 +1028,52 @@ function PaymentButton() {
                         </div>
                     </section>
 
-                    {/* Verification */}
-                    <section id="verification" className="mb-16 md:mb-24 scroll-mt-24">
+                    {/* Self-Sovereign Verification */}
+                    <section id="self-sovereign" className="mb-16 md:mb-24 scroll-mt-24">
                         <div className="flex items-center gap-3 mb-8 md:mb-10">
-                            <h2 className="text-xl md:text-2xl font-bold tracking-tight text-[#1D1D1F]">Verification</h2>
+                            <h2 className="text-xl md:text-2xl font-bold tracking-tight text-[#1D1D1F]">Self-Sovereign Verification</h2>
                             <div className="flex-1 h-[1px] bg-[#D2D2D7]" />
+                        </div>
+
+                        <div className="bg-[#F5F5F7] border border-[#D2D2D7] rounded-3xl md:rounded-[32px] p-6 md:p-12 mb-10">
+                            <div className="max-w-3xl">
+                                <h3 className="text-xl md:text-2xl font-bold text-[#1D1D1F] mb-4">Verify Payments Yourself.</h3>
+                                <p className="text-gray-500 text-sm md:text-base leading-relaxed font-medium mb-6">
+                                    By default, the library uses the x402.org hosted facilitator. However, you can enable <strong>Self-Sovereign Mode</strong> to verify payments directly against your own Solana RPC node, removing reliance on any external API services.
+                                </p>
+                                <CodeBlock code={`const withMicropay = createX402Middleware({
+    walletAddress: 'YOUR_WALLET',
+    network: 'devnet',
+    price: '1000000',
+    // Enable Self-Sovereign Mode
+    rpcUrl: process.env.NEXT_PUBLIC_RPC_URL 
+});`} />
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+                            <div className="bg-white border border-gray-100 rounded-3xl p-6 md:p-8">
+                                <h4 className="text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-6">Hosted Mode (Default)</h4>
+                                <ul className="space-y-4">
+                                    {['Verified by x402.org', 'Zero-config setup', 'Best for quick startups'].map((item, i) => (
+                                        <li key={i} className="flex items-center gap-3 text-[13px] text-gray-600 font-medium">
+                                            <div className="w-1.5 h-1.5 rounded-full bg-blue-500" />
+                                            {item}
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                            <div className="bg-white border border-gray-100 rounded-3xl p-6 md:p-8">
+                                <h4 className="text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-6">Self-Sovereign Mode</h4>
+                                <ul className="space-y-4">
+                                    {['Verified by your RPC node', 'No external data sharing', 'Best for production'].map((item, i) => (
+                                        <li key={i} className="flex items-center gap-3 text-[13px] text-gray-600 font-medium">
+                                            <div className="w-1.5 h-1.5 rounded-full bg-purple-500" />
+                                            {item}
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
                         </div>
 
                         <div className="bg-white border border-gray-100 rounded-3xl p-6 md:p-8 mb-8">
@@ -1053,8 +1141,10 @@ if (!isValid) throw new Error('Payment already claimed!');`} />
                                 </div>
                                 <div className="p-6 md:p-8">
                                     <CodeBlock code={`const server = new x402ResourceServer({
-  facilitator: new LocalSvmFacilitator(RPC_URL),
+  // Use your own self-hosted facilitator
+  facilitator: new RemoteFacilitator('https://my-facilitator.railway.app'), 
   walletAddress: CREATOR_ADDR,
+  
   // Optional config
   registry: new RedisRegistry(), // Custom storage
   ttl: 3600, // Session duration in seconds
@@ -1083,7 +1173,9 @@ if (!isValid) throw new Error('Payment already claimed!');`} />
 const withPayment = createX402Middleware({
   walletAddress: process.env.CREATOR_WALLET_ADDRESS!,
   price: '10000000', // 0.01 SOL
-  network: 'devnet'
+  network: 'devnet',
+  // Optional: Use your self-hosted facilitator
+  facilitatorUrl: 'https://my-facilitator.railway.app'
 });
 
 export const GET = withPayment(async (req) => {
