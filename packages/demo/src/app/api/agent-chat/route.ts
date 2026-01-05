@@ -310,10 +310,27 @@ export async function POST(req: NextRequest) {
                             }
 
                             if (!verifySuccess) {
-                                send({ type: 'thinking', id: 'v_fail', stepType: 'error', message: `Verification Failed: ${failureReason}`, agent: 'Research Agent' });
-                                send({ type: 'content', content: `❌ **Verification Denied:** ${failureReason}. Execution halted.`, isPremium: false });
-                                close();
-                                return;
+                                // FINAL FALLBACK: If Private Node can't see it (Devnet Lag), check LOCAL RPC
+                                if (failureReason.toLowerCase().includes('not found')) {
+                                    send({ type: 'thinking', id: 'v_fallback', stepType: 'thinking', message: `⚠️ Private Node Lag: Falling back to Local RPC verify...`, agent: 'Research Agent' });
+
+                                    // Local Verification Check
+                                    const tx = await getConnection().getTransaction(result.signature, { commitment: 'confirmed' });
+                                    if (tx) {
+                                        send({ type: 'thinking', id: 'v_rpc_ok', stepType: 'confirmed', message: `RPC Verified: Transaction confirmed on-chain ✓`, agent: 'Research Agent' });
+                                    } else {
+                                        send({ type: 'thinking', id: 'v_fail', stepType: 'error', message: `Verification Failed: Tx truly lost.`, agent: 'Research Agent' });
+                                        send({ type: 'content', content: `❌ **Payment Failed:** Transaction dropped by network.`, isPremium: false });
+                                        close();
+                                        return;
+                                    }
+                                } else {
+                                    // Genuine Rejection (e.g. wrong amount)
+                                    send({ type: 'thinking', id: 'v_fail', stepType: 'error', message: `Verification Failed: ${failureReason}`, agent: 'Research Agent' });
+                                    send({ type: 'content', content: `❌ **Verification Denied:** ${failureReason}. Execution halted.`, isPremium: false });
+                                    close();
+                                    return;
+                                }
                             }
 
                             await new Promise(r => setTimeout(r, thoughtDelay));
