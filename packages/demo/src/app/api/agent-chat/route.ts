@@ -352,15 +352,54 @@ I can only process requests related to:
                             send({ type: 'thinking', id: 'cnf', stepType: 'confirmed', message: `Tx Broadcast: ${result.signature.slice(0, 8)}...`, signature: result.signature, agent: 'Research Agent' });
                             await new Promise(r => setTimeout(r, thoughtDelay));
 
-                            // Custom Facilitator Verification Step
-                            // Uses the user's deployed facilitator (e.g. on Railway) if configured, or default PayAI
-                            const PLATFORM_FACILITATOR_URL = process.env.PLATFORM_FACILITATOR_URL || 'https://facilitator.payai.network';
+                            // ---------------------------------------------------------
+                            // DUAL VERIFICATION STRATEGY
+                            // 1. Sovereign Check: Verify with user's own Custom Facilitator (if configured)
+                            // 2. Network Check: Cross-validate with the public PayAI Network
+                            // ---------------------------------------------------------
 
-                            send({ type: 'thinking', id: 'payai1', stepType: 'paying', message: `Verification: Submitting to Facilitator (${PLATFORM_FACILITATOR_URL})...`, agent: 'Research Agent' });
+                            const CUSTOM_FACILITATOR_URL = process.env.PLATFORM_FACILITATOR_URL;
+                            const PAYAI_FACILITATOR_URL = process.env.PAYAI_FACILITATOR_URL || 'https://facilitator.payai.network';
+
+                            // Step 1: Custom Verification (if enabled)
+                            if (CUSTOM_FACILITATOR_URL) {
+                                send({ type: 'thinking', id: 'f_custom', stepType: 'paying', message: `Sovereign Verify: Checking ${new URL(CUSTOM_FACILITATOR_URL).hostname}...`, agent: 'Research Agent' });
+                                await new Promise(r => setTimeout(r, thoughtDelay / 2));
+
+                                try {
+                                    const customRes = await fetch(`${CUSTOM_FACILITATOR_URL}/verify`, {
+                                        method: 'POST',
+                                        headers: { 'Content-Type': 'application/json' },
+                                        body: JSON.stringify({
+                                            paymentPayload: { x402Version: 2, payload: { signature: result.signature } },
+                                            paymentRequirements: {
+                                                payTo: recipientWallet,
+                                                amount: '1000000',
+                                                asset: 'SOL',
+                                                network: process.env.SOLANA_NETWORK || 'devnet'
+                                            }
+                                        })
+                                    });
+                                    const customData = await customRes.json();
+
+                                    if (customData.valid) {
+                                        send({ type: 'thinking', id: 'f_custom_ok', stepType: 'confirmed', message: `Sovereign Verified: Your infrastructure confirmed payment ✓`, agent: 'Research Agent' });
+                                    } else {
+                                        send({ type: 'thinking', id: 'f_custom_fail', stepType: 'error', message: `Sovereign Verification Failed`, agent: 'Research Agent' });
+                                    }
+                                } catch (e) {
+                                    send({ type: 'thinking', id: 'f_custom_err', stepType: 'error', message: `Sovereign Check Failed: Unreachable`, agent: 'Research Agent' });
+                                }
+                                await new Promise(r => setTimeout(r, thoughtDelay));
+                            }
+
+                            // Step 2: PayAI Network Verification (Always run as global consensus/audit)
+
+                            send({ type: 'thinking', id: 'payai1', stepType: 'paying', message: 'Network Verify: Submitting to PayAI Consensus...', agent: 'Research Agent' });
                             await new Promise(r => setTimeout(r, thoughtDelay / 2));
 
                             try {
-                                const verifyRes = await fetch(`${PLATFORM_FACILITATOR_URL}/verify`, {
+                                const verifyRes = await fetch(`${PAYAI_FACILITATOR_URL}/verify`, {
                                     method: 'POST',
                                     headers: { 'Content-Type': 'application/json' },
                                     body: JSON.stringify({
@@ -380,7 +419,7 @@ I can only process requests related to:
                                 const verification = await verifyRes.json();
 
                                 if (verification.valid) {
-                                    send({ type: 'thinking', id: 'payai2', stepType: 'confirmed', message: `Verified: Payment confirmed by your Facilitator ✓`, agent: 'Research Agent' });
+                                    send({ type: 'thinking', id: 'payai2', stepType: 'confirmed', message: `Network Verified: Confirmed by PayAI Public Node ✓`, agent: 'Research Agent' });
                                 } else {
                                     // Log warning but continue - tx is already on-chain
                                     console.warn('[Agent Chat] Facilitator verification returned invalid, but tx is on-chain:', verification);
