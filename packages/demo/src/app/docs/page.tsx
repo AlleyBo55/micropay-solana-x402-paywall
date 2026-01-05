@@ -1167,6 +1167,7 @@ function PaymentButton() {
                     </section>
 
                     {/* Verification Modes */}
+                    {/* Verification Modes */}
                     <section id="self-sovereign" className="mb-16 md:mb-24 scroll-mt-24">
                         <div className="flex items-center gap-3 mb-8 md:mb-10">
                             <h2 className="text-xl md:text-2xl font-bold tracking-tight text-[#1D1D1F]">Verification Modes</h2>
@@ -1177,41 +1178,55 @@ function PaymentButton() {
                             <div className="max-w-3xl">
                                 <h3 className="text-xl md:text-2xl font-bold text-[#1D1D1F] mb-4">Choose Your Trust Model.</h3>
                                 <p className="text-gray-500 text-sm md:text-base leading-relaxed font-medium mb-6">
-                                    Micropay supports a <strong>Split Architecture</strong>. You can use the managed PayAI Network for standard convenience, or switch to <strong>Sovereign Mode</strong> by pointing the middleware to your own private Facilitator node.
+                                    Micropay supports three distinct trust topologies. Default to the managed <strong>PayAI Network</strong>, run your own <strong>Private Facilitator</strong>, or go fully <strong>Self-Sovereign</strong> with direct RPC verification.
                                 </p>
                                 <CodeBlock code={`const withMicropay = createX402Middleware({
     walletAddress: 'YOUR_WALLET',
-    network: 'devnet',
     price: '1000000',
     
-    // Standard Mode (Default)
-    // Uses PayAI Network for verification
+    // Mode 1: Hosted (Default)
+    // Uses PayAI Network
     
-    // Sovereign Mode (Optional)
+    // Mode 2: Private Verified
     // Point to your own Railway/Docker container
-    facilitatorUrl: process.env.PLATFORM_FACILITATOR_URL 
+    facilitatorUrl: 'https://my-facilitator.railway.app',
+
+    // Mode 3: Self-Sovereign
+    // Verify directly against Solana RPC (No Facilitator)
+    rpcUrl: process.env.NEXT_PUBLIC_RPC_URL
 });`} />
                             </div>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-                            <div className="bg-white border border-gray-100 rounded-3xl p-6 md:p-8">
-                                <h4 className="text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-6">Standard Mode (PayAI)</h4>
-                                <ul className="space-y-4">
-                                    {['Verified by PayAI Network', 'Zero-config setup', 'Best for SaaS & Consumer Apps'].map((item, i) => (
-                                        <li key={i} className="flex items-center gap-3 text-[13px] text-gray-600 font-medium">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+                            <div className="bg-white border border-gray-100 rounded-3xl p-6">
+                                <h4 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-4">Hosted (PayAI)</h4>
+                                <ul className="space-y-3">
+                                    {['Zero Setup', 'Global Cache', 'Managed Reliability'].map((item, i) => (
+                                        <li key={i} className="flex items-center gap-2 text-[12px] text-gray-600 font-medium">
                                             <div className="w-1.5 h-1.5 rounded-full bg-blue-500" />
                                             {item}
                                         </li>
                                     ))}
                                 </ul>
                             </div>
-                            <div className="bg-white border border-gray-100 rounded-3xl p-6 md:p-8">
-                                <h4 className="text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-6">Sovereign Mode (Custom)</h4>
-                                <ul className="space-y-4">
-                                    {['Verified by Your Infrastructure', 'Total Privacy & Control', 'Best for Autonomous Agents'].map((item, i) => (
-                                        <li key={i} className="flex items-center gap-3 text-[13px] text-gray-600 font-medium">
+                            <div className="bg-white border border-gray-100 rounded-3xl p-6">
+                                <h4 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-4">Private (Railway)</h4>
+                                <ul className="space-y-3">
+                                    {['Your Infrastructure', 'Custom Logic', 'Private Logs'].map((item, i) => (
+                                        <li key={i} className="flex items-center gap-2 text-[12px] text-gray-600 font-medium">
                                             <div className="w-1.5 h-1.5 rounded-full bg-purple-500" />
+                                            {item}
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                            <div className="bg-white border border-gray-100 rounded-3xl p-6">
+                                <h4 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-4">Sovereign (RPC)</h4>
+                                <ul className="space-y-3">
+                                    {['Trustless', 'Direct Blockchain', 'Maximum Control'].map((item, i) => (
+                                        <li key={i} className="flex items-center gap-2 text-[12px] text-gray-600 font-medium">
+                                            <div className="w-1.5 h-1.5 rounded-full bg-amber-500" />
                                             {item}
                                         </li>
                                     ))}
