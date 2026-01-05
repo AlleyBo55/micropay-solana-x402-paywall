@@ -145,6 +145,10 @@ export async function POST(req: NextRequest) {
     try {
         const { message, history } = await req.json();
 
+        // Debug Env Vars
+        console.log('[AgentChat] PLATFORM_FACILITATOR_URL:', process.env.PLATFORM_FACILITATOR_URL);
+        console.log('[AgentChat] PAYAI_FACILITATOR_URL:', process.env.PAYAI_FACILITATOR_URL);
+
         // Rate Limit Check
         const ip = req.headers.get('x-forwarded-for') || 'unknown';
         if (!checkRateLimit(ip)) {
@@ -243,7 +247,8 @@ export async function POST(req: NextRequest) {
                                 send({ type: 'thinking', id: 'v_net', stepType: 'paying', message: `Network Verify: Checking via PayAI Consensus...`, agent: 'Research Agent' });
                             }
 
-                            await new Promise(r => setTimeout(r, thoughtDelay / 2));
+                            // Wait longer for transaction propagation (Devnet can be slow)
+                            await new Promise(r => setTimeout(r, 2500));
 
                             try {
                                 const verifyRes = await fetch(`${VERIFIER_URL}/verify`, {
