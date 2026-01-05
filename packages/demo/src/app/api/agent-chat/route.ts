@@ -352,14 +352,15 @@ I can only process requests related to:
                             send({ type: 'thinking', id: 'cnf', stepType: 'confirmed', message: `Tx Broadcast: ${result.signature.slice(0, 8)}...`, signature: result.signature, agent: 'Research Agent' });
                             await new Promise(r => setTimeout(r, thoughtDelay));
 
-                            // PayAI Facilitator Verification Step
-                            send({ type: 'thinking', id: 'payai1', stepType: 'paying', message: 'Verification: Submitting to PayAI Network for independent verification...', agent: 'Research Agent' });
+                            // Custom Facilitator Verification Step
+                            // Uses the user's deployed facilitator (e.g. on Railway) if configured, or default PayAI
+                            const PLATFORM_FACILITATOR_URL = process.env.PLATFORM_FACILITATOR_URL || 'https://facilitator.payai.network';
+
+                            send({ type: 'thinking', id: 'payai1', stepType: 'paying', message: `Verification: Submitting to Facilitator (${PLATFORM_FACILITATOR_URL})...`, agent: 'Research Agent' });
                             await new Promise(r => setTimeout(r, thoughtDelay / 2));
 
-                            const PAYAI_FACILITATOR_URL = process.env.PAYAI_FACILITATOR_URL || 'https://facilitator.payai.network';
-
                             try {
-                                const verifyRes = await fetch(`${PAYAI_FACILITATOR_URL}/verify`, {
+                                const verifyRes = await fetch(`${PLATFORM_FACILITATOR_URL}/verify`, {
                                     method: 'POST',
                                     headers: { 'Content-Type': 'application/json' },
                                     body: JSON.stringify({
@@ -371,7 +372,7 @@ I can only process requests related to:
                                             payTo: recipientWallet,
                                             amount: '1000000', // 0.001 SOL in lamports
                                             asset: 'SOL',
-                                            network: process.env.NEXT_PUBLIC_SOLANA_NETWORK || 'devnet'
+                                            network: process.env.SOLANA_NETWORK || 'devnet'
                                         }
                                     })
                                 });
@@ -379,16 +380,16 @@ I can only process requests related to:
                                 const verification = await verifyRes.json();
 
                                 if (verification.valid) {
-                                    send({ type: 'thinking', id: 'payai2', stepType: 'confirmed', message: `PayAI Verified: Payment confirmed by neutral facilitator ✓`, agent: 'Research Agent' });
+                                    send({ type: 'thinking', id: 'payai2', stepType: 'confirmed', message: `Verified: Payment confirmed by your Facilitator ✓`, agent: 'Research Agent' });
                                 } else {
                                     // Log warning but continue - tx is already on-chain
-                                    console.warn('[Agent Chat] PayAI verification returned invalid, but tx is on-chain:', verification);
-                                    send({ type: 'thinking', id: 'payai2', stepType: 'confirmed', message: `On-Chain Verified: Tx confirmed via RPC fallback`, agent: 'Research Agent' });
+                                    console.warn('[Agent Chat] Facilitator verification returned invalid, but tx is on-chain:', verification);
+                                    send({ type: 'thinking', id: 'payai2', stepType: 'confirmed', message: `On-Chain Verified: Tx confirmed via RPC (facilitator reported invalid)`, agent: 'Research Agent' });
                                 }
-                            } catch (payaiError) {
+                            } catch (facilitatorError) {
                                 // Fallback to RPC verification (tx is already confirmed)
-                                console.warn('[Agent Chat] PayAI verification failed, using RPC confirmation:', payaiError);
-                                send({ type: 'thinking', id: 'payai2', stepType: 'confirmed', message: `RPC Verified: PayAI unreachable, using direct RPC confirmation`, agent: 'Research Agent' });
+                                console.warn('[Agent Chat] Facilitator verification failed, using RPC confirmation:', facilitatorError);
+                                send({ type: 'thinking', id: 'payai2', stepType: 'confirmed', message: `RPC Verified: Facilitator unreachable, using direct RPC confirmation`, agent: 'Research Agent' });
                             }
 
                             await new Promise(r => setTimeout(r, thoughtDelay));
