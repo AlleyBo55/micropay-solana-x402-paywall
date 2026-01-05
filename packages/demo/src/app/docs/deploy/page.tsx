@@ -119,21 +119,21 @@ export default function DeployDocsPage() {
                             desc: 'Recommended for production. Auto-scaling & zero-downtime deploys.',
                             color: 'from-purple-500 to-pink-500',
                             icon: RailwayIcon,
-                            link: 'https://railway.app/template?template=https://github.com/AlleyBo55/x402-facilitator-oss'
+                            link: 'https://railway.app/template?template=https://github.com/AlleyBo55/oneclickfacilitator'
                         },
                         {
                             name: 'Heroku',
                             desc: 'Easiest for quick prototypes. One-click setup with dyno management.',
                             color: 'from-violet-500 to-indigo-500',
                             icon: HerokuIcon,
-                            link: 'https://heroku.com/deploy?template=https://github.com/AlleyBo55/x402-facilitator-oss'
+                            link: 'https://heroku.com/deploy?template=https://github.com/AlleyBo55/oneclickfacilitator'
                         },
                         {
                             name: 'Render',
                             desc: 'Best price-performance. Fully managed docker containers.',
                             color: 'from-blue-500 to-cyan-500',
                             icon: RenderIcon,
-                            link: 'https://render.com/deploy?repo=https://github.com/AlleyBo55/x402-facilitator-oss'
+                            link: 'https://render.com/deploy?repo=https://github.com/AlleyBo55/oneclickfacilitator'
                         }
                     ].map((platform) => (
                         <a
