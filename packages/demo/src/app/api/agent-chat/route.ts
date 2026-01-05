@@ -263,7 +263,7 @@ export async function POST(req: NextRequest) {
 
                                 if (verifyData.valid) {
                                     const confirmMsg = CUSTOM_FACILITATOR_URL
-                                        ? `Sovereign Verified: Check passed via ${VERIFIER_NAME} ✓`
+                                        ? `Private Verified: Check passed via ${VERIFIER_NAME} ✓`
                                         : `Network Verified: Check passed via ${VERIFIER_NAME} ✓`;
 
                                     send({ type: 'thinking', id: 'v_ok', stepType: 'confirmed', message: confirmMsg, agent: 'Research Agent' });
