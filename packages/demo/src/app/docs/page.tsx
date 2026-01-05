@@ -13,6 +13,7 @@ import Database01Icon from 'hugeicons-react/dist/esm/icons/database_01_icon';
 import DollarCircleIcon from 'hugeicons-react/dist/esm/icons/dollar_circle_icon';
 import Globe02Icon from 'hugeicons-react/dist/esm/icons/globe_02_icon';
 import ArrowRight01Icon from 'hugeicons-react/dist/esm/icons/arrow_right_01_icon';
+import ArrowLeft01Icon from 'hugeicons-react/dist/esm/icons/arrow_left_01_icon';
 import CheckmarkCircle01Icon from 'hugeicons-react/dist/esm/icons/checkmark_circle_01_icon';
 import Copy01Icon from 'hugeicons-react/dist/esm/icons/copy_01_icon';
 import RefreshIcon from 'hugeicons-react/dist/esm/icons/refresh_icon';
@@ -49,6 +50,30 @@ import FingerprintScanIcon from 'hugeicons-react/dist/esm/icons/fingerprint_scan
 const LightningIcon = ZapIcon;
 const Cpu = CpuIcon;
 const Sparkles = SparklesIcon;
+
+// Custom Brand Icons
+const RailwayIcon = ({ className }: { className?: string }) => (
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+        <path d="M4 3C4 2.44772 4.44772 2 5 2H19C19.5523 2 20 2.44772 20 3V21C20 21.5523 19.5523 22 19 22H5C4.44772 22 4 21.5523 4 21V3ZM12 4.5L12 19.5M4 12H20M4 7H20M4 17H20" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+    </svg>
+);
+
+const HerokuIcon = ({ className }: { className?: string }) => (
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+        <path d="M3 3H8.25V21H3V3Z" fill="currentColor" />
+        <path d="M15.75 3H21V21H15.75V3Z" fill="currentColor" />
+        <path d="M3 15.375C3 15.375 7.02758 12.1624 12 12C16.9724 11.8376 21 15.375 21 15.375" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+);
+
+const RenderIcon = ({ className }: { className?: string }) => (
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+        <path d="M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" strokeWidth="2" />
+        <path d="M12 21V12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+        <path d="M3.5 10L12 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+        <path d="M20.5 10L12 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+    </svg>
+);
 
 
 const sections = [
@@ -659,41 +684,154 @@ function PaymentButton() {
                     {/* Deployment Section */}
                     <section id="deployment" className="mb-16 md:mb-24 scroll-mt-24">
                         <div className="flex items-center gap-3 mb-8 md:mb-10">
-                            <div className="p-2 bg-purple-100 text-purple-600 rounded-lg text-lg">🚀</div>
-                            <h2 className="text-2xl md:text-3xl font-bold text-[#1D1D1F]">Deployment</h2>
+                            <h2 className="text-xl md:text-2xl font-bold tracking-tight text-[#1D1D1F]">Deployment</h2>
+                            <div className="flex-1 h-[1px] bg-[#D2D2D7]" />
                         </div>
 
-                        <div className="bg-[#1D1D1F] rounded-[32px] p-8 md:p-12 relative overflow-hidden group">
-                            <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-blue-600/20 to-purple-600/20 blur-3xl rounded-full -mr-32 -mt-32 pointer-events-none" />
+                        {/* New Hero */}
+                        <div className="mb-12">
+                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-100 text-blue-600 text-[11px] font-bold uppercase tracking-wider mb-6">
+                                <RocketIcon size={14} />
+                                One-Click Deploy
+                            </div>
+                            <h3 className="text-3xl md:text-4xl font-bold tracking-tight text-[#1D1D1F] mb-4">
+                                Deploy Your Own Facilitator
+                            </h3>
+                            <p className="text-lg text-gray-500 max-w-2xl leading-relaxed">
+                                For production, spin up a high-performance verification node in seconds.
+                                Zero config files to edit—just bring your RPC URL.
+                            </p>
+                        </div>
 
-                            <div className="relative z-10">
-                                <h3 className="text-2xl md:text-3xl font-bold text-white mb-4">Self-Host Your Facilitator</h3>
-                                <p className="text-lg text-gray-400 mb-8 max-w-2xl leading-relaxed">
-                                    For production, you need a high-performance verification node.
-                                    Deploy your own instance in one click with zero configuration.
-                                </p>
+                        {/* Platform Grid */}
+                        <div className="grid md:grid-cols-3 gap-6 mb-16">
+                            {[
+                                {
+                                    name: 'Railway',
+                                    desc: 'Recommended for production. Auto-scaling & zero-downtime deploys.',
+                                    color: 'from-purple-500 to-pink-500',
+                                    icon: RailwayIcon,
+                                    link: 'https://railway.app/template?template=https://github.com/AlleyBo55/oneclickfacilitator'
+                                },
+                                {
+                                    name: 'Heroku',
+                                    desc: 'Easiest for quick prototypes. One-click setup with dyno management.',
+                                    color: 'from-violet-500 to-indigo-500',
+                                    icon: HerokuIcon,
+                                    link: 'https://heroku.com/deploy?template=https://github.com/AlleyBo55/oneclickfacilitator'
+                                },
+                                {
+                                    name: 'Render',
+                                    desc: 'Best price-performance. Fully managed docker containers.',
+                                    color: 'from-blue-500 to-cyan-500',
+                                    icon: RenderIcon,
+                                    link: 'https://render.com/deploy?repo=https://github.com/AlleyBo55/oneclickfacilitator'
+                                }
+                            ].map((platform) => (
+                                <a
+                                    key={platform.name}
+                                    href={platform.link}
+                                    target="_blank"
+                                    className="group relative bg-white border border-[#D2D2D7] rounded-3xl p-6 md:p-8 hover:shadow-xl hover:shadow-blue-900/5 transition-all duration-300 hover:-translate-y-1 block overflow-hidden"
+                                >
+                                    <div className={`absolute inset-0 bg-gradient-to-br ${platform.color} opacity-0 group-hover:opacity-[0.03] transition-opacity`} />
+                                    <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${platform.color} flex items-center justify-center text-white mb-6 shadow-lg transform group-hover:scale-110 transition-transform duration-500`}>
+                                        <platform.icon className="w-6 h-6" />
+                                    </div>
+                                    <h3 className="text-xl font-bold text-[#1D1D1F] mb-2 flex items-center gap-2">
+                                        {platform.name}
+                                        <ArrowLeft01Icon size={16} className="rotate-180 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all text-gray-400" />
+                                    </h3>
+                                    <p className="text-gray-500 text-[13px] md:text-[14px] leading-relaxed font-medium">{platform.desc}</p>
+                                </a>
+                            ))}
+                        </div>
 
-                                <div className="grid sm:grid-cols-3 gap-4 mb-10">
-                                    <div className="bg-white/5 border border-white/10 p-4 rounded-2xl backdrop-blur-sm">
-                                        <div className="font-bold text-white mb-1">Railway</div>
-                                        <div className="text-gray-400 text-xs">Production Ready</div>
-                                    </div>
-                                    <div className="bg-white/5 border border-white/10 p-4 rounded-2xl backdrop-blur-sm">
-                                        <div className="font-bold text-white mb-1">Heroku</div>
-                                        <div className="text-gray-400 text-xs">One-Click Setup</div>
-                                    </div>
-                                    <div className="bg-white/5 border border-white/10 p-4 rounded-2xl backdrop-blur-sm">
-                                        <div className="font-bold text-white mb-1">Render</div>
-                                        <div className="text-gray-400 text-xs">Docker Runtime</div>
+                        {/* Config Workflow */}
+                        <div className="mb-16">
+                            <h3 className="text-xl font-bold text-[#1D1D1F] mb-8 flex items-center gap-3">
+                                <span className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center text-gray-500 text-sm">2</span>
+                                Configuration Workflow
+                            </h3>
+
+                            <div className="relative pl-8 md:pl-12 border-l-2 border-dashed border-gray-200 space-y-12">
+                                {/* Step 1 */}
+                                <div className="relative">
+                                    <div className="absolute -left-[39px] md:-left-[55px] top-0 w-5 h-5 bg-blue-500 rounded-full border-4 border-white shadow-sm" />
+                                    <h4 className="font-bold text-[#1D1D1F] mb-2">Initiate Deployment</h4>
+                                    <p className="text-sm text-gray-500 mb-4">Select your preferred cloud provider above. You'll be redirected to their setup wizard.</p>
+                                    <div className="bg-gray-50 rounded-lg border border-gray-200 px-3 py-2 inline-block text-[13px] text-gray-500 font-medium">
+                                        💡 No account? Railway allows guest deployments.
                                     </div>
                                 </div>
 
-                                <Link
-                                    href="/docs/deploy"
-                                    className="inline-flex items-center gap-2 bg-white text-[#1D1D1F] px-6 py-3 rounded-full font-bold hover:bg-gray-100 transition-all active:scale-95 shadow-lg shadow-white/10"
-                                >
-                                    View Deployment Guide <ArrowRight01Icon size={16} />
-                                </Link>
+                                {/* Step 2 */}
+                                <div className="relative">
+                                    <div className="absolute -left-[39px] md:-left-[55px] top-0 w-5 h-5 bg-purple-500 rounded-full border-4 border-white shadow-sm" />
+                                    <h4 className="font-bold text-[#1D1D1F] mb-2">Configure RPC Endpoint</h4>
+                                    <p className="text-sm text-gray-500 mb-6">
+                                        The only critical environment variable is <code className="bg-gray-100 px-1 py-0.5 rounded text-[#1D1D1F] font-mono text-xs">SOLANA_RPC_URL</code>.
+                                    </p>
+                                    <div className="bg-[#1C1C1E] text-white rounded-2xl p-6 shadow-xl max-w-xl border border-white/10">
+                                        <div className="space-y-4">
+                                            <div>
+                                                <label className="block text-[10px] font-bold text-gray-400 mb-2 uppercase tracking-wider">SOLANA_RPC_URL <span className="text-red-400">*</span></label>
+                                                <div className="bg-white/10 border border-white/10 rounded-lg p-3 font-mono text-[13px] text-blue-300 break-all">
+                                                    https://mainnet.helius-rpc.com/?api-key=...
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <label className="block text-[10px] font-bold text-gray-400 mb-2 uppercase tracking-wider">SOLANA_NETWORK</label>
+                                                <div className="flex gap-2">
+                                                    <div className="bg-white/10 border border-blue-500/50 rounded-md px-3 py-2 text-[13px] font-medium ring-1 ring-blue-500/50">mainnet-beta</div>
+                                                    <div className="bg-transparent border border-white/10 rounded-md px-3 py-2 text-[13px] text-gray-500">devnet</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Step 3 */}
+                                <div className="relative">
+                                    <div className="absolute -left-[39px] md:-left-[55px] top-0 w-5 h-5 bg-green-500 rounded-full border-4 border-white shadow-sm" />
+                                    <h4 className="font-bold text-[#1D1D1F] mb-2">Verify & Connect</h4>
+                                    <p className="text-sm text-gray-500 mb-6">Once deployed, verify your node is active with the health check.</p>
+                                    <div className="flex flex-wrap gap-4">
+                                        <div className="bg-white border border-[#D2D2D7] px-4 py-3 rounded-xl flex items-center gap-3 shadow-sm">
+                                            <ShieldKeyIcon size={16} className="text-green-600" />
+                                            <code className="text-[13px] font-mono text-[#1D1D1F]">GET /health</code>
+                                        </div>
+                                        <div className="bg-white border border-[#D2D2D7] px-4 py-3 rounded-xl flex items-center gap-3 shadow-sm">
+                                            <Database01Icon size={16} className="text-blue-600" />
+                                            <code className="text-[13px] font-mono text-[#1D1D1F]">GET /metrics</code>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* FAQ */}
+                        <div className="bg-white rounded-[32px] p-8 md:p-10 border border-[#D2D2D7]">
+                            <h3 className="text-xl font-bold text-[#1D1D1F] mb-8">Deployment FAQ</h3>
+                            <div className="grid md:grid-cols-2 gap-8 md:gap-12">
+                                <div>
+                                    <h4 className="font-bold text-[#1D1D1F] text-[15px] mb-3 flex items-center gap-2">
+                                        <div className="w-1.5 h-1.5 rounded-full bg-blue-500"></div>
+                                        What happens when I click Deploy?
+                                    </h4>
+                                    <p className="text-[14px] text-gray-500 leading-relaxed font-medium">
+                                        The platform (Railway/Heroku/Render) will automatically fork this open-source repository into your own account. It will then pause to ask for your Environment Variables before building the Go binaries.
+                                    </p>
+                                </div>
+                                <div>
+                                    <h4 className="font-bold text-[#1D1D1F] text-[15px] mb-3 flex items-center gap-2">
+                                        <div className="w-1.5 h-1.5 rounded-full bg-purple-500"></div>
+                                        Can I change networks later?
+                                    </h4>
+                                    <p className="text-[14px] text-gray-500 leading-relaxed font-medium">
+                                        Yes. Simply go to your project dashboard's "Variables" or "Settings" tab and update <code className="bg-gray-100 px-1 py-0.5 rounded text-gray-800 font-mono text-xs">SOLANA_NETWORK</code> to <code className="font-mono text-xs">mainnet-beta</code> or <code className="font-mono text-xs">devnet</code>.
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     </section>
