@@ -514,79 +514,140 @@ export async function POST(req) {
                 </section>
 
                 {/* Deploy Your Own Facilitator */}
-                <section className="py-24 sm:py-32 bg-gradient-to-b from-gray-50 to-white mx-3 sm:mx-8 rounded-[2.5rem] overflow-hidden">
-                    <div className="max-w-7xl mx-auto px-6 sm:px-12">
-                        <div className="max-w-3xl mb-12 sm:mb-16">
-                            <motion.div
-                                initial={{ opacity: 0, y: 20 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true }}
-                                className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-black/5 text-[10px] font-bold uppercase tracking-widest text-black/50 mb-6"
-                            >
-                                <Database01Icon size={12} />
-                                Self-Sovereign
-                            </motion.div>
-                            <h2 className="text-3xl sm:text-5xl font-bold tracking-tight mb-6 text-[#1D1D1F] leading-[1.1]">
-                                Deploy your own <br />
-                                <span className="text-black/30">facilitator.</span>
-                            </h2>
-                            <p className="text-lg sm:text-xl text-gray-500 leading-relaxed max-w-xl">
-                                Don't rely on third parties. Self-host your own x402 payment verification server with one click.
-                                Open source, zero fees, full control.
-                            </p>
-                        </div>
+                <section className="py-24 sm:py-32 bg-[#F5F5F7] mx-2 sm:mx-6 md:mx-8 rounded-[2rem] sm:rounded-[3rem] overflow-hidden relative">
+                    <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-gradient-to-b from-blue-100/40 to-transparent blur-[120px] -translate-y-1/2 translate-x-1/2 pointer-events-none" />
+                    <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-gradient-to-t from-green-100/40 to-transparent blur-[120px] translate-y-1/2 -translate-x-1/2 pointer-events-none" />
 
-                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                            {[
-                                {
-                                    name: 'Railway',
-                                    color: 'from-black to-gray-800',
-                                    url: 'https://railway.com/deploy/owL10e?referralCode=WF4b52&utm_medium=integration&utm_source=template&utm_campaign=generic',
-                                    icon: (
-                                        <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
-                                            <path d="M.113 10.27A13.026 13.026 0 000 11.48h18.23c-.064-.125-.15-.237-.235-.347-3.117-4.027-4.793-3.677-7.19-3.78-.8-.034-1.34-.048-4.524-.048-1.704 0-3.555.005-5.358.01-.234.63-.459 1.24-.567 1.737h9.342v1.216H.113v.002zm18.26 2.426H.009c.02.326.05.645.094.961h16.955c.754 0 1.179-.429 1.315-.96zm-17.318 4.28s2.81 6.902 10.93 7.024c4.855 0 9.027-2.883 10.92-7.024H1.056zM11.988 0C7.5 0 3.593 2.466 1.531 6.108l4.75-.005v-.002c3.71 0 3.849.016 4.573.047l.448.016c1.563.052 3.485.22 4.996 1.364.82.621 2.007 1.99 2.712 2.965.654.902.842 1.94.396 2.934-.408.914-1.289 1.458-2.353 1.458H.391s.099.42.249.886h22.748A12.026 12.026 0 0024 12.005C24 5.377 18.621 0 11.988 0z" />
-                                        </svg>
-                                    ),
-                                },
-                            ].map((platform, i) => (
-                                <motion.a
-                                    key={platform.name}
-                                    href={platform.url}
-                                    target="_blank"
+                    <div className="max-w-7xl mx-auto px-6 sm:px-12 relative z-10">
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 items-center">
+                            {/* Left: The Hook */}
+                            <div className="text-center lg:text-left">
+                                <motion.div
                                     initial={{ opacity: 0, y: 20 }}
                                     whileInView={{ opacity: 1, y: 0 }}
                                     viewport={{ once: true }}
-                                    transition={{ delay: i * 0.1 }}
-                                    className="group relative bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden"
+                                    className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white shadow-sm border border-gray-100 text-[11px] font-bold uppercase tracking-widest text-gray-500 mb-8"
                                 >
-                                    <div className={`absolute inset-0 bg-gradient-to-br ${platform.color} opacity-0 group-hover:opacity-5 transition-opacity duration-300`} />
-                                    <div className="relative z-10 flex flex-col items-center text-center gap-4">
-                                        <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${platform.color} text-white flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300`}>
-                                            {platform.icon}
+                                    <Database01Icon size={12} className="text-gray-400" />
+                                    Self-Sovereign
+                                </motion.div>
+                                <h2 className="text-4xl sm:text-6xl font-bold tracking-tight mb-6 text-[#1D1D1F] leading-[1.05]">
+                                    Stop paying <br />
+                                    <span className="text-transparent bg-clip-text bg-gradient-to-br from-gray-900 to-gray-500">rent-seeking fees.</span>
+                                </h2>
+                                <p className="text-lg sm:text-xl text-gray-500 leading-relaxed max-w-xl mx-auto lg:mx-0 mb-10">
+                                    Switch to a private, high-performance facilitator. Keep 100% of your revenue. One-click deploy to your own infrastructure.
+                                </p>
+
+                                <div className="flex flex-col items-center lg:items-start gap-4">
+                                    <motion.a
+                                        whileHover={{ scale: 1.02 }}
+                                        whileTap={{ scale: 0.98 }}
+                                        href="https://railway.com/deploy/owL10e?referralCode=WF4b52&utm_medium=integration&utm_source=template&utm_campaign=generic"
+                                        target="_blank"
+                                        className="group relative flex items-center gap-4 bg-[#1D1D1F] text-white px-8 py-4 rounded-full shadow-xl hover:shadow-2xl hover:bg-black transition-all duration-300 w-full sm:w-auto overflow-hidden"
+                                    >
+                                        <div className="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                                        <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center shrink-0">
+                                            <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                                                <path d="M.113 10.27A13.026 13.026 0 000 11.48h18.23c-.064-.125-.15-.237-.235-.347-3.117-4.027-4.793-3.677-7.19-3.78-.8-.034-1.34-.048-4.524-.048-1.704 0-3.555.005-5.358.01-.234.63-.459 1.24-.567 1.737h9.342v1.216H.113v.002zm18.26 2.426H.009c.02.326.05.645.094.961h16.955c.754 0 1.179-.429 1.315-.96zm-17.318 4.28s2.81 6.902 10.93 7.024c4.855 0 9.027-2.883 10.92-7.024H1.056zM11.988 0C7.5 0 3.593 2.466 1.531 6.108l4.75-.005v-.002c3.71 0 3.849.016 4.573.047l.448.016c1.563.052 3.485.22 4.996 1.364.82.621 2.007 1.99 2.712 2.965.654.902.842 1.94.396 2.934-.408.914-1.289 1.458-2.353 1.458H.391s.099.42.249.886h22.748A12.026 12.026 0 0024 12.005C24 5.377 18.621 0 11.988 0z" />
+                                            </svg>
                                         </div>
+                                        <div className="flex flex-col items-start">
+                                            <span className="font-bold text-lg leading-tight">Deploy on Railway</span>
+                                            <span className="text-xs text-white/60 font-medium">Recommended for production</span>
+                                        </div>
+                                        <ChevronRightIcon className="w-5 h-5 text-white/40 ml-2 group-hover:translate-x-1 transition-transform" />
+                                    </motion.a>
+
+                                    <div className="flex items-center gap-6 text-sm font-medium mt-4">
+                                        <a href="https://github.com/AlleyBo55/oneclick-x402-facilitator-solana" target="_blank" className="flex items-center gap-2 text-gray-500 hover:text-black transition-colors">
+                                            <SourceCodeIcon size={14} />
+                                            View Source
+                                        </a>
+                                        <span className="w-1 h-1 rounded-full bg-gray-300" />
+                                        <span className="text-gray-500">MIT Open Source</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Right: The Proof */}
+                            <div className="relative">
+                                {/* Saving Card */}
+                                <motion.div
+                                    initial={{ opacity: 0, y: 40, rotate: -2 }}
+                                    whileInView={{ opacity: 1, y: 0, rotate: 0 }}
+                                    viewport={{ once: true }}
+                                    transition={{ duration: 0.8, ease: "easeOut" }}
+                                    className="bg-white/60 backdrop-blur-xl border border-white/40 p-8 rounded-[2rem] shadow-2xl relative z-10 max-w-md mx-auto transform hover:scale-[1.02] transition-transform duration-500"
+                                >
+                                    <div className="flex items-center justify-between mb-8 border-b border-gray-200/50 pb-6">
                                         <div>
-                                            <h3 className="font-semibold text-lg text-[#1D1D1F]">{platform.name}</h3>
-                                            <p className="text-sm text-gray-500 mt-1">Deploy now →</p>
+                                            <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Monthly Cost</p>
+                                            <p className="text-sm text-gray-500">@ 1M Transactions</p>
+                                        </div>
+                                        <div className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-bold border border-green-200">
+                                            Safe & Fast
                                         </div>
                                     </div>
-                                </motion.a>
-                            ))}
-                        </div>
 
-                        <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4 text-sm">
-                            <a
-                                href="https://github.com/AlleyBo55/oneclick-x402-facilitator-solana"
-                                target="_blank"
-                                className="text-gray-500 hover:text-black transition-colors flex items-center gap-2"
-                            >
-                                <SourceCodeIcon size={16} />
-                                View Source on GitHub
-                            </a>
-                            <span className="hidden sm:inline text-gray-300">•</span>
-                            <span className="text-gray-400 flex items-center gap-2">
-                                <Shield02Icon size={16} />
-                                MIT Licensed • Zero Fees
-                            </span>
+                                    <div className="space-y-6">
+                                        <div className="flex items-center justify-between opacity-50 grayscale">
+                                            <div className="flex items-center gap-3">
+                                                <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-xl">🏦</div>
+                                                <div>
+                                                    <p className="font-semibold text-gray-900">Public Node</p>
+                                                    <p className="text-xs text-gray-500">1% Fee</p>
+                                                </div>
+                                            </div>
+                                            <p className="font-mono text-lg font-bold text-red-400 decoration-line-through">$1,000/mo</p>
+                                        </div>
+
+                                        <div className="flex items-center justify-between scale-105 origin-left">
+                                            <div className="flex items-center gap-3">
+                                                <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-xl shadow-inner text-blue-600">
+                                                    <Database01Icon size={20} />
+                                                </div>
+                                                <div>
+                                                    <p className="font-bold text-[#1D1D1F]">Your Node</p>
+                                                    <p className="text-xs text-blue-600 font-medium">Zero Fee</p>
+                                                </div>
+                                            </div>
+                                            <div className="text-right">
+                                                <p className="font-mono text-2xl font-bold text-[#1D1D1F]">$10/mo</p>
+                                                <p className="text-[10px] text-green-600 font-bold">You save $990/mo</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="mt-8 pt-6 border-t border-gray-200/50 flex justify-between gap-2">
+                                        <div className="text-center flex-1 bg-white/50 rounded-xl py-3 border border-white/60 shadow-sm">
+                                            <p className="text-[10px] uppercase font-bold text-gray-400 tracking-wider mb-1">Latency</p>
+                                            <p className="text-xl font-bold text-[#1D1D1F]">~10ms</p>
+                                            <p className="text-[10px] text-gray-400">Written in Go</p>
+                                        </div>
+                                        <div className="text-center flex-1 bg-white/50 rounded-xl py-3 border border-white/60 shadow-sm">
+                                            <p className="text-[10px] uppercase font-bold text-gray-400 tracking-wider mb-1">Uptime</p>
+                                            <p className="text-xl font-bold text-[#1D1D1F]">99.9%</p>
+                                            <p className="text-[10px] text-gray-400">Railway SLA</p>
+                                        </div>
+                                    </div>
+                                </motion.div>
+
+                                {/* Decorative Elements */}
+                                <motion.div
+                                    initial={{ opacity: 0, scale: 0.8 }}
+                                    whileInView={{ opacity: 1, scale: 1 }}
+                                    transition={{ delay: 0.2 }}
+                                    className="absolute -top-6 -right-6 w-24 h-24 bg-blue-500 rounded-2xl rotate-12 -z-10 blur-xl opacity-20"
+                                />
+                                <motion.div
+                                    initial={{ opacity: 0, scale: 0.8 }}
+                                    whileInView={{ opacity: 1, scale: 1 }}
+                                    transition={{ delay: 0.4 }}
+                                    className="absolute -bottom-8 -left-8 w-32 h-32 bg-green-500 rounded-full -z-10 blur-2xl opacity-20"
+                                />
+                            </div>
                         </div>
                     </div>
                 </section>
