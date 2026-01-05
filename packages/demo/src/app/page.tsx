@@ -557,7 +557,7 @@ export async function POST(req) {
                                             <span className="font-bold text-lg leading-tight">Deploy on Railway</span>
                                             <span className="text-xs text-white/60 font-medium">Recommended for production</span>
                                         </div>
-                                        <ChevronRightIcon className="w-5 h-5 text-white/40 ml-2 group-hover:translate-x-1 transition-transform" />
+                                        <ArrowRight01Icon className="w-5 h-5 text-white/40 ml-2 group-hover:translate-x-1 transition-transform" />
                                     </motion.a>
 
                                     <div className="flex items-center gap-6 text-sm font-medium mt-4">
