@@ -14,7 +14,8 @@
     "react-qr-reader": {
       "react": "$react",
       "react-dom": "$react-dom"
-    }
+    },
+    "zod": "^3.23.8"
   },
   "dependencies": {
     "@alleyboss/micropay-solana-x402-paywall": "3.3.13",
