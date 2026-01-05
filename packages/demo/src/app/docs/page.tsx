@@ -1245,6 +1245,29 @@ function PaymentButton() {
                         <CodeBlock code={`// Manual Verification Example
 const isValid = await server.verify(signature);
 if (!isValid) throw new Error('Payment already claimed!');`} />
+                        <div className="bg-white border border-gray-100 rounded-3xl p-6 md:p-8 mt-8">
+                            <h3 className="text-lg md:text-xl font-bold text-[#1D1D1F] mb-4">Facilitator API Format</h3>
+                            <p className="text-gray-500 text-[13px] md:text-[14px] leading-relaxed font-medium mb-6">
+                                The custom facilitator accepts a standard x402 verification payload. You can use this to integrate payment verification into any backend.
+                            </p>
+                            <CodeBlock language="json" code={`POST /verify
+Content-Type: application/json
+
+{
+  "paymentPayload": {
+    "x402Version": 2,
+    "payload": {
+      "signature": "5eykt...pY1vz"
+    }
+  },
+  "paymentRequirements": {
+    "payTo": "YOUR_WALLET",
+    "amount": "1000000",
+    "asset": "SOL",
+    "network": "devnet"
+  }
+}`} />
+                        </div>
                     </section>
 
                     {/* Installation */}
