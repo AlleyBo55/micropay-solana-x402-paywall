@@ -257,42 +257,63 @@ export async function POST(req: NextRequest) {
                                 send({ type: 'thinking', id: 'v_net', stepType: 'paying', message: `Network Verify: Checking via PayAI (Custom Facilitator Not Configured)...`, agent: 'Research Agent' });
                             }
 
-                            // Wait longer for transaction propagation (Devnet can be slow)
-                            await new Promise(r => setTimeout(r, 2500));
+                            // Wait for transaction propagation (Devnet can be slow)
+                            await new Promise(r => setTimeout(r, 2000));
 
-                            try {
-                                const verifyRes = await fetch(`${VERIFIER_URL}/verify`, {
-                                    method: 'POST',
-                                    headers: { 'Content-Type': 'application/json' },
-                                    body: JSON.stringify({
-                                        paymentPayload: { x402Version: 2, payload: { signature: result.signature } },
-                                        paymentRequirements: {
-                                            payTo: recipientWallet,
-                                            amount: priceLamports.toString(),
-                                            asset: 'SOL',
-                                            network: process.env.SOLANA_NETWORK || 'devnet'
+                            let verifySuccess = false;
+                            let failureReason = '';
+
+                            // Retry Loop for Propagation Delay
+                            for (let attempt = 1; attempt <= 3; attempt++) {
+                                try {
+                                    if (attempt > 1) {
+                                        send({ type: 'thinking', id: `v_retry_${attempt}`, stepType: 'thinking', message: `Propagation delay (Attempt ${attempt}/3)...`, agent: 'Research Agent' });
+                                        await new Promise(r => setTimeout(r, 3000));
+                                    }
+
+                                    const verifyRes = await fetch(`${VERIFIER_URL}/verify`, {
+                                        method: 'POST',
+                                        headers: { 'Content-Type': 'application/json' },
+                                        body: JSON.stringify({
+                                            paymentPayload: { x402Version: 2, payload: { signature: result.signature } },
+                                            paymentRequirements: {
+                                                payTo: recipientWallet,
+                                                amount: priceLamports.toString(),
+                                                asset: 'SOL',
+                                                network: process.env.SOLANA_NETWORK || 'devnet'
+                                            }
+                                        })
+                                    });
+                                    const verifyData = await verifyRes.json();
+
+                                    if (verifyData.valid) {
+                                        const confirmMsg = CUSTOM_FACILITATOR_URL
+                                            ? `Private Verified: Check passed via ${VERIFIER_NAME} ✓`
+                                            : `Network Verified: Check passed via ${VERIFIER_NAME} ✓`;
+
+                                        send({ type: 'thinking', id: 'v_ok', stepType: 'confirmed', message: confirmMsg, agent: 'Research Agent' });
+                                        verifySuccess = true;
+                                        break; // Success!
+                                    } else {
+                                        failureReason = verifyData.invalidReason || 'Unknown Reason';
+                                        // Only retry if "not found"
+                                        if (!failureReason.toLowerCase().includes('not found')) {
+                                            break; // Fatal error (e.g. wrong amount)
                                         }
-                                    })
-                                });
-                                const verifyData = await verifyRes.json();
-
-                                if (verifyData.valid) {
-                                    const confirmMsg = CUSTOM_FACILITATOR_URL
-                                        ? `Private Verified: Check passed via ${VERIFIER_NAME} ✓`
-                                        : `Network Verified: Check passed via ${VERIFIER_NAME} ✓`;
-
-                                    send({ type: 'thinking', id: 'v_ok', stepType: 'confirmed', message: confirmMsg, agent: 'Research Agent' });
-                                } else {
-                                    const reason = verifyData.invalidReason || 'Unknown Reason';
-                                    send({ type: 'thinking', id: 'v_fail', stepType: 'error', message: `Verification Failed: ${reason}`, agent: 'Research Agent' });
-                                    send({ type: 'content', content: `❌ **Verification Denied:** ${reason}. Execution halted.`, isPremium: false });
-                                    close();
-                                    return;
+                                        console.warn(`[Agent Chat] Verification attempt ${attempt} failed: ${failureReason}`);
+                                    }
+                                } catch (e: any) {
+                                    console.warn('[Agent Chat] Verification network error:', e);
+                                    failureReason = e.message;
+                                    // Retry on network errors too
                                 }
-                            } catch (e) {
-                                console.warn('[Agent Chat] Verification failed:', e);
-                                send({ type: 'thinking', id: 'v_err', stepType: 'confirmed', message: `Fallback: Tx confirmed via RPC (Node Unreachable)`, agent: 'Research Agent' });
-                                // On network error (e.g. timeout), we default to implicit trust (RPC fallback) for demo continuity
+                            }
+
+                            if (!verifySuccess) {
+                                send({ type: 'thinking', id: 'v_fail', stepType: 'error', message: `Verification Failed: ${failureReason}`, agent: 'Research Agent' });
+                                send({ type: 'content', content: `❌ **Verification Denied:** ${failureReason}. Execution halted.`, isPremium: false });
+                                close();
+                                return;
                             }
 
                             await new Promise(r => setTimeout(r, thoughtDelay));
