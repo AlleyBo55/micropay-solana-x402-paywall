@@ -711,7 +711,7 @@ function PaymentButton() {
                                     desc: 'Recommended for production. Auto-scaling & zero-downtime deploys.',
                                     color: 'from-purple-500 to-pink-500',
                                     icon: RailwayIcon,
-                                    link: 'https://railway.app/new?template=https%3A%2F%2Fgithub.com%2FAlleyBo55%2Foneclick-x402-facilitator-solana'
+                                    link: 'https://railway.com/new?template=https%3A%2F%2Fgithub.com%2FAlleyBo55%2Foneclick-x402-facilitator-solana'
                                 },
                                 {
                                     name: 'Heroku',
