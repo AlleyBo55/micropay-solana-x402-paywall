@@ -53,8 +53,8 @@ const Sparkles = SparklesIcon;
 
 // Custom Brand Icons
 const RailwayIcon = ({ className }: { className?: string }) => (
-    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
-        <path d="M4 3C4 2.44772 4.44772 2 5 2H19C19.5523 2 20 2.44772 20 3V21C20 21.5523 19.5523 22 19 22H5C4.44772 22 4 21.5523 4 21V3ZM12 4.5L12 19.5M4 12H20M4 7H20M4 17H20" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+    <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" className={className}>
+        <path d="M.113 10.27A13.026 13.026 0 000 11.48h18.23c-.064-.125-.15-.237-.235-.347-3.117-4.027-4.793-3.677-7.19-3.78-.8-.034-1.34-.048-4.524-.048-1.704 0-3.555.005-5.358.01-.234.63-.459 1.24-.567 1.737h9.342v1.216H.113v.002zm18.26 2.426H.009c.02.326.05.645.094.961h16.955c.754 0 1.179-.429 1.315-.96zm-17.318 4.28s2.81 6.902 10.93 7.024c4.855 0 9.027-2.883 10.92-7.024H1.056zM11.988 0C7.5 0 3.593 2.466 1.531 6.108l4.75-.005v-.002c3.71 0 3.849.016 4.573.047l.448.016c1.563.052 3.485.22 4.996 1.364.82.621 2.007 1.99 2.712 2.965.654.902.842 1.94.396 2.934-.408.914-1.289 1.458-2.353 1.458H.391s.099.42.249.886h22.748A12.026 12.026 0 0024 12.005C24 5.377 18.621 0 11.988 0z" />
     </svg>
 );
 
@@ -704,28 +704,14 @@ function PaymentButton() {
                         </div>
 
                         {/* Platform Grid */}
-                        <div className="grid md:grid-cols-3 gap-6 mb-16">
+                        <div className="grid md:grid-cols-1 gap-6 mb-16 max-w-md mx-auto">
                             {[
                                 {
                                     name: 'Railway',
                                     desc: 'Recommended for production. Auto-scaling & zero-downtime deploys.',
                                     color: 'from-purple-500 to-pink-500',
                                     icon: RailwayIcon,
-                                    link: 'https://railway.app/template/https://github.com/AlleyBo55/oneclick-x402-facilitator-solana'
-                                },
-                                {
-                                    name: 'Heroku',
-                                    desc: 'Easiest for quick prototypes. One-click setup with dyno management.',
-                                    color: 'from-violet-500 to-indigo-500',
-                                    icon: HerokuIcon,
-                                    link: 'https://heroku.com/deploy?template=https://github.com/AlleyBo55/oneclick-x402-facilitator-solana'
-                                },
-                                {
-                                    name: 'Render',
-                                    desc: 'Best price-performance. Fully managed docker containers.',
-                                    color: 'from-blue-500 to-cyan-500',
-                                    icon: RenderIcon,
-                                    link: 'https://render.com/deploy?repo=https://github.com/AlleyBo55/oneclick-x402-facilitator-solana'
+                                    link: 'https://railway.com/deploy/owL10e?referralCode=WF4b52&utm_medium=integration&utm_source=template&utm_campaign=generic'
                                 }
                             ].map((platform) => (
                                 <a
@@ -768,10 +754,14 @@ function PaymentButton() {
                                 {/* Step 2 */}
                                 <div className="relative">
                                     <div className="absolute -left-[39px] md:-left-[55px] top-0 w-5 h-5 bg-purple-500 rounded-full border-4 border-white shadow-sm" />
-                                    <h4 className="font-bold text-[#1D1D1F] mb-2">Configure RPC Endpoint</h4>
-                                    <p className="text-sm text-gray-500 mb-6">
-                                        The only critical environment variable is <code className="bg-gray-100 px-1 py-0.5 rounded text-[#1D1D1F] font-mono text-xs">SOLANA_RPC_URL</code>.
-                                    </p>
+                                    <h4 className="font-bold text-[#1D1D1F] mb-2">Configure Environment Variables</h4>
+                                    <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-4">
+                                        <p className="text-xs font-bold text-amber-800 uppercase tracking-wider mb-1">⚠️ Important: Default is Devnet!</p>
+                                        <p className="text-xs text-amber-700">
+                                            The facilitator deploys with <code className="bg-amber-100 px-1 rounded">devnet</code> by default.
+                                            For <strong>mainnet production</strong>, you must change the environment variables after deployment.
+                                        </p>
+                                    </div>
                                     <div className="bg-[#1C1C1E] text-white rounded-2xl p-6 shadow-xl max-w-xl border border-white/10">
                                         <div className="space-y-4">
                                             <div>
@@ -779,12 +769,13 @@ function PaymentButton() {
                                                 <div className="bg-white/10 border border-white/10 rounded-lg p-3 font-mono text-[13px] text-blue-300 break-all">
                                                     https://mainnet.helius-rpc.com/?api-key=...
                                                 </div>
+                                                <p className="text-[10px] text-gray-500 mt-1">Default: https://api.devnet.solana.com</p>
                                             </div>
                                             <div>
                                                 <label className="block text-[10px] font-bold text-gray-400 mb-2 uppercase tracking-wider">SOLANA_NETWORK</label>
                                                 <div className="flex gap-2">
                                                     <div className="bg-white/10 border border-blue-500/50 rounded-md px-3 py-2 text-[13px] font-medium ring-1 ring-blue-500/50">mainnet-beta</div>
-                                                    <div className="bg-transparent border border-white/10 rounded-md px-3 py-2 text-[13px] text-gray-500">devnet</div>
+                                                    <div className="bg-transparent border border-white/10 rounded-md px-3 py-2 text-[13px] text-gray-500">devnet (default)</div>
                                                 </div>
                                             </div>
                                         </div>
