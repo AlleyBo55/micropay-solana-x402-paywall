@@ -238,7 +238,7 @@ export async function POST(req: NextRequest) {
                             // If custom is set, we use ONLY custom (Sovereign Mode)
                             if (CUSTOM_FACILITATOR_URL) {
                                 const host = new URL(CUSTOM_FACILITATOR_URL).hostname;
-                                send({ type: 'thinking', id: 'v_sov', stepType: 'paying', message: `Sovereign Verify: Checking via Private Node (${host})...`, agent: 'Research Agent' });
+                                send({ type: 'thinking', id: 'v_sov', stepType: 'paying', message: `Private Verify: Checking via Custom Node (${host})...`, agent: 'Research Agent' });
                             } else {
                                 send({ type: 'thinking', id: 'v_net', stepType: 'paying', message: `Network Verify: Checking via PayAI Consensus...`, agent: 'Research Agent' });
                             }
