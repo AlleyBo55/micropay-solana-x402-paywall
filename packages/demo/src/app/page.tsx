@@ -82,18 +82,23 @@ export async function POST(req) {
                 {/* Hero Section */}
                 <section className="relative pt-32 pb-20 overflow-hidden">
                     <div className="max-w-7xl mx-auto px-6 text-center">
-                        <motion.div
+                        <motion.button
+                            onClick={() => document.getElementById('deploy')?.scrollIntoView({ behavior: 'smooth' })}
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
                             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-                            className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-black/5 mb-8 shadow-sm backdrop-blur-sm"
+                            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-black/5 mb-8 shadow-sm backdrop-blur-sm hover:shadow-md hover:border-black/10 transition-all cursor-pointer group"
                         >
                             <span className="relative flex h-2 w-2">
                                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
                                 <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
                             </span>
-                            <span className="text-xs font-medium text-gray-600">v3.3.13 · Self-Sovereign Mode</span>
-                        </motion.div>
+                            <span className="text-xs font-medium text-gray-600 group-hover:text-black transition-colors">
+                                <span className="font-bold">New:</span> Deploy Your Own Facilitator <span className="opacity-50 ml-1">↓</span>
+                            </span>
+                        </motion.button>
 
                         <motion.h1
                             initial={{ opacity: 0, y: 20 }}
@@ -514,7 +519,7 @@ export async function POST(req) {
                 </section>
 
                 {/* Deploy Your Own Facilitator */}
-                <section className="py-24 sm:py-32 bg-[#F5F5F7] mx-2 sm:mx-6 md:mx-8 rounded-[2rem] sm:rounded-[3rem] overflow-hidden relative">
+                <section id="deploy" className="py-24 sm:py-32 bg-[#F5F5F7] mx-2 sm:mx-6 md:mx-8 rounded-[2rem] sm:rounded-[3rem] overflow-hidden relative">
                     <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-gradient-to-b from-blue-100/40 to-transparent blur-[120px] -translate-y-1/2 translate-x-1/2 pointer-events-none" />
                     <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-gradient-to-t from-green-100/40 to-transparent blur-[120px] translate-y-1/2 -translate-x-1/2 pointer-events-none" />
 
