@@ -257,8 +257,8 @@ export async function POST(req: NextRequest) {
                                 send({ type: 'thinking', id: 'v_net', stepType: 'paying', message: `Network Verify: Checking via PayAI (Custom Facilitator Not Configured)...`, agent: 'Research Agent' });
                             }
 
-                            // Wait for transaction propagation (Devnet can be slow)
-                            await new Promise(r => setTimeout(r, 2000));
+                            // Quick initial wait for transaction propagation
+                            await new Promise(r => setTimeout(r, 500));
 
                             let verifySuccess = false;
                             let failureReason = '';
@@ -267,8 +267,8 @@ export async function POST(req: NextRequest) {
                             for (let attempt = 1; attempt <= 3; attempt++) {
                                 try {
                                     if (attempt > 1) {
-                                        send({ type: 'thinking', id: `v_retry_${attempt}`, stepType: 'thinking', message: `Propagation delay (Attempt ${attempt}/3)...`, agent: 'Research Agent' });
-                                        await new Promise(r => setTimeout(r, 3000));
+                                        send({ type: 'thinking', id: `v_retry_${attempt}`, stepType: 'thinking', message: `Retry ${attempt}/3...`, agent: 'Research Agent' });
+                                        await new Promise(r => setTimeout(r, 1000));
                                     }
 
                                     const verifyRes = await fetch(`${VERIFIER_URL}/verify`, {
