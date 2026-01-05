@@ -46,7 +46,8 @@ describe('agent/agentPayment', () => {
             expect(result.keypair).toBeDefined();
             expect(result.secretBase58).toBeDefined();
             expect(result.publicKey).toBeDefined();
-            expect(result.publicKey).toHaveLength(44); // Base58 pubkey length
+            expect(result.publicKey.length).toBeGreaterThanOrEqual(43);
+            expect(result.publicKey.length).toBeLessThanOrEqual(44); // Base58 pubkey can be 43-44 chars
         });
 
         it('generates unique keypairs', () => {

@@ -13,6 +13,7 @@ import Database01Icon from 'hugeicons-react/dist/esm/icons/database_01_icon';
 import DollarCircleIcon from 'hugeicons-react/dist/esm/icons/dollar_circle_icon';
 import Globe02Icon from 'hugeicons-react/dist/esm/icons/globe_02_icon';
 import ArrowRight01Icon from 'hugeicons-react/dist/esm/icons/arrow_right_01_icon';
+import ArrowLeft01Icon from 'hugeicons-react/dist/esm/icons/arrow_left_01_icon';
 import CheckmarkCircle01Icon from 'hugeicons-react/dist/esm/icons/checkmark_circle_01_icon';
 import Copy01Icon from 'hugeicons-react/dist/esm/icons/copy_01_icon';
 import RefreshIcon from 'hugeicons-react/dist/esm/icons/refresh_icon';
@@ -50,6 +51,30 @@ const LightningIcon = ZapIcon;
 const Cpu = CpuIcon;
 const Sparkles = SparklesIcon;
 
+// Custom Brand Icons
+const RailwayIcon = ({ className }: { className?: string }) => (
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+        <path d="M4 3C4 2.44772 4.44772 2 5 2H19C19.5523 2 20 2.44772 20 3V21C20 21.5523 19.5523 22 19 22H5C4.44772 22 4 21.5523 4 21V3ZM12 4.5L12 19.5M4 12H20M4 7H20M4 17H20" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+    </svg>
+);
+
+const HerokuIcon = ({ className }: { className?: string }) => (
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+        <path d="M3 3H8.25V21H3V3Z" fill="currentColor" />
+        <path d="M15.75 3H21V21H15.75V3Z" fill="currentColor" />
+        <path d="M3 15.375C3 15.375 7.02758 12.1624 12 12C16.9724 11.8376 21 15.375 21 15.375" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+);
+
+const RenderIcon = ({ className }: { className?: string }) => (
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+        <path d="M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" strokeWidth="2" />
+        <path d="M12 21V12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+        <path d="M3.5 10L12 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+        <path d="M20.5 10L12 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+    </svg>
+);
+
 
 const sections = [
     { id: 'intro', title: 'Introduction', Icon: RocketIcon },
@@ -57,6 +82,7 @@ const sections = [
     { id: 'demo-features', title: 'Demos', Icon: GameController01Icon },
     { id: 'installation', title: 'Installation', Icon: PackageIcon },
     { id: 'quick-start', title: 'Quick Start', Icon: ZapIcon },
+    { id: 'deployment', title: 'Deployment', Icon: RocketIcon },
     { id: 'payment-flow', title: 'How It Works', Icon: WorkflowCircle03Icon },
     { id: 'wallet-topology', title: 'Wallet Topology', Icon: Database01Icon },
     { id: 'agent-chat', title: 'AI Payments', Icon: AiBrain01Icon },
@@ -241,7 +267,7 @@ export default function DocsPage() {
                         <span className="text-[15px] tracking-tight text-[#1D1D1F]">Micropay <span className="text-gray-400 font-normal">Docs</span></span>
                     </Link>
                     <div className="flex items-center gap-3 md:gap-4">
-                        <span className="hidden sm:inline-flex text-[11px] font-mono bg-gray-50 text-gray-500 px-2 py-1 rounded-md border border-gray-100">v3.3.13</span>
+                        <span className="hidden sm:inline-flex text-[11px] font-mono bg-gray-50 text-gray-500 px-2 py-1 rounded-md border border-gray-100">v3.3.14</span>
                         <Link href="/" className="hidden sm:inline-flex text-[13px] font-medium px-4 py-1.5 bg-[#1D1D1F] text-white rounded-full hover:bg-black transition-all shadow-sm active:scale-95">
                             Live Demo
                         </Link>
@@ -321,7 +347,7 @@ export default function DocsPage() {
                     <section id="intro" className="mb-16 md:mb-24 mt-4 scroll-mt-24">
                         <div className="inline-flex items-center gap-2 px-3 py-1 bg-white border border-[#D2D2D7] rounded-full mb-6 md:mb-8 shadow-sm">
                             <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
-                            <span className="text-[10px] md:text-[11px] font-bold text-gray-400 uppercase tracking-widest leading-none mt-0.5">Production Ready • v3.3.13</span>
+                            <span className="text-[10px] md:text-[11px] font-bold text-gray-400 uppercase tracking-widest leading-none mt-0.5">Production Ready • v3.3.14</span>
                         </div>
 
                         <h1 className="text-[32px] md:text-[64px] font-bold tracking-tight text-[#1D1D1F] leading-[1.1] mb-6 md:mb-8">
@@ -655,6 +681,161 @@ function PaymentButton() {
                         </div>
                     </section>
 
+                    {/* Deployment Section */}
+                    <section id="deployment" className="mb-16 md:mb-24 scroll-mt-24">
+                        <div className="flex items-center gap-3 mb-8 md:mb-10">
+                            <h2 className="text-xl md:text-2xl font-bold tracking-tight text-[#1D1D1F]">Deployment</h2>
+                            <div className="flex-1 h-[1px] bg-[#D2D2D7]" />
+                        </div>
+
+                        {/* New Hero */}
+                        <div className="mb-12">
+                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-100 text-blue-600 text-[11px] font-bold uppercase tracking-wider mb-6">
+                                <RocketIcon size={14} />
+                                One-Click Deploy
+                            </div>
+                            <h3 className="text-3xl md:text-4xl font-bold tracking-tight text-[#1D1D1F] mb-4">
+                                Deploy Your Own Facilitator
+                            </h3>
+                            <p className="text-lg text-gray-500 max-w-2xl leading-relaxed">
+                                For production, spin up a high-performance verification node in seconds.
+                                Zero config files to edit—just bring your RPC URL.
+                            </p>
+                        </div>
+
+                        {/* Platform Grid */}
+                        <div className="grid md:grid-cols-3 gap-6 mb-16">
+                            {[
+                                {
+                                    name: 'Railway',
+                                    desc: 'Recommended for production. Auto-scaling & zero-downtime deploys.',
+                                    color: 'from-purple-500 to-pink-500',
+                                    icon: RailwayIcon,
+                                    link: 'https://railway.app/template/https://github.com/AlleyBo55/oneclick-x402-facilitator-solana'
+                                },
+                                {
+                                    name: 'Heroku',
+                                    desc: 'Easiest for quick prototypes. One-click setup with dyno management.',
+                                    color: 'from-violet-500 to-indigo-500',
+                                    icon: HerokuIcon,
+                                    link: 'https://heroku.com/deploy?template=https://github.com/AlleyBo55/oneclick-x402-facilitator-solana'
+                                },
+                                {
+                                    name: 'Render',
+                                    desc: 'Best price-performance. Fully managed docker containers.',
+                                    color: 'from-blue-500 to-cyan-500',
+                                    icon: RenderIcon,
+                                    link: 'https://render.com/deploy?repo=https://github.com/AlleyBo55/oneclick-x402-facilitator-solana'
+                                }
+                            ].map((platform) => (
+                                <a
+                                    key={platform.name}
+                                    href={platform.link}
+                                    target="_blank"
+                                    className="group relative bg-white border border-[#D2D2D7] rounded-3xl p-6 md:p-8 hover:shadow-xl hover:shadow-blue-900/5 transition-all duration-300 hover:-translate-y-1 block overflow-hidden"
+                                >
+                                    <div className={`absolute inset-0 bg-gradient-to-br ${platform.color} opacity-0 group-hover:opacity-[0.03] transition-opacity`} />
+                                    <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${platform.color} flex items-center justify-center text-white mb-6 shadow-lg transform group-hover:scale-110 transition-transform duration-500`}>
+                                        <platform.icon className="w-6 h-6" />
+                                    </div>
+                                    <h3 className="text-xl font-bold text-[#1D1D1F] mb-2 flex items-center gap-2">
+                                        {platform.name}
+                                        <ArrowLeft01Icon size={16} className="rotate-180 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all text-gray-400" />
+                                    </h3>
+                                    <p className="text-gray-500 text-[13px] md:text-[14px] leading-relaxed font-medium">{platform.desc}</p>
+                                </a>
+                            ))}
+                        </div>
+
+                        {/* Config Workflow */}
+                        <div className="mb-16">
+                            <h3 className="text-xl font-bold text-[#1D1D1F] mb-8 flex items-center gap-3">
+                                <span className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center text-gray-500 text-sm">2</span>
+                                Configuration Workflow
+                            </h3>
+
+                            <div className="relative pl-8 md:pl-12 border-l-2 border-dashed border-gray-200 space-y-12">
+                                {/* Step 1 */}
+                                <div className="relative">
+                                    <div className="absolute -left-[39px] md:-left-[55px] top-0 w-5 h-5 bg-blue-500 rounded-full border-4 border-white shadow-sm" />
+                                    <h4 className="font-bold text-[#1D1D1F] mb-2">Initiate Deployment</h4>
+                                    <p className="text-sm text-gray-500 mb-4">Select your preferred cloud provider above. You'll be redirected to their setup wizard.</p>
+                                    <div className="bg-gray-50 rounded-lg border border-gray-200 px-3 py-2 inline-block text-[13px] text-gray-500 font-medium">
+                                        💡 No account? Railway allows guest deployments.
+                                    </div>
+                                </div>
+
+                                {/* Step 2 */}
+                                <div className="relative">
+                                    <div className="absolute -left-[39px] md:-left-[55px] top-0 w-5 h-5 bg-purple-500 rounded-full border-4 border-white shadow-sm" />
+                                    <h4 className="font-bold text-[#1D1D1F] mb-2">Configure RPC Endpoint</h4>
+                                    <p className="text-sm text-gray-500 mb-6">
+                                        The only critical environment variable is <code className="bg-gray-100 px-1 py-0.5 rounded text-[#1D1D1F] font-mono text-xs">SOLANA_RPC_URL</code>.
+                                    </p>
+                                    <div className="bg-[#1C1C1E] text-white rounded-2xl p-6 shadow-xl max-w-xl border border-white/10">
+                                        <div className="space-y-4">
+                                            <div>
+                                                <label className="block text-[10px] font-bold text-gray-400 mb-2 uppercase tracking-wider">SOLANA_RPC_URL <span className="text-red-400">*</span></label>
+                                                <div className="bg-white/10 border border-white/10 rounded-lg p-3 font-mono text-[13px] text-blue-300 break-all">
+                                                    https://mainnet.helius-rpc.com/?api-key=...
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <label className="block text-[10px] font-bold text-gray-400 mb-2 uppercase tracking-wider">SOLANA_NETWORK</label>
+                                                <div className="flex gap-2">
+                                                    <div className="bg-white/10 border border-blue-500/50 rounded-md px-3 py-2 text-[13px] font-medium ring-1 ring-blue-500/50">mainnet-beta</div>
+                                                    <div className="bg-transparent border border-white/10 rounded-md px-3 py-2 text-[13px] text-gray-500">devnet</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Step 3 */}
+                                <div className="relative">
+                                    <div className="absolute -left-[39px] md:-left-[55px] top-0 w-5 h-5 bg-green-500 rounded-full border-4 border-white shadow-sm" />
+                                    <h4 className="font-bold text-[#1D1D1F] mb-2">Verify & Connect</h4>
+                                    <p className="text-sm text-gray-500 mb-6">Once deployed, verify your node is active with the health check.</p>
+                                    <div className="flex flex-wrap gap-4">
+                                        <div className="bg-white border border-[#D2D2D7] px-4 py-3 rounded-xl flex items-center gap-3 shadow-sm">
+                                            <ShieldKeyIcon size={16} className="text-green-600" />
+                                            <code className="text-[13px] font-mono text-[#1D1D1F]">GET /health</code>
+                                        </div>
+                                        <div className="bg-white border border-[#D2D2D7] px-4 py-3 rounded-xl flex items-center gap-3 shadow-sm">
+                                            <Database01Icon size={16} className="text-blue-600" />
+                                            <code className="text-[13px] font-mono text-[#1D1D1F]">GET /metrics</code>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* FAQ */}
+                        <div className="bg-white rounded-[32px] p-8 md:p-10 border border-[#D2D2D7]">
+                            <h3 className="text-xl font-bold text-[#1D1D1F] mb-8">Deployment FAQ</h3>
+                            <div className="grid md:grid-cols-2 gap-8 md:gap-12">
+                                <div>
+                                    <h4 className="font-bold text-[#1D1D1F] text-[15px] mb-3 flex items-center gap-2">
+                                        <div className="w-1.5 h-1.5 rounded-full bg-blue-500"></div>
+                                        What happens when I click Deploy?
+                                    </h4>
+                                    <p className="text-[14px] text-gray-500 leading-relaxed font-medium">
+                                        The platform (Railway/Heroku/Render) will automatically fork this open-source repository into your own account. It will then pause to ask for your Environment Variables before building the Go binaries.
+                                    </p>
+                                </div>
+                                <div>
+                                    <h4 className="font-bold text-[#1D1D1F] text-[15px] mb-3 flex items-center gap-2">
+                                        <div className="w-1.5 h-1.5 rounded-full bg-purple-500"></div>
+                                        Can I change networks later?
+                                    </h4>
+                                    <p className="text-[14px] text-gray-500 leading-relaxed font-medium">
+                                        Yes. Simply go to your project dashboard's "Variables" or "Settings" tab and update <code className="bg-gray-100 px-1 py-0.5 rounded text-gray-800 font-mono text-xs">SOLANA_NETWORK</code> to <code className="font-mono text-xs">mainnet-beta</code> or <code className="font-mono text-xs">devnet</code>.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
                     {/* How It Works */}
                     <section id="payment-flow" className="mb-16 md:mb-24 scroll-mt-24">
                         <div className="flex items-center gap-3 mb-8 md:mb-10">
@@ -901,17 +1082,21 @@ function PaymentButton() {
                         <div className="bg-[#F5F5F7] border border-[#D2D2D7] rounded-3xl md:rounded-[32px] p-6 md:p-12 mb-10 md:mb-12">
                             <div className="max-w-3xl text-center md:text-left mx-auto md:mx-0">
                                 <h3 className="text-xl md:text-2xl font-bold text-[#1D1D1F] mb-4">The Universal Standard.</h3>
-                                <p className="text-gray-500 text-sm md:text-base leading-relaxed font-medium mb-8">
-                                    Native support for the PayAI payment format - a universal protocol that enables cross-chain payment discovery.
+                                <p className="text-gray-500 text-sm md:text-base leading-relaxed font-medium mb-6">
+                                    Native support for the <a href="https://payai.network" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline font-semibold">PayAI payment format</a> - a universal protocol that enables cross-chain payment discovery.
                                     Micropay automatically detects and transforms PayAI payloads into x402 compliant authorizations.
                                 </p>
-                                <div className="flex flex-wrap justify-center md:justify-start gap-3">
+                                <div className="flex flex-wrap justify-center md:justify-start gap-3 mb-6">
                                     {['Multi-chain', 'Stateless', 'Async', 'Universal'].map((tag) => (
                                         <div key={tag} className="px-3 py-1.5 md:px-4 md:py-2 bg-white rounded-xl border border-gray-100 text-[9px] md:text-[11px] font-bold text-gray-400 uppercase tracking-widest text-center shadow-sm">
                                             {tag}
                                         </div>
                                     ))}
                                 </div>
+                                <a href="https://payai.network" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-full text-[12px] font-bold text-[#1D1D1F] hover:bg-gray-50 transition-all shadow-sm">
+                                    Learn more at payai.network
+                                    <ArrowRight01Icon size={14} />
+                                </a>
                             </div>
                         </div>
 
@@ -981,11 +1166,72 @@ function PaymentButton() {
                         </div>
                     </section>
 
-                    {/* Verification */}
-                    <section id="verification" className="mb-16 md:mb-24 scroll-mt-24">
+                    {/* Verification Modes */}
+                    {/* Verification Modes */}
+                    <section id="self-sovereign" className="mb-16 md:mb-24 scroll-mt-24">
                         <div className="flex items-center gap-3 mb-8 md:mb-10">
-                            <h2 className="text-xl md:text-2xl font-bold tracking-tight text-[#1D1D1F]">Verification</h2>
+                            <h2 className="text-xl md:text-2xl font-bold tracking-tight text-[#1D1D1F]">Verification Modes</h2>
                             <div className="flex-1 h-[1px] bg-[#D2D2D7]" />
+                        </div>
+
+                        <div className="bg-[#F5F5F7] border border-[#D2D2D7] rounded-3xl md:rounded-[32px] p-6 md:p-12 mb-10">
+                            <div className="max-w-3xl">
+                                <h3 className="text-xl md:text-2xl font-bold text-[#1D1D1F] mb-4">Choose Your Trust Model.</h3>
+                                <p className="text-gray-500 text-sm md:text-base leading-relaxed font-medium mb-6">
+                                    Micropay supports three distinct trust topologies. Default to the managed <strong>PayAI Network</strong>, run your own <strong>Private Facilitator</strong>, or go fully <strong>Self-Sovereign</strong> with direct RPC verification.
+                                </p>
+                                <CodeBlock code={`const withMicropay = createX402Middleware({
+    walletAddress: 'YOUR_WALLET',
+    price: '1000000',
+    
+    // Mode 1: Hosted (Default)
+    // Uses PayAI Network
+    
+    // Mode 2: Private Verified
+    // Point to your own Railway/Docker container
+    facilitatorUrl: 'https://my-facilitator.railway.app',
+
+    // Mode 3: Self-Sovereign
+    // Verify directly against Solana RPC (No Facilitator)
+    rpcUrl: process.env.NEXT_PUBLIC_RPC_URL
+});`} />
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+                            <div className="bg-white border border-gray-100 rounded-3xl p-6">
+                                <h4 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-4">Hosted (PayAI)</h4>
+                                <ul className="space-y-3">
+                                    {['Zero Setup', 'Global Cache', 'Managed Reliability'].map((item, i) => (
+                                        <li key={i} className="flex items-center gap-2 text-[12px] text-gray-600 font-medium">
+                                            <div className="w-1.5 h-1.5 rounded-full bg-blue-500" />
+                                            {item}
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                            <div className="bg-white border border-gray-100 rounded-3xl p-6">
+                                <h4 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-4">Private (Railway)</h4>
+                                <ul className="space-y-3">
+                                    {['Your Infrastructure', 'Custom Logic', 'Private Logs'].map((item, i) => (
+                                        <li key={i} className="flex items-center gap-2 text-[12px] text-gray-600 font-medium">
+                                            <div className="w-1.5 h-1.5 rounded-full bg-purple-500" />
+                                            {item}
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                            <div className="bg-white border border-gray-100 rounded-3xl p-6">
+                                <h4 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-4">Sovereign (RPC)</h4>
+                                <ul className="space-y-3">
+                                    {['Trustless', 'Direct Blockchain', 'Maximum Control'].map((item, i) => (
+                                        <li key={i} className="flex items-center gap-2 text-[12px] text-gray-600 font-medium">
+                                            <div className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                                            {item}
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
                         </div>
 
                         <div className="bg-white border border-gray-100 rounded-3xl p-6 md:p-8 mb-8">
@@ -1014,6 +1260,29 @@ function PaymentButton() {
                         <CodeBlock code={`// Manual Verification Example
 const isValid = await server.verify(signature);
 if (!isValid) throw new Error('Payment already claimed!');`} />
+                        <div className="bg-white border border-gray-100 rounded-3xl p-6 md:p-8 mt-8">
+                            <h3 className="text-lg md:text-xl font-bold text-[#1D1D1F] mb-4">Facilitator API Format</h3>
+                            <p className="text-gray-500 text-[13px] md:text-[14px] leading-relaxed font-medium mb-6">
+                                The custom facilitator accepts a standard x402 verification payload. You can use this to integrate payment verification into any backend.
+                            </p>
+                            <CodeBlock language="json" code={`POST /verify
+Content-Type: application/json
+
+{
+  "paymentPayload": {
+    "x402Version": 2,
+    "payload": {
+      "signature": "5eykt...pY1vz"
+    }
+  },
+  "paymentRequirements": {
+    "payTo": "YOUR_WALLET",
+    "amount": "1000000",
+    "asset": "SOL",
+    "network": "devnet"
+  }
+}`} />
+                        </div>
                     </section>
 
                     {/* Installation */}
@@ -1053,8 +1322,10 @@ if (!isValid) throw new Error('Payment already claimed!');`} />
                                 </div>
                                 <div className="p-6 md:p-8">
                                     <CodeBlock code={`const server = new x402ResourceServer({
-  facilitator: new LocalSvmFacilitator(RPC_URL),
+  // Use your own self-hosted facilitator
+  facilitator: new RemoteFacilitator('https://my-facilitator.railway.app'), 
   walletAddress: CREATOR_ADDR,
+  
   // Optional config
   registry: new RedisRegistry(), // Custom storage
   ttl: 3600, // Session duration in seconds
@@ -1083,7 +1354,9 @@ if (!isValid) throw new Error('Payment already claimed!');`} />
 const withPayment = createX402Middleware({
   walletAddress: process.env.CREATOR_WALLET_ADDRESS!,
   price: '10000000', // 0.01 SOL
-  network: 'devnet'
+  network: 'devnet',
+  // Optional: Use your self-hosted facilitator
+  facilitatorUrl: 'https://my-facilitator.railway.app'
 });
 
 export const GET = withPayment(async (req) => {
@@ -1177,6 +1450,75 @@ export const GET = withPayment(async (req) => {
                                 <p className="text-gray-500 text-[13px] md:text-[14px] leading-relaxed font-medium">
                                     By using Solana as the source of truth, the middleware doesn't need to maintain a database of users. If the on-chain data matches the request, access is granted.
                                 </p>
+                            </div>
+                            <div className="bg-white border border-gray-100 rounded-3xl p-6 md:p-8 col-span-1 md:col-span-2">
+                                <h3 className="text-lg md:text-xl font-bold text-[#1D1D1F] mb-3">Agent Demo Configuration</h3>
+                                <p className="text-gray-500 text-[13px] md:text-[14px] leading-relaxed font-medium mb-6">
+                                    To enable the **Agent-to-Agent** payment demo using your own infrastructure:
+                                </p>
+                                <div className="space-y-4">
+                                    <div className="flex items-start gap-3">
+                                        <div className="w-6 h-6 rounded-full bg-black/5 flex items-center justify-center text-[10px] font-bold shrink-0 mt-0.5">1</div>
+                                        <div>
+                                            <p className="text-sm font-semibold text-[#1D1D1F]">Deploy Facilitator</p>
+                                            <p className="text-xs text-text-gray-500 mt-1">Deploy your facilitator to Railway/Heroku using the One-Click button above.</p>
+                                        </div>
+                                    </div>
+                                    <div className="flex items-start gap-3">
+                                        <div className="w-6 h-6 rounded-full bg-black/5 flex items-center justify-center text-[10px] font-bold shrink-0 mt-0.5">2</div>
+                                        <div>
+                                            <p className="text-sm font-semibold text-[#1D1D1F]">Get Service URL</p>
+                                            <p className="text-xs text-gray-500 mt-1">
+                                                On Railway: Click your project → Click the Service → Copy the <strong>Public Networking URL</strong> (e.g. <code>https://my-app.up.railway.app</code>).
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div className="flex items-start gap-3">
+                                        <div className="w-6 h-6 rounded-full bg-black/5 flex items-center justify-center text-[10px] font-bold shrink-0 mt-0.5">3</div>
+                                        <div>
+                                            <p className="text-sm font-semibold text-[#1D1D1F]">Set Environment Variable</p>
+                                            <p className="text-xs text-gray-500 mt-1">
+                                                Add this to your local or deployed demo environment:
+                                            </p>
+                                            <div className="mt-2 bg-black/5 p-3 rounded-xl font-mono text-[10px] text-gray-600">
+                                                PLATFORM_FACILITATOR_URL=https://your-app.up.railway.app
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="bg-white border border-gray-100 rounded-3xl p-6 md:p-8 col-span-1 md:col-span-2 mb-8">
+                            <h3 className="text-lg md:text-xl font-bold text-[#1D1D1F] mb-3">Verification Architecture</h3>
+                            <div className="flex flex-col md:flex-row gap-6">
+                                <div className="flex-1">
+                                    <p className="text-gray-500 text-[13px] md:text-[14px] leading-relaxed font-medium mb-4">
+                                        This demo implements a <strong>"Split Architecture"</strong> (Toly Design) to optimize for both trust and convenience:
+                                    </p>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div className="p-4 bg-blue-50/50 rounded-xl border border-blue-100">
+                                            <div className="flex items-center gap-2 mb-2">
+                                                <div className="w-2 h-2 rounded-full bg-blue-500"></div>
+                                                <p className="text-xs font-bold text-blue-800 uppercase tracking-widest">Standard Flow</p>
+                                            </div>
+                                            <p className="text-xs text-gray-600 font-medium leading-relaxed">
+                                                <strong>Agent → API</strong> payments use the managed <strong>PayAI Network</strong>.
+                                                Zero-config, high availability for standard SaaS interactions.
+                                            </p>
+                                        </div>
+                                        <div className="p-4 bg-green-50/50 rounded-xl border border-green-100">
+                                            <div className="flex items-center gap-2 mb-2">
+                                                <div className="w-2 h-2 rounded-full bg-green-500"></div>
+                                                <p className="text-xs font-bold text-green-800 uppercase tracking-widest">Sovereign Flow</p>
+                                            </div>
+                                            <p className="text-xs text-gray-600 font-medium leading-relaxed">
+                                                <strong>Agent → Agent</strong> payments use your <strong>Custom Railway Node</strong>.
+                                                Demonstrates true p2p sovereignty and private infrastructure verification.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 

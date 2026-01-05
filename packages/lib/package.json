@@ -1,6 +1,6 @@
 {
     "name": "@alleyboss/micropay-solana-x402-paywall",
-    "version": "3.3.13",
+    "version": "3.3.15",
     "description": "Production-ready Solana micropayments library wrapper for official x402 SDK",
     "author": "AlleyBoss",
     "license": "MIT",
@@ -8,6 +8,7 @@
         "type": "git",
         "url": "git@github.com:AlleyBo55/micropay-solana-x402-paywall.git"
     },
+    "homepage": "https://solana-x402-paywall.vercel.app/",
     "keywords": [
         "solana",
         "x402",

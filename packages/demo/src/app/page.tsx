@@ -513,6 +513,104 @@ export async function POST(req) {
                     </div>
                 </section>
 
+                {/* Deploy Your Own Facilitator */}
+                <section className="py-24 sm:py-32 bg-gradient-to-b from-gray-50 to-white mx-3 sm:mx-8 rounded-[2.5rem] overflow-hidden">
+                    <div className="max-w-7xl mx-auto px-6 sm:px-12">
+                        <div className="max-w-3xl mb-12 sm:mb-16">
+                            <motion.div
+                                initial={{ opacity: 0, y: 20 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-black/5 text-[10px] font-bold uppercase tracking-widest text-black/50 mb-6"
+                            >
+                                <Database01Icon size={12} />
+                                Self-Sovereign
+                            </motion.div>
+                            <h2 className="text-3xl sm:text-5xl font-bold tracking-tight mb-6 text-[#1D1D1F] leading-[1.1]">
+                                Deploy your own <br />
+                                <span className="text-black/30">facilitator.</span>
+                            </h2>
+                            <p className="text-lg sm:text-xl text-gray-500 leading-relaxed max-w-xl">
+                                Don't rely on third parties. Self-host your own x402 payment verification server with one click.
+                                Open source, zero fees, full control.
+                            </p>
+                        </div>
+
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            {[
+                                {
+                                    name: 'Heroku',
+                                    color: 'from-purple-500 to-purple-600',
+                                    url: 'https://heroku.com/deploy?template=https://github.com/AlleyBo55/oneclick-x402-facilitator-solana',
+                                    icon: (
+                                        <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M20.61 0H3.39C2.189 0 1.23.96 1.23 2.16v19.681c0 1.198.959 2.159 2.16 2.159h17.22c1.2 0 2.159-.961 2.159-2.159V2.16C22.77.96 21.811 0 20.61 0zm.96 21.841c0 .539-.421.96-.96.96H3.39c-.54 0-.96-.421-.96-.96V2.16c0-.54.42-.96.96-.96h17.22c.539 0 .96.42.96.96v19.681zM6.63 20.399L9.33 18l-2.7-2.4v4.799zm9.72-9.719c-.479-.48-1.379-1.08-2.879-1.08-1.621 0-3.301.421-4.5.84V3.6h-2.4v10.38l1.68-.78s2.76-1.26 5.16-1.26c1.2 0 1.5.66 1.5 1.26v7.2h2.4v-7.2c0-1.08-.24-2.04-.961-2.52zM15.03 3.6h2.4c0 1.619-1.32 3.6-3.6 4.199V5.28c1.08-.42 1.2-1.68 1.2-1.68z" />
+                                        </svg>
+                                    ),
+                                },
+                                {
+                                    name: 'Railway',
+                                    color: 'from-black to-gray-800',
+                                    url: 'https://railway.app/template/https://github.com/AlleyBo55/oneclick-x402-facilitator-solana',
+                                    icon: (
+                                        <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M.113 12.611c-.055-.273-.113-.556-.113-.851 0-1.027.381-1.973 1.005-2.704 0 0 .27-.328.723-.741h4.064c-.721.627-1.163 1.55-1.163 2.577 0 1.9 1.538 3.439 3.437 3.439.65 0 1.256-.182 1.775-.496l2.035 3.522c-.948.44-2.008.693-3.127.693-3.914 0-7.127-2.96-7.531-6.768-.053-.223-.105-.447-.105-.671zM11.972 19.049L9.937 15.527c.518-.313.934-.77 1.197-1.317h4.063c-.312 2.085-1.396 3.923-2.987 5.199.078-.119-.158.359-.238.64zM22.887 12.611c.055-.273.113-.556.113-.851 0-1.027-.381-1.973-1.005-2.704 0 0-.27-.328-.723-.741h-4.064c.721.627 1.163 1.55 1.163 2.577 0 1.9-1.538 3.439-3.437 3.439-.65 0-1.256-.182-1.775-.496l-2.035 3.522c.948.44 2.008.693 3.127.693 3.914 0 7.127-2.96 7.531-6.768.053-.223.105-.447.105-.671z" />
+                                        </svg>
+                                    ),
+                                },
+                                {
+                                    name: 'Render',
+                                    color: 'from-emerald-500 to-teal-600',
+                                    url: 'https://render.com/deploy?repo=https://github.com/AlleyBo55/oneclick-x402-facilitator-solana',
+                                    icon: (
+                                        <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M11.998 0C5.373 0 0 5.373 0 12s5.373 12 11.998 12C18.627 24 24 18.627 24 12S18.627 0 11.998 0zm5.608 17.608h-3.487v-3.486h3.487v3.486zm0-4.723h-3.487v-3.488h3.487v3.488zm-4.72 0H9.398V9.397h3.488v3.488zm-4.722 0H4.676V9.397h3.488v3.488zm9.442-4.72h-3.487V4.677h3.487v3.488zm-4.72 0H9.398V4.677h3.488v3.488zm-4.722 0H4.676V4.677h3.488v3.488z" />
+                                        </svg>
+                                    ),
+                                },
+                            ].map((platform, i) => (
+                                <motion.a
+                                    key={platform.name}
+                                    href={platform.url}
+                                    target="_blank"
+                                    initial={{ opacity: 0, y: 20 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    viewport={{ once: true }}
+                                    transition={{ delay: i * 0.1 }}
+                                    className="group relative bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden"
+                                >
+                                    <div className={`absolute inset-0 bg-gradient-to-br ${platform.color} opacity-0 group-hover:opacity-5 transition-opacity duration-300`} />
+                                    <div className="relative z-10 flex flex-col items-center text-center gap-4">
+                                        <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${platform.color} text-white flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300`}>
+                                            {platform.icon}
+                                        </div>
+                                        <div>
+                                            <h3 className="font-semibold text-lg text-[#1D1D1F]">{platform.name}</h3>
+                                            <p className="text-sm text-gray-500 mt-1">Deploy now →</p>
+                                        </div>
+                                    </div>
+                                </motion.a>
+                            ))}
+                        </div>
+
+                        <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4 text-sm">
+                            <a
+                                href="https://github.com/AlleyBo55/oneclick-x402-facilitator-solana"
+                                target="_blank"
+                                className="text-gray-500 hover:text-black transition-colors flex items-center gap-2"
+                            >
+                                <SourceCodeIcon size={16} />
+                                View Source on GitHub
+                            </a>
+                            <span className="hidden sm:inline text-gray-300">•</span>
+                            <span className="text-gray-400 flex items-center gap-2">
+                                <Shield02Icon size={16} />
+                                MIT Licensed • Zero Fees
+                            </span>
+                        </div>
+                    </div>
+                </section>
+
                 {/* CTA */}
                 <section className="py-32 border-t border-black/5 bg-white">
                     <div className="max-w-4xl mx-auto px-6 text-center">
