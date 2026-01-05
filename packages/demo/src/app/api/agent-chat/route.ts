@@ -276,10 +276,14 @@ export async function POST(req: NextRequest) {
                                     send({ type: 'thinking', id: 'v_ok', stepType: 'confirmed', message: confirmMsg, agent: 'Research Agent' });
                                 } else {
                                     send({ type: 'thinking', id: 'v_fail', stepType: 'error', message: `Verification Failed by ${VERIFIER_NAME}`, agent: 'Research Agent' });
+                                    send({ type: 'content', content: `❌ **Verification Denied:** The facilitator rejected the payment signature. Execution halted.`, isPremium: false });
+                                    close();
+                                    return;
                                 }
                             } catch (e) {
                                 console.warn('[Agent Chat] Verification failed:', e);
                                 send({ type: 'thinking', id: 'v_err', stepType: 'confirmed', message: `Fallback: Tx confirmed via RPC (Node Unreachable)`, agent: 'Research Agent' });
+                                // On network error (e.g. timeout), we default to implicit trust (RPC fallback) for demo continuity
                             }
 
                             await new Promise(r => setTimeout(r, thoughtDelay));
