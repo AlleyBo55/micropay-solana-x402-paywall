@@ -352,6 +352,8 @@ export default function AgentChat() {
                                             This demo simulates <strong>Consumer-to-Agent Payments</strong>.
                                             <br className="mb-2" />
                                             Ask for <strong>"Premium Analysis"</strong> and the AI will request a <strong>micropayment</strong> (0.002 SOL) before delivering.
+                                            <br className="mb-2" />
+                                            <span className="text-blue-600 font-semibold">Payments are verified via PayAI Network</span>
                                         </span>
                                     )}
                                 </p>
@@ -505,7 +507,7 @@ export default function AgentChat() {
                                                         <div className="flex items-center gap-2 opacity-30 hover:opacity-100 transition-opacity">
                                                             <CheckCircle2 size={12} className="text-green-600" />
                                                             <span className="text-[9px] font-bold uppercase tracking-widest">
-                                                                {message.agentName ? 'Custom Verified' : 'Verified on Solana'}
+                                                                {message.agentName ? 'Custom Verified' : 'PayAI Verified'}
                                                             </span>
                                                         </div>
                                                     </motion.div>
