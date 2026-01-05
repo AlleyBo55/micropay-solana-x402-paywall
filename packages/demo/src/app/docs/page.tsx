@@ -1446,6 +1446,39 @@ export const GET = withPayment(async (req) => {
                             </div>
                         </div>
 
+                        <div className="bg-white border border-gray-100 rounded-3xl p-6 md:p-8 col-span-1 md:col-span-2 mb-8">
+                            <h3 className="text-lg md:text-xl font-bold text-[#1D1D1F] mb-3">Verification Architecture</h3>
+                            <div className="flex flex-col md:flex-row gap-6">
+                                <div className="flex-1">
+                                    <p className="text-gray-500 text-[13px] md:text-[14px] leading-relaxed font-medium mb-4">
+                                        This demo implements a <strong>"Split Architecture"</strong> (Toly Design) to optimize for both trust and convenience:
+                                    </p>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div className="p-4 bg-blue-50/50 rounded-xl border border-blue-100">
+                                            <div className="flex items-center gap-2 mb-2">
+                                                <div className="w-2 h-2 rounded-full bg-blue-500"></div>
+                                                <p className="text-xs font-bold text-blue-800 uppercase tracking-widest">Standard Flow</p>
+                                            </div>
+                                            <p className="text-xs text-gray-600 font-medium leading-relaxed">
+                                                <strong>Agent → API</strong> payments use the managed <strong>PayAI Network</strong>.
+                                                Zero-config, high availability for standard SaaS interactions.
+                                            </p>
+                                        </div>
+                                        <div className="p-4 bg-green-50/50 rounded-xl border border-green-100">
+                                            <div className="flex items-center gap-2 mb-2">
+                                                <div className="w-2 h-2 rounded-full bg-green-500"></div>
+                                                <p className="text-xs font-bold text-green-800 uppercase tracking-widest">Sovereign Flow</p>
+                                            </div>
+                                            <p className="text-xs text-gray-600 font-medium leading-relaxed">
+                                                <strong>Agent → Agent</strong> payments use your <strong>Custom Railway Node</strong>.
+                                                Demonstrates true p2p sovereignty and private infrastructure verification.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <div className="bg-gray-900 rounded-3xl p-6 md:p-12 text-white overflow-hidden relative">
                             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-red-500 to-amber-500 opacity-50" />
                             <div className="flex flex-col md:flex-row gap-10 items-center">
