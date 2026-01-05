@@ -207,7 +207,10 @@ export async function POST(req: NextRequest) {
                     }
 
                     // 4. Quotation
-                    send({ type: 'thinking', id: 'neg', stepType: 'thinking', message: 'Negotiation: Analysis Agent demands 0.001 SOL.' });
+                    const AGENT_PRICE_SOL = parseFloat(process.env.AGENT_FEE_SOL || '0.001');
+                    const AGENT_NAME = process.env.AGENT_NAME || 'Analysis Agent';
+
+                    send({ type: 'thinking', id: 'neg', stepType: 'thinking', message: `Negotiation: ${AGENT_NAME} demands ${AGENT_PRICE_SOL} SOL.` });
                     await new Promise(r => setTimeout(r, thoughtDelay));
 
                     // 5. Payment Execution
@@ -215,13 +218,14 @@ export async function POST(req: NextRequest) {
 
                     try {
                         const recipientWallet = getCreatorWallet(); // In real scenario, would be Analysis Agent's specific wallet
+                        const priceLamports = BigInt(Math.round(AGENT_PRICE_SOL * 1_000_000_000));
 
                         // Execute Payment via SDK
                         const result = await executeAgentPayment({
                             connection: getConnection(),
                             agentKeypair: getAgentKeypair(),
                             recipientAddress: recipientWallet,
-                            amountLamports: BigInt(1_000_000), // 0.001 SOL
+                            amountLamports: priceLamports,
                             priorityFee: { enabled: true, microLamports: 10000 } // High priority for demo speed
                         });
 
