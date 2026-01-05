@@ -711,7 +711,7 @@ function PaymentButton() {
                                     desc: 'Recommended for production. Auto-scaling & zero-downtime deploys.',
                                     color: 'from-purple-500 to-pink-500',
                                     icon: RailwayIcon,
-                                    link: 'https://railway.app/new/template?template=https://github.com/AlleyBo55/oneclick-x402-facilitator-solana'
+                                    link: 'https://railway.com/deploy/owL10e?referralCode=WF4b52&utm_medium=integration&utm_source=template&utm_campaign=generic'
                                 }
                             ].map((platform) => (
                                 <a
