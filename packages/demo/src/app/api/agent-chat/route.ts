@@ -315,7 +315,7 @@ export async function POST(req: NextRequest) {
                                     send({ type: 'thinking', id: 'v_fallback', stepType: 'thinking', message: `⚠️ Private Node Lag: Falling back to Local RPC verify...`, agent: 'Research Agent' });
 
                                     // Local Verification Check
-                                    const tx = await getConnection().getTransaction(result.signature, { commitment: 'confirmed' });
+                                    const tx = await getConnection().getTransaction(result.signature, { commitment: 'confirmed', maxSupportedTransactionVersion: 0 });
                                     if (tx) {
                                         send({ type: 'thinking', id: 'v_rpc_ok', stepType: 'confirmed', message: `RPC Verified: Transaction confirmed on-chain ✓`, agent: 'Research Agent' });
                                     } else {
