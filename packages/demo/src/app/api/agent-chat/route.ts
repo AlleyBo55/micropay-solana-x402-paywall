@@ -268,7 +268,7 @@ export async function POST(req: NextRequest) {
                                         paymentPayload: { x402Version: 2, payload: { signature: result.signature } },
                                         paymentRequirements: {
                                             payTo: recipientWallet,
-                                            amount: '1000000',
+                                            amount: priceLamports.toString(),
                                             asset: 'SOL',
                                             network: process.env.SOLANA_NETWORK || 'devnet'
                                         }
