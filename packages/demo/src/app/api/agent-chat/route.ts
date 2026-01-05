@@ -207,7 +207,11 @@ export async function POST(req: NextRequest) {
                     }
 
                     // 4. Quotation
-                    const AGENT_PRICE_SOL = parseFloat(process.env.AGENT_FEE_SOL || '0.001');
+                    // Dynamic Price Range: 0.001 - 0.003 SOL (User Request)
+                    const minPrice = 0.001;
+                    const maxPrice = 0.003;
+                    const randomPrice = minPrice + Math.random() * (maxPrice - minPrice);
+                    const AGENT_PRICE_SOL = parseFloat(randomPrice.toFixed(4)); // Round to 4 decimals
                     const AGENT_NAME = process.env.AGENT_NAME || 'Analysis Agent';
 
                     send({ type: 'thinking', id: 'neg', stepType: 'thinking', message: `Negotiation: ${AGENT_NAME} demands ${AGENT_PRICE_SOL} SOL.` });
@@ -264,7 +268,7 @@ export async function POST(req: NextRequest) {
                                         paymentPayload: { x402Version: 2, payload: { signature: result.signature } },
                                         paymentRequirements: {
                                             payTo: recipientWallet,
-                                            amount: '1000000',
+                                            amount: priceLamports.toString(),
                                             asset: 'SOL',
                                             network: process.env.SOLANA_NETWORK || 'devnet'
                                         }
