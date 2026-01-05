@@ -1408,6 +1408,42 @@ export const GET = withPayment(async (req) => {
                                     By using Solana as the source of truth, the middleware doesn't need to maintain a database of users. If the on-chain data matches the request, access is granted.
                                 </p>
                             </div>
+                            <div className="bg-white border border-gray-100 rounded-3xl p-6 md:p-8 col-span-1 md:col-span-2">
+                                <h3 className="text-lg md:text-xl font-bold text-[#1D1D1F] mb-3">Agent Demo Configuration</h3>
+                                <p className="text-gray-500 text-[13px] md:text-[14px] leading-relaxed font-medium mb-6">
+                                    To enable the **Agent-to-Agent** payment demo using your own infrastructure:
+                                </p>
+                                <div className="space-y-4">
+                                    <div className="flex items-start gap-3">
+                                        <div className="w-6 h-6 rounded-full bg-black/5 flex items-center justify-center text-[10px] font-bold shrink-0 mt-0.5">1</div>
+                                        <div>
+                                            <p className="text-sm font-semibold text-[#1D1D1F]">Deploy Facilitator</p>
+                                            <p className="text-xs text-text-gray-500 mt-1">Deploy your facilitator to Railway/Heroku using the One-Click button above.</p>
+                                        </div>
+                                    </div>
+                                    <div className="flex items-start gap-3">
+                                        <div className="w-6 h-6 rounded-full bg-black/5 flex items-center justify-center text-[10px] font-bold shrink-0 mt-0.5">2</div>
+                                        <div>
+                                            <p className="text-sm font-semibold text-[#1D1D1F]">Get Service URL</p>
+                                            <p className="text-xs text-gray-500 mt-1">
+                                                On Railway: Click your project → Click the Service → Copy the <strong>Public Networking URL</strong> (e.g. <code>https://my-app.up.railway.app</code>).
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div className="flex items-start gap-3">
+                                        <div className="w-6 h-6 rounded-full bg-black/5 flex items-center justify-center text-[10px] font-bold shrink-0 mt-0.5">3</div>
+                                        <div>
+                                            <p className="text-sm font-semibold text-[#1D1D1F]">Set Environment Variable</p>
+                                            <p className="text-xs text-gray-500 mt-1">
+                                                Add this to your local or deployed demo environment:
+                                            </p>
+                                            <div className="mt-2 bg-black/5 p-3 rounded-xl font-mono text-[10px] text-gray-600">
+                                                PLATFORM_FACILITATOR_URL=https://your-app.up.railway.app
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                         <div className="bg-gray-900 rounded-3xl p-6 md:p-12 text-white overflow-hidden relative">
