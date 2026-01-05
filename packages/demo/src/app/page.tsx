@@ -89,13 +89,13 @@ export async function POST(req) {
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
                             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-                            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-black/5 mb-8 shadow-sm backdrop-blur-sm hover:shadow-md hover:border-black/10 transition-all cursor-pointer group"
+                            className="inline-flex items-center gap-2 px-4 py-1.5 sm:px-5 sm:py-2 rounded-full bg-white border border-black/5 mb-8 shadow-sm backdrop-blur-sm hover:shadow-md hover:border-black/10 transition-all cursor-pointer group"
                         >
-                            <span className="relative flex h-2 w-2">
+                            <span className="relative flex h-2 w-2 sm:h-2.5 sm:w-2.5">
                                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                                <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                                <span className="relative inline-flex rounded-full h-2 w-2 sm:h-2.5 sm:w-2.5 bg-green-500"></span>
                             </span>
-                            <span className="text-xs font-medium text-gray-600 group-hover:text-black transition-colors">
+                            <span className="text-xs sm:text-sm font-medium text-gray-600 group-hover:text-black transition-colors">
                                 <span className="font-bold">New:</span> Deploy Your Own Facilitator <span className="opacity-50 ml-1">↓</span>
                             </span>
                         </motion.button>
