@@ -143,11 +143,12 @@ async function generateAnalysisAgentResponse(message: string, send: (v: any) => 
 
 export async function POST(req: NextRequest) {
     try {
-        const { message, history } = await req.json();
+        const { message, history, mode } = await req.json();
 
         // Debug Env Vars
         console.log('[AgentChat] PLATFORM_FACILITATOR_URL:', process.env.PLATFORM_FACILITATOR_URL);
         console.log('[AgentChat] PAYAI_FACILITATOR_URL:', process.env.PAYAI_FACILITATOR_URL);
+        console.log('[AgentChat] Mode:', mode);
 
         // Rate Limit Check
         const ip = req.headers.get('x-forwarded-for') || 'unknown';
@@ -164,12 +165,13 @@ export async function POST(req: NextRequest) {
             message.toLowerCase().includes('expert') ||
             message.toLowerCase().includes('prediction');
 
-        const isStandardRequest = !isPremiumRequest;
+        // FORCE Private Flow if mode is 'agent-to-agent' (User Request)
+        // Otherwise fallback to keyword detection
+        const needsAgentPayment = mode === 'agent-to-agent' || isPremiumRequest;
 
-        // Determine if we need to pay another agent
-        const needsAgentPayment = isPremiumRequest;
-        // ENABLE standard Agent-to-API payments for all other requests to demonstrate the "Standard Flow"
-        const isPremium = !isPremiumRequest;
+        // ENABLE standard Agent-to-API payments for all OTHER requests
+        // If it's NOT agent-to-agent flow, it is Standard flow.
+        const isPremium = !needsAgentPayment;
 
         // Create Stream
         const encoder = new TextEncoder();
