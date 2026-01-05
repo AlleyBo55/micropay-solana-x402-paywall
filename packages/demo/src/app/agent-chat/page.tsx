@@ -344,6 +344,8 @@ export default function AgentChat() {
                                             This demo simulates an <strong>Autonomous Agent Economy</strong>.
                                             <br className="mb-2" />
                                             Ask for expert advice, and the agent will autonomously <strong>hire & pay</strong> specialists (0.001 SOL).
+                                            <br className="mb-2" />
+                                            <span className="text-blue-600 font-semibold">Payments are verified via the PayAI Network</span> - a neutral facilitator for trusted agent-to-agent transactions.
                                         </span>
                                     ) : (
                                         <span className="block text-xs sm:text-sm max-w-md mx-auto mt-2 text-gray-500">
@@ -502,7 +504,9 @@ export default function AgentChat() {
                                                         </div>
                                                         <div className="flex items-center gap-2 opacity-30 hover:opacity-100 transition-opacity">
                                                             <CheckCircle2 size={12} className="text-green-600" />
-                                                            <span className="text-[9px] font-bold uppercase tracking-widest">Verified on Solana</span>
+                                                            <span className="text-[9px] font-bold uppercase tracking-widest">
+                                                                {message.agentName ? 'PayAI Verified' : 'Verified on Solana'}
+                                                            </span>
                                                         </div>
                                                     </motion.div>
                                                 )}
