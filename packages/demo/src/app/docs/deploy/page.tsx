@@ -155,115 +155,171 @@ export default function DeployDocsPage() {
                     ))}
                 </div>
 
-                {/* Configuration Flow */}
-                <div className="mb-24">
-                    <div className="flex items-center gap-4 mb-12">
-                        <div className="w-10 h-10 rounded-xl bg-gray-900 flex items-center justify-center text-white shadow-lg shadow-gray-900/20">
-                            <Settings01Icon size={20} />
-                        </div>
-                        <h2 className="text-2xl font-bold text-gray-900">Configuration Workflow</h2>
+        </div>
+
+                {/* How it Works FAQ */ }
+    <div className="mb-24">
+        <div className="flex items-center gap-4 mb-8">
+            <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600">
+                <Rocket01Icon size={20} />
+            </div>
+            <h2 className="text-2xl font-bold text-gray-900">How it Works</h2>
+        </div>
+
+        <div className="grid gap-6">
+            <div className="bg-white rounded-2xl p-8 border border-gray-200 shadow-sm">
+                <h3 className="text-lg font-bold text-gray-900 mb-4">What happens when I click "Deploy"?</h3>
+                <ul className="space-y-4 text-gray-500 text-sm leading-relaxed">
+                    <li className="flex gap-3">
+                        <div className="mt-1 min-w-[20px]"><ZapIcon size={16} className="text-yellow-500" /></div>
+                        <div><strong className="text-gray-900">Platform Takeover:</strong> You are redirected to the cloud provider's website (Railway/Heroku).</div>
+                    </li>
+                    <li className="flex gap-3">
+                        <div className="mt-1 min-w-[20px]"><Copy01Icon size={16} className="text-purple-500" /></div>
+                        <div><strong className="text-gray-900">Auto-Cloning:</strong> The platform automatically forks the <a href="https://github.com/AlleyBo55/oneclickfacilitator" target="_blank" className="text-blue-600 hover:underline">open-source repository</a> into your personal account.</div>
+                    </li>
+                    <li className="flex gap-3">
+                        <div className="mt-1 min-w-[20px]"><Settings01Icon size={16} className="text-blue-500" /></div>
+                        <div><strong className="text-gray-900">Config Prompt:</strong> The setup wizard pauses to ask for your <code className="bg-gray-100 px-1 py-0.5 rounded text-gray-800 font-mono text-xs">SOLANA_RPC_URL</code>.</div>
+                    </li>
+                    <li className="flex gap-3">
+                        <div className="mt-1 min-w-[20px]"><Rocket01Icon size={16} className="text-green-500" /></div>
+                        <div><strong className="text-gray-900">Launch:</strong> You click "Deploy" and the server spins up. You pay the provider directly; we take zero fees.</div>
+                    </li>
+                </ul>
+            </div>
+
+            <div className="bg-white rounded-2xl p-8 border border-gray-200 shadow-sm">
+                <h3 className="text-lg font-bold text-gray-900 mb-4">How do I input my custom RPC URL?</h3>
+                <div className="grid md:grid-cols-2 gap-4">
+                    <div className="bg-gray-50 p-4 rounded-xl border border-gray-100">
+                        <h4 className="font-semibold text-gray-900 text-sm mb-1 flex items-center gap-2">
+                            <span className="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
+                            During Deployment
+                        </h4>
+                        <p className="text-xs text-gray-500 leading-relaxed pl-3.5">The platform's wizard will have a text box explicitly labeled <code className="font-mono text-gray-700">SOLANA_RPC_URL</code>.</p>
                     </div>
+                    <div className="bg-gray-50 p-4 rounded-xl border border-gray-100">
+                        <h4 className="font-semibold text-gray-900 text-sm mb-1 flex items-center gap-2">
+                            <span className="w-1.5 h-1.5 rounded-full bg-green-500"></span>
+                            After Deployment
+                        </h4>
+                        <p className="text-xs text-gray-500 leading-relaxed pl-3.5">Go to your project's <strong>Settings &rarr; Variables</strong> tab to edit <code className="font-mono text-gray-700">SOLANA_RPC_URL</code> or switch <code className="font-mono text-gray-700">SOLANA_NETWORK</code> at any time.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-                    <div className="relative">
-                        <div className="absolute top-0 bottom-0 left-8 w-0.5 bg-gray-100" />
+    {/* Configuration Flow */ }
+    <div className="mb-24">
+        <div className="flex items-center gap-4 mb-12">
+            <div className="w-10 h-10 rounded-xl bg-gray-900 flex items-center justify-center text-white shadow-lg shadow-gray-900/20">
+                <Settings01Icon size={20} />
+            </div>
+            <h2 className="text-2xl font-bold text-gray-900">Configuration Workflow</h2>
+        </div>
 
-                        {/* Step 1 */}
-                        <div className="relative pl-24 mb-16 group">
-                            <div className="absolute left-0 top-0 w-16 h-16 rounded-2xl bg-white border border-gray-200 flex items-center justify-center text-xl font-bold text-gray-400 shadow-sm z-10 group-hover:border-blue-500 group-hover:text-blue-600 transition-colors duration-300">
-                                01
+        <div className="relative">
+            <div className="absolute top-0 bottom-0 left-8 w-0.5 bg-gray-100" />
+
+            {/* Step 1 */}
+            <div className="relative pl-24 mb-16 group">
+                <div className="absolute left-0 top-0 w-16 h-16 rounded-2xl bg-white border border-gray-200 flex items-center justify-center text-xl font-bold text-gray-400 shadow-sm z-10 group-hover:border-blue-500 group-hover:text-blue-600 transition-colors duration-300">
+                    01
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-2">Initiate Deployment</h3>
+                <p className="text-gray-500 mb-6">Select your preferred cloud provider above. You'll be redirected to their setup wizard.</p>
+                <div className="bg-gray-50 rounded-xl border border-gray-200 p-4 inline-block text-sm text-gray-500">
+                    💡 No account? Railway allows guest deployments for testing.
+                </div>
+            </div>
+
+            {/* Step 2 */}
+            <div className="relative pl-24 mb-16 group">
+                <div className="absolute left-0 top-0 w-16 h-16 rounded-2xl bg-white border border-gray-200 flex items-center justify-center text-xl font-bold text-gray-400 shadow-sm z-10 group-hover:border-purple-500 group-hover:text-purple-600 transition-colors duration-300">
+                    02
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-4">Configure RPC Endpoint</h3>
+                <p className="text-gray-500 mb-6 max-w-2xl">
+                    The wizard will ask for <code className="bg-gray-100 px-1.5 py-0.5 rounded text-gray-800 font-mono text-sm">SOLANA_RPC_URL</code>.
+                    This is the only critical configuration.
+                </p>
+
+                <div className="bg-[#1C1C1E] text-white rounded-2xl p-6 md:p-8 shadow-2xl relative overflow-hidden max-w-2xl">
+                    <div className="absolute top-0 right-0 p-32 bg-purple-500/20 blur-[80px] rounded-full -mr-16 -mt-16 pointer-events-none" />
+                    <h4 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-6">Environment Variables</h4>
+
+                    <div className="space-y-6 relative z-10">
+                        <div>
+                            <label className="block text-xs font-bold text-gray-400 mb-2 uppercase">SOLANA_RPC_URL <span className="text-red-400">*</span></label>
+                            <div className="bg-white/10 border border-white/10 rounded-lg p-3 font-mono text-sm text-blue-300">
+                                https://mainnet.helius-rpc.com/?api-key=...
                             </div>
-                            <h3 className="text-xl font-bold text-gray-900 mb-2">Initiate Deployment</h3>
-                            <p className="text-gray-500 mb-6">Select your preferred cloud provider above. You'll be redirected to their setup wizard.</p>
-                            <div className="bg-gray-50 rounded-xl border border-gray-200 p-4 inline-block text-sm text-gray-500">
-                                💡 No account? Railway allows guest deployments for testing.
-                            </div>
+                            <p className="text-xs text-gray-500 mt-2">Get a high-performance RPC from Helius, QuickNode, or Triton.</p>
                         </div>
 
-                        {/* Step 2 */}
-                        <div className="relative pl-24 mb-16 group">
-                            <div className="absolute left-0 top-0 w-16 h-16 rounded-2xl bg-white border border-gray-200 flex items-center justify-center text-xl font-bold text-gray-400 shadow-sm z-10 group-hover:border-purple-500 group-hover:text-purple-600 transition-colors duration-300">
-                                02
-                            </div>
-                            <h3 className="text-xl font-bold text-gray-900 mb-4">Configure RPC Endpoint</h3>
-                            <p className="text-gray-500 mb-6 max-w-2xl">
-                                The wizard will ask for <code className="bg-gray-100 px-1.5 py-0.5 rounded text-gray-800 font-mono text-sm">SOLANA_RPC_URL</code>.
-                                This is the only critical configuration.
-                            </p>
-
-                            <div className="bg-[#1C1C1E] text-white rounded-2xl p-6 md:p-8 shadow-2xl relative overflow-hidden max-w-2xl">
-                                <div className="absolute top-0 right-0 p-32 bg-purple-500/20 blur-[80px] rounded-full -mr-16 -mt-16 pointer-events-none" />
-                                <h4 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-6">Environment Variables</h4>
-
-                                <div className="space-y-6 relative z-10">
-                                    <div>
-                                        <label className="block text-xs font-bold text-gray-400 mb-2 uppercase">SOLANA_RPC_URL <span className="text-red-400">*</span></label>
-                                        <div className="bg-white/10 border border-white/10 rounded-lg p-3 font-mono text-sm text-blue-300">
-                                            https://mainnet.helius-rpc.com/?api-key=...
-                                        </div>
-                                        <p className="text-xs text-gray-500 mt-2">Get a high-performance RPC from Helius, QuickNode, or Triton.</p>
-                                    </div>
-
-                                    <div>
-                                        <label className="block text-xs font-bold text-gray-400 mb-2 uppercase">SOLANA_NETWORK</label>
-                                        <div className="grid grid-cols-2 gap-3">
-                                            <div className="bg-white/10 border border-blue-500/50 rounded-lg p-3 text-sm text-center font-medium ring-2 ring-blue-500/20">mainnet-beta</div>
-                                            <div className="bg-transparent border border-white/10 rounded-lg p-3 text-sm text-center text-gray-500">devnet</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Step 3 */}
-                        <div className="relative pl-24 group">
-                            <div className="absolute left-0 top-0 w-16 h-16 rounded-2xl bg-white border border-gray-200 flex items-center justify-center text-xl font-bold text-gray-400 shadow-sm z-10 group-hover:border-green-500 group-hover:text-green-600 transition-colors duration-300">
-                                03
-                            </div>
-                            <h3 className="text-xl font-bold text-gray-900 mb-2">Verify & Connect</h3>
-                            <p className="text-gray-500 mb-6">Once deployed, your facilitator will be live at a public URL.</p>
-
-                            <div className="grid md:grid-cols-2 gap-4 max-w-3xl">
-                                <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm hover:border-green-400/50 transition-colors">
-                                    <div className="flex items-center gap-3 mb-3 text-green-600">
-                                        <ShieldKeyIcon size={20} />
-                                        <span className="font-bold">Health Check</span>
-                                    </div>
-                                    <p className="text-sm text-gray-500 mb-3">Verify your node is active and syncing.</p>
-                                    <code className="text-xs bg-gray-50 px-2 py-1 rounded border border-gray-100 block w-fit">GET /health</code>
-                                </div>
-                                <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm hover:border-blue-400/50 transition-colors">
-                                    <div className="flex items-center gap-3 mb-3 text-blue-600">
-                                        <Database01Icon size={20} />
-                                        <span className="font-bold">Metrics</span>
-                                    </div>
-                                    <p className="text-sm text-gray-500 mb-3">Monitor performance via Prometheus.</p>
-                                    <code className="text-xs bg-gray-50 px-2 py-1 rounded border border-gray-100 block w-fit">GET /metrics</code>
-                                </div>
+                        <div>
+                            <label className="block text-xs font-bold text-gray-400 mb-2 uppercase">SOLANA_NETWORK</label>
+                            <div className="grid grid-cols-2 gap-3">
+                                <div className="bg-white/10 border border-blue-500/50 rounded-lg p-3 text-sm text-center font-medium ring-2 ring-blue-500/20">mainnet-beta</div>
+                                <div className="bg-transparent border border-white/10 rounded-lg p-3 text-sm text-center text-gray-500">devnet</div>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                {/* Integration */}
-                <div className="bg-[#F5F5F7] rounded-[40px] p-8 md:p-16 text-center border border-white/50 shadow-inner">
-                    <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mx-auto mb-8 shadow-lg shadow-gray-200/50 text-[#111827]">
-                        <LightningIcon size={32} />
+            {/* Step 3 */}
+            <div className="relative pl-24 group">
+                <div className="absolute left-0 top-0 w-16 h-16 rounded-2xl bg-white border border-gray-200 flex items-center justify-center text-xl font-bold text-gray-400 shadow-sm z-10 group-hover:border-green-500 group-hover:text-green-600 transition-colors duration-300">
+                    03
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-2">Verify & Connect</h3>
+                <p className="text-gray-500 mb-6">Once deployed, your facilitator will be live at a public URL.</p>
+
+                <div className="grid md:grid-cols-2 gap-4 max-w-3xl">
+                    <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm hover:border-green-400/50 transition-colors">
+                        <div className="flex items-center gap-3 mb-3 text-green-600">
+                            <ShieldKeyIcon size={20} />
+                            <span className="font-bold">Health Check</span>
+                        </div>
+                        <p className="text-sm text-gray-500 mb-3">Verify your node is active and syncing.</p>
+                        <code className="text-xs bg-gray-50 px-2 py-1 rounded border border-gray-100 block w-fit">GET /health</code>
                     </div>
-                    <h2 className="text-3xl font-bold text-gray-900 mb-4">Ready to Integrate?</h2>
-                    <p className="text-lg text-gray-500 mb-8 max-w-xl mx-auto">
-                        Point your middleware to your new facilitator URL to start accepting self-sovereign payments.
-                    </p>
-                    <CodeBlock
-                        code={`const middleware = createX402Middleware({
+                    <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm hover:border-blue-400/50 transition-colors">
+                        <div className="flex items-center gap-3 mb-3 text-blue-600">
+                            <Database01Icon size={20} />
+                            <span className="font-bold">Metrics</span>
+                        </div>
+                        <p className="text-sm text-gray-500 mb-3">Monitor performance via Prometheus.</p>
+                        <code className="text-xs bg-gray-50 px-2 py-1 rounded border border-gray-100 block w-fit">GET /metrics</code>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {/* Integration */ }
+    <div className="bg-[#F5F5F7] rounded-[40px] p-8 md:p-16 text-center border border-white/50 shadow-inner">
+        <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mx-auto mb-8 shadow-lg shadow-gray-200/50 text-[#111827]">
+            <LightningIcon size={32} />
+        </div>
+        <h2 className="text-3xl font-bold text-gray-900 mb-4">Ready to Integrate?</h2>
+        <p className="text-lg text-gray-500 mb-8 max-w-xl mx-auto">
+            Point your middleware to your new facilitator URL to start accepting self-sovereign payments.
+        </p>
+        <CodeBlock
+            code={`const middleware = createX402Middleware({
   facilitatorUrl: 'https://your-app.up.railway.app', // Your new URL
   walletAddress: 'YOUR_WALLET',
   price: '10000000'
 });`}
-                        language="typescript"
-                    />
-                </div>
+            language="typescript"
+        />
+    </div>
 
-            </main>
-        </div>
+            </main >
+        </div >
     );
 }
