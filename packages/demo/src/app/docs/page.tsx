@@ -754,10 +754,14 @@ function PaymentButton() {
                                 {/* Step 2 */}
                                 <div className="relative">
                                     <div className="absolute -left-[39px] md:-left-[55px] top-0 w-5 h-5 bg-purple-500 rounded-full border-4 border-white shadow-sm" />
-                                    <h4 className="font-bold text-[#1D1D1F] mb-2">Configure RPC Endpoint</h4>
-                                    <p className="text-sm text-gray-500 mb-6">
-                                        The only critical environment variable is <code className="bg-gray-100 px-1 py-0.5 rounded text-[#1D1D1F] font-mono text-xs">SOLANA_RPC_URL</code>.
-                                    </p>
+                                    <h4 className="font-bold text-[#1D1D1F] mb-2">Configure Environment Variables</h4>
+                                    <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-4">
+                                        <p className="text-xs font-bold text-amber-800 uppercase tracking-wider mb-1">⚠️ Important: Default is Devnet!</p>
+                                        <p className="text-xs text-amber-700">
+                                            The facilitator deploys with <code className="bg-amber-100 px-1 rounded">devnet</code> by default.
+                                            For <strong>mainnet production</strong>, you must change the environment variables after deployment.
+                                        </p>
+                                    </div>
                                     <div className="bg-[#1C1C1E] text-white rounded-2xl p-6 shadow-xl max-w-xl border border-white/10">
                                         <div className="space-y-4">
                                             <div>
@@ -765,12 +769,13 @@ function PaymentButton() {
                                                 <div className="bg-white/10 border border-white/10 rounded-lg p-3 font-mono text-[13px] text-blue-300 break-all">
                                                     https://mainnet.helius-rpc.com/?api-key=...
                                                 </div>
+                                                <p className="text-[10px] text-gray-500 mt-1">Default: https://api.devnet.solana.com</p>
                                             </div>
                                             <div>
                                                 <label className="block text-[10px] font-bold text-gray-400 mb-2 uppercase tracking-wider">SOLANA_NETWORK</label>
                                                 <div className="flex gap-2">
                                                     <div className="bg-white/10 border border-blue-500/50 rounded-md px-3 py-2 text-[13px] font-medium ring-1 ring-blue-500/50">mainnet-beta</div>
-                                                    <div className="bg-transparent border border-white/10 rounded-md px-3 py-2 text-[13px] text-gray-500">devnet</div>
+                                                    <div className="bg-transparent border border-white/10 rounded-md px-3 py-2 text-[13px] text-gray-500">devnet (default)</div>
                                                 </div>
                                             </div>
                                         </div>
