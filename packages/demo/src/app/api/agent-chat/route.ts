@@ -258,7 +258,7 @@ export async function POST(req: NextRequest) {
                             }
 
                             // Quick initial wait for transaction propagation
-                            await new Promise(r => setTimeout(r, 500));
+                            await new Promise(r => setTimeout(r, 50));
 
                             let verifySuccess = false;
                             let failureReason = '';
@@ -268,7 +268,7 @@ export async function POST(req: NextRequest) {
                                 try {
                                     if (attempt > 1) {
                                         send({ type: 'thinking', id: `v_retry_${attempt}`, stepType: 'thinking', message: `Retry ${attempt}/3...`, agent: 'Research Agent' });
-                                        await new Promise(r => setTimeout(r, 1000));
+                                        await new Promise(r => setTimeout(r, 200));
                                     }
 
                                     const verifyRes = await fetch(`${VERIFIER_URL}/verify`, {
