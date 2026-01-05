@@ -201,7 +201,7 @@ export default function AgentChat() {
                                             }
                                         ],
                                     };
-                                } else if (parsed.type === 'content') {
+                                } else if (parsed.type === 'content' || parsed.type === 'token') {
                                     return {
                                         ...msg,
                                         content: msg.content + parsed.content,
