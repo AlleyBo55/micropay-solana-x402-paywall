@@ -1166,34 +1166,39 @@ function PaymentButton() {
                         </div>
                     </section>
 
-                    {/* Self-Sovereign Verification */}
+                    {/* Verification Modes */}
                     <section id="self-sovereign" className="mb-16 md:mb-24 scroll-mt-24">
                         <div className="flex items-center gap-3 mb-8 md:mb-10">
-                            <h2 className="text-xl md:text-2xl font-bold tracking-tight text-[#1D1D1F]">Self-Sovereign Verification</h2>
+                            <h2 className="text-xl md:text-2xl font-bold tracking-tight text-[#1D1D1F]">Verification Modes</h2>
                             <div className="flex-1 h-[1px] bg-[#D2D2D7]" />
                         </div>
 
                         <div className="bg-[#F5F5F7] border border-[#D2D2D7] rounded-3xl md:rounded-[32px] p-6 md:p-12 mb-10">
                             <div className="max-w-3xl">
-                                <h3 className="text-xl md:text-2xl font-bold text-[#1D1D1F] mb-4">Verify Payments Yourself.</h3>
+                                <h3 className="text-xl md:text-2xl font-bold text-[#1D1D1F] mb-4">Choose Your Trust Model.</h3>
                                 <p className="text-gray-500 text-sm md:text-base leading-relaxed font-medium mb-6">
-                                    By default, the library uses the x402.org hosted facilitator. However, you can enable <strong>Self-Sovereign Mode</strong> to verify payments directly against your own Solana RPC node, removing reliance on any external API services.
+                                    Micropay supports a <strong>Split Architecture</strong>. You can use the managed PayAI Network for standard convenience, or switch to <strong>Sovereign Mode</strong> by pointing the middleware to your own private Facilitator node.
                                 </p>
                                 <CodeBlock code={`const withMicropay = createX402Middleware({
     walletAddress: 'YOUR_WALLET',
     network: 'devnet',
     price: '1000000',
-    // Enable Self-Sovereign Mode
-    rpcUrl: process.env.NEXT_PUBLIC_RPC_URL 
+    
+    // Standard Mode (Default)
+    // Uses PayAI Network for verification
+    
+    // Sovereign Mode (Optional)
+    // Point to your own Railway/Docker container
+    facilitatorUrl: process.env.PLATFORM_FACILITATOR_URL 
 });`} />
                             </div>
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
                             <div className="bg-white border border-gray-100 rounded-3xl p-6 md:p-8">
-                                <h4 className="text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-6">Hosted Mode (Default)</h4>
+                                <h4 className="text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-6">Standard Mode (PayAI)</h4>
                                 <ul className="space-y-4">
-                                    {['Verified by x402.org', 'Zero-config setup', 'Best for quick startups'].map((item, i) => (
+                                    {['Verified by PayAI Network', 'Zero-config setup', 'Best for SaaS & Consumer Apps'].map((item, i) => (
                                         <li key={i} className="flex items-center gap-3 text-[13px] text-gray-600 font-medium">
                                             <div className="w-1.5 h-1.5 rounded-full bg-blue-500" />
                                             {item}
@@ -1202,9 +1207,9 @@ function PaymentButton() {
                                 </ul>
                             </div>
                             <div className="bg-white border border-gray-100 rounded-3xl p-6 md:p-8">
-                                <h4 className="text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-6">Self-Sovereign Mode</h4>
+                                <h4 className="text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-6">Sovereign Mode (Custom)</h4>
                                 <ul className="space-y-4">
-                                    {['Verified by your RPC node', 'No external data sharing', 'Best for production'].map((item, i) => (
+                                    {['Verified by Your Infrastructure', 'Total Privacy & Control', 'Best for Autonomous Agents'].map((item, i) => (
                                         <li key={i} className="flex items-center gap-3 text-[13px] text-gray-600 font-medium">
                                             <div className="w-1.5 h-1.5 rounded-full bg-purple-500" />
                                             {item}
