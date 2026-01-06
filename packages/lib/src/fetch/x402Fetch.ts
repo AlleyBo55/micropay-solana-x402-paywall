@@ -34,7 +34,6 @@ import type {
     X402FetchFunction,
     PaymentRequirements,
     WalletLike,
-    SolanaNetwork,
 } from './types';
 
 import {
@@ -52,19 +51,16 @@ import {
 } from './errors';
 
 // ============================================================================
-// Constants
+// Constants (imported from shared module)
 // ============================================================================
 
-const DEFAULT_TIMEOUT = 30_000; // 30 seconds
-const DEFAULT_MAX_RETRIES = 3;
-const DEFAULT_RATE_LIMIT_WINDOW = 60_000; // 1 minute
-const DEFAULT_RATE_LIMIT_MAX = 10;
-
-const RPC_ENDPOINTS: Record<SolanaNetwork, string> = {
-    'mainnet-beta': 'https://api.mainnet-beta.solana.com',
-    'devnet': 'https://api.devnet.solana.com',
-    'testnet': 'https://api.testnet.solana.com',
-};
+import {
+    RPC_ENDPOINTS,
+    DEFAULT_CONFIRMATION_TIMEOUT as DEFAULT_TIMEOUT,
+    DEFAULT_MAX_RETRIES,
+    DEFAULT_RATE_LIMIT_WINDOW_MS as DEFAULT_RATE_LIMIT_WINDOW,
+    DEFAULT_RATE_LIMIT_MAX_PAYMENTS as DEFAULT_RATE_LIMIT_MAX,
+} from '../shared/constants';
 
 // ============================================================================
 // Utility Functions
