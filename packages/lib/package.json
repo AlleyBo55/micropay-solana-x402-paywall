@@ -1,6 +1,6 @@
 {
     "name": "@alleyboss/micropay-solana-x402-paywall",
-    "version": "3.3.15",
+    "version": "3.5.0",
     "description": "Production-ready Solana micropayments library wrapper for official x402 SDK",
     "author": "AlleyBoss",
     "license": "MIT",
@@ -16,7 +16,8 @@
         "micropayments",
         "web3",
         "coinbase",
-        "agent-payments"
+        "agent-payments",
+        "fetch"
     ],
     "type": "module",
     "main": "./dist/index.cjs",
@@ -92,6 +93,16 @@
                 "types": "./dist/session/index.d.cts",
                 "default": "./dist/session/index.cjs"
             }
+        },
+        "./fetch": {
+            "import": {
+                "types": "./dist/fetch/index.d.ts",
+                "default": "./dist/fetch/index.js"
+            },
+            "require": {
+                "types": "./dist/fetch/index.d.cts",
+                "default": "./dist/fetch/index.cjs"
+            }
         }
     },
     "files": [
@@ -118,10 +129,23 @@
     },
     "peerDependencies": {
         "@solana/web3.js": "^1.90.0",
+        "@solana/wallet-adapter-base": "^0.9.0",
         "react": ">=16.8.0",
         "react-dom": ">=16.8.0"
     },
+    "peerDependenciesMeta": {
+        "@solana/wallet-adapter-base": {
+            "optional": true
+        },
+        "react": {
+            "optional": true
+        },
+        "react-dom": {
+            "optional": true
+        }
+    },
     "devDependencies": {
+        "@solana/wallet-adapter-base": "^0.9.27",
         "@solana/web3.js": "^1.98.4",
         "@types/express": "^5.0.6",
         "@types/node": "^20",

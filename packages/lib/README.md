@@ -21,6 +21,7 @@ npm install @alleyboss/micropay-solana-x402-paywall @x402/core @x402/svm @solana
 
 | Feature | Description | Status |
 |---------|-------------|--------|
+| 🔥 **x402Fetch** | Drop-in `fetch()` replacement with auto-payment | ✅ **NEW in v3.4** |
 | 💰 **SOL & USDC** | Native SOL and SPL tokens (USDC, USDT) | ✅ Verified by `@x402/svm` |
 | 🔐 **x402 Protocol** | Full HTTP 402 compliance | ✅ Powered by `@x402/core` |
 | 🌐 **PayAI Format** | Multi-chain payment format support | ✅ Built-in |
@@ -32,6 +33,96 @@ npm install @alleyboss/micropay-solana-x402-paywall @x402/core @x402/svm @solana
 | ⚡ **Priority Fees** | Compute unit price optimization | ✅ Supported (Agent Module) |
 | 📦 **Versioned Tx** | v0 Transaction support | ✅ Native (x402 SDK) |
 | 🌳 **Tree-Shakeable** | Modular exports | ✅ Built-in |
+
+## 🔥 x402Fetch — The Killer Feature (NEW in v3.4)
+
+Replace `fetch()` with `x402Fetch()` and **402 responses are handled automatically**.
+
+```typescript
+import { createX402Fetch } from '@alleyboss/micropay-solana-x402-paywall/fetch';
+import { useWallet } from '@solana/wallet-adapter-react';
+
+// Create configured fetch instance
+const x402Fetch = createX402Fetch({
+  wallet: useWallet(),           // Browser wallet adapter
+  network: 'mainnet-beta',
+  onPaymentRequired: async (req) => {
+    return confirm(`Pay ${req.amount} lamports to ${req.payTo}?`);
+  },
+});
+
+// Use it like fetch — that's it!
+const response = await x402Fetch('https://api.example.com/premium-data');
+const data = await response.json();
+```
+
+### Server-Side / AI Agent Usage
+
+```typescript
+import { createX402Fetch } from '@alleyboss/micropay-solana-x402-paywall/fetch';
+import { Keypair } from '@solana/web3.js';
+import bs58 from 'bs58';
+
+const agentKeypair = Keypair.fromSecretKey(
+  bs58.decode(process.env.AGENT_PRIVATE_KEY!)
+);
+
+const x402Fetch = createX402Fetch({
+  wallet: agentKeypair,  // Server-side keypair
+  network: 'mainnet-beta',
+});
+
+// Autonomous payment — no user interaction needed
+const response = await x402Fetch('https://api.example.com/ai-data');
+```
+
+### Error Handling
+
+```typescript
+import { X402PaymentError, isUserRejection } from '@alleyboss/micropay-solana-x402-paywall/fetch';
+
+try {
+  await x402Fetch('/api/premium');
+} catch (error) {
+  if (isUserRejection(error)) {
+    console.log('User declined payment');
+  } else if (error instanceof X402PaymentError) {
+    console.log('Payment failed:', error.code);
+    // Codes: USER_REJECTED, INSUFFICIENT_BALANCE, TRANSACTION_FAILED, etc.
+  }
+}
+```
+
+### Security Configuration (v3.4.1)
+
+Protect your wallet from malicious 402 responses:
+
+```typescript
+const x402Fetch = createX402Fetch({
+  wallet,
+  network: 'mainnet-beta',
+
+  // 🔒 Critical: Maximum payment per request (prevents wallet drain)
+  maxPaymentPerRequest: BigInt(10_000_000), // Max 0.01 SOL
+
+  // 🔒 Critical: Whitelist of allowed recipients (prevents phishing)
+  allowedRecipients: ['7fPjN...', 'ABC123...'],
+
+  // ⚡ UX: Transaction speed (processed=fast, finalized=safe)
+  commitment: 'confirmed', // 'processed' | 'confirmed' | 'finalized'
+
+  // 🛡️ Rate limiting (prevents infinite loops)
+  rateLimit: {
+    maxPayments: 10,      // Max 10 payments
+    windowMs: 60_000,     // Per minute
+  },
+});
+```
+
+**Security Error Codes:**
+- `AMOUNT_EXCEEDS_LIMIT` — Payment blocked: amount exceeds `maxPaymentPerRequest`
+- `RECIPIENT_NOT_ALLOWED` — Payment blocked: recipient not in whitelist
+- `RATE_LIMIT_EXCEEDED` — Payment blocked: too many payments in time window
 
 ## 📦 Quick Example (Express.js)
 
@@ -92,6 +183,9 @@ export const GET = withMicropay(handler, {
 Import only what you need:
 
 ```typescript
+// 🔥 x402Fetch - Drop-in fetch replacement (NEW!)
+import { createX402Fetch } from '@alleyboss/micropay-solana-x402-paywall/fetch';
+
 // Express Middleware
 import { x402Middleware } from '@alleyboss/micropay-solana-x402-paywall/express';
 

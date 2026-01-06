@@ -9,6 +9,7 @@ export default defineConfig({
         'session/index': 'src/session/index.ts',
         'express/index': 'src/express/index.ts',
         'next/index': 'src/next/index.ts',
+        'fetch/index': 'src/fetch/index.ts',
     },
 
     format: ['esm', 'cjs'],
@@ -20,5 +21,5 @@ export default defineConfig({
     minify: false,
     target: 'node18',
     outDir: 'dist',
-    external: ['@solana/web3.js', '@x402/core', '@x402/svm', 'react', 'react-dom'],
+    external: ['@solana/web3.js', '@solana/wallet-adapter-base', '@x402/core', '@x402/svm', 'react', 'react-dom'],
 });
