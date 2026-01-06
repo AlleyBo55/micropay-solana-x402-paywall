@@ -40,4 +40,5 @@ export {
     lamportsToSol,
 } from './pricing';
 
-
+// x402Fetch is available via '@alleyboss/micropay-solana-x402-paywall/fetch'
+// Not re-exported here to avoid PaymentRequirements type collision with @x402/core
