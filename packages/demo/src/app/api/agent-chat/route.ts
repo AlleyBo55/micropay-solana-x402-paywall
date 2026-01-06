@@ -227,7 +227,7 @@ export async function POST(req: NextRequest) {
                         const privateKey = bs58.encode(keypair.secretKey);
                         const agent = createPayingAgent(privateKey, {
                             network: (process.env.NEXT_PUBLIC_SOLANA_NETWORK as any) || 'devnet',
-                            maxPaymentPerRequest: 100_000_000n, // 0.1 SOL safety cap
+                            maxPaymentPerRequest: BigInt(100_000_000), // 0.1 SOL safety cap
                             rpcUrl: process.env.NEXT_PUBLIC_RPC_URL
                         });
 
@@ -294,7 +294,7 @@ export async function POST(req: NextRequest) {
 
                         const agent = createPayingAgent(privateKey, {
                             network: (process.env.NEXT_PUBLIC_SOLANA_NETWORK as any) || 'devnet',
-                            maxPaymentPerRequest: 100_000_000n, // 0.1 SOL safety cap
+                            maxPaymentPerRequest: BigInt(100_000_000), // 0.1 SOL safety cap
                             rpcUrl: process.env.NEXT_PUBLIC_RPC_URL
                         });
 
