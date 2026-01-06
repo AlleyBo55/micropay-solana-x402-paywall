@@ -117,6 +117,12 @@ const x402Fetch = createX402Fetch({
     windowMs: 60_000,     // Per minute
   },
 });
+
+// 💡 Header Compatibility:
+// Automatically detects requirements from:
+// - WWW-Authenticate: X402 ... (Standard)
+// - X-Payment-Requirements: json (Simple)
+// - payment-required: base64 (Upstream Middleware)
 ```
 
 **Security Error Codes:**
@@ -228,6 +234,19 @@ const withMicropay = createX402Middleware({
 | **Privacy** | Metadata sent to facilitator | No external data sharing |
 | **Setup** | Zero-config | Requires RPC URL |
 | **Best For** | Quick startups, MVPs | Production, High-Volume, Agents |
+
+## 🔧 What's New in v3.5.2
+
+**Middleware Fix**: The `createX402Middleware` now generates 402 responses directly, fixing a bug where the upstream library multiplied payment amounts by 1M. Your configured `price` in lamports is now used exactly as specified.
+
+```typescript
+// price: '1000000' → 0.001 SOL (correct!)
+const withPayment = createX402Middleware({
+    walletAddress: 'YOUR_WALLET',
+    price: '1000000', // This is now used correctly
+    network: 'devnet'
+});
+```
 
 ## 🌐 PayAI Format Support (New in v3.3.13)
 

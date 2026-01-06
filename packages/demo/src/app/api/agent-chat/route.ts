@@ -4,7 +4,8 @@
 
 import { NextRequest } from 'next/server';
 import OpenAI from 'openai';
-import { executeAgentPayment } from '@alleyboss/micropay-solana-x402-paywall/agent';
+import { createPayingAgent } from '@alleyboss/micropay-solana-x402-paywall/agent';
+import bs58 from 'bs58';
 import { getAgentKeypair, getConnection, validateAgentWallet } from '@/lib/agent-wallet';
 import { getCreatorWallet } from '@/lib/config';
 import { AGENTS } from '@/config/agents';
@@ -186,7 +187,7 @@ export async function POST(req: NextRequest) {
                 }
 
                 if (needsAgentPayment) {
-                    // Agent-to-Agent Workflow
+                    // Agent-to-Agent Workflow (Refactored for v3.5.1)
                     const thoughtDelay = 1200;
 
                     // 1. Initial Thinking
@@ -199,153 +200,57 @@ export async function POST(req: NextRequest) {
 
                     // 3. Wallet Check
                     const walletStatus = await validateAgentWallet();
-                    if (!walletStatus.configured || (walletStatus.balance && walletStatus.balance < 0.002)) {
-                        send({ type: 'thinking', id: 'err', stepType: 'error', message: 'Wallet Error: Insufficient funds for agent-to-agent hop.' });
-                        send({ type: 'content', content: `❌ **Agent Error:** My wallet is empty on Devnet. Please fund me!`, isPremium: false });
+                    if (!walletStatus.configured || (walletStatus.balance && walletStatus.balance < 0.003)) {
+                        send({ type: 'thinking', id: 'err', stepType: 'error', message: 'Wallet Error: Insufficient funds.' });
+                        send({ type: 'content', content: `❌ **Agent Error:** My wallet is empty. Please fund me!`, isPremium: false });
                         close();
                         return;
                     }
 
-                    // 4. Quotation
-                    // Dynamic Price Range: 0.001 - 0.003 SOL (User Request)
-                    const minPrice = 0.001;
-                    const maxPrice = 0.003;
-                    const randomPrice = minPrice + Math.random() * (maxPrice - minPrice);
-                    const AGENT_PRICE_SOL = parseFloat(randomPrice.toFixed(4)); // Round to 4 decimals
-                    const AGENT_NAME = process.env.AGENT_NAME || 'Analysis Agent';
-
-                    send({ type: 'thinking', id: 'neg', stepType: 'thinking', message: `Negotiation: ${AGENT_NAME} demands ${AGENT_PRICE_SOL} SOL.` });
+                    // 4. Quotation / Negotiation
+                    send({ type: 'thinking', id: 'neg', stepType: 'thinking', message: `Negotiation: Analysis Agent demands payment (402).` });
                     await new Promise(r => setTimeout(r, thoughtDelay));
 
-                    // 5. Payment Execution
-                    send({ type: 'thinking', id: 'exec', stepType: 'paying', message: 'Action: Broadcasting on-chain payment...' });
+                    // 5. Execution via createPayingAgent
+                    send({ type: 'thinking', id: 'exec', stepType: 'paying', message: 'Action: Paying via x402 Protocol...', amount: '0.002 SOL' });
 
                     try {
-                        const recipientWallet = getCreatorWallet(); // In real scenario, would be Analysis Agent's specific wallet
-                        const priceLamports = BigInt(Math.round(AGENT_PRICE_SOL * 1_000_000_000));
+                        // Dynamic URL resolution based on request host (solves IPv4/IPv6 loopback issues)
+                        const host = req.headers.get('host') || 'localhost:3000';
+                        const protocol = host.includes('localhost') || host.includes('127.0.0.1') || host.includes('[::1]') ? 'http' : 'https';
+                        const APP_URL = `${protocol}://${host}`;
+                        const SERVICE_URL = `${APP_URL}/api/analysis-agent`;
+                        console.log('[AgentChatDebug] Target SERVICE_URL:', SERVICE_URL);
 
-                        // Execute Payment via SDK
-                        const result = await executeAgentPayment({
-                            connection: getConnection(),
-                            agentKeypair: getAgentKeypair(),
-                            recipientAddress: recipientWallet,
-                            amountLamports: priceLamports,
-                            priorityFee: { enabled: true, microLamports: 10000 } // High priority for demo speed
+                        // Init Agent
+                        const keypair = getAgentKeypair();
+                        const privateKey = bs58.encode(keypair.secretKey);
+                        const agent = createPayingAgent(privateKey, {
+                            network: (process.env.NEXT_PUBLIC_SOLANA_NETWORK as any) || 'devnet',
+                            maxPaymentPerRequest: 100_000_000n, // 0.1 SOL safety cap
+                            rpcUrl: process.env.NEXT_PUBLIC_RPC_URL
                         });
 
-                        if (result.success && result.signature) {
-                            send({ type: 'thinking', id: 'cnf', stepType: 'confirmed', message: `Tx Broadcast: ${result.signature.slice(0, 8)}...`, signature: result.signature, agent: 'Research Agent' });
-                            await new Promise(r => setTimeout(r, thoughtDelay));
+                        // Call Service (Handles 402 -> Pay -> Retry)
+                        const res = await agent.post(SERVICE_URL, { context: message });
+                        const data = await res.json();
 
-                            // ---------------------------------------------------------
-                            // SPLIT VERIFICATION STRATEGY (Toly's Architecture)
-                            // Agent-to-Agent -> Uses Sovereign/Custom Node (Performance + Trust)
-                            // ---------------------------------------------------------
+                        if (!res.ok) throw new Error(data.error || 'Agent call failed');
 
-                            const CUSTOM_FACILITATOR_URL = process.env.PLATFORM_FACILITATOR_URL;
-                            const PAYAI_FACILITATOR_URL = process.env.PAYAI_FACILITATOR_URL || 'https://facilitator.payai.network';
+                        send({ type: 'thinking', id: 'cnf', stepType: 'confirmed', message: `Success: Analysis Agent paid & responded.`, signature: 'Auto-Signed', agent: 'Research Agent' });
+                        await new Promise(r => setTimeout(r, thoughtDelay));
 
-                            // Determine which verifier to use
-                            const VERIFIER_URL = CUSTOM_FACILITATOR_URL || PAYAI_FACILITATOR_URL;
-                            const VERIFIER_NAME = CUSTOM_FACILITATOR_URL ? 'Private Node' : 'PayAI Network';
+                        send({ type: 'thinking', id: 'sw', stepType: 'confirmed', message: 'Handover: Context switching to [Analysis Agent]...', agent: 'Research Agent' });
+                        await new Promise(r => setTimeout(r, thoughtDelay));
 
-                            // If custom is set, we use ONLY custom (Sovereign Mode)
-                            if (CUSTOM_FACILITATOR_URL) {
-                                const host = new URL(CUSTOM_FACILITATOR_URL).hostname;
-                                send({ type: 'thinking', id: 'v_sov', stepType: 'paying', message: `Private Verify: Checking via Custom Node (${host})...`, agent: 'Research Agent' });
-                            } else {
-                                send({ type: 'thinking', id: 'v_net', stepType: 'paying', message: `Network Verify: Checking via PayAI (Custom Facilitator Not Configured)...`, agent: 'Research Agent' });
-                            }
+                        send({ type: 'thinking', id: 'an1', stepType: 'thinking', message: 'Analysis Agent: Processing paid request...', agent: 'Analysis Agent' });
+                        await new Promise(r => setTimeout(r, thoughtDelay));
 
-                            // Quick initial wait for transaction propagation
-                            await new Promise(r => setTimeout(r, 50));
+                        // Inject findings
+                        await generateAnalysisAgentResponse(message + `\n\n[Input: ${data.insight}]`, send);
 
-                            let verifySuccess = false;
-                            let failureReason = '';
-
-                            // Retry Loop for Propagation Delay
-                            for (let attempt = 1; attempt <= 3; attempt++) {
-                                try {
-                                    if (attempt > 1) {
-                                        send({ type: 'thinking', id: `v_retry_${attempt}`, stepType: 'thinking', message: `Retry ${attempt}/3...`, agent: 'Research Agent' });
-                                        await new Promise(r => setTimeout(r, 200));
-                                    }
-
-                                    const verifyRes = await fetch(`${VERIFIER_URL}/verify`, {
-                                        method: 'POST',
-                                        headers: { 'Content-Type': 'application/json' },
-                                        body: JSON.stringify({
-                                            paymentPayload: { x402Version: 2, payload: { signature: result.signature } },
-                                            paymentRequirements: {
-                                                payTo: recipientWallet,
-                                                amount: priceLamports.toString(),
-                                                asset: 'SOL',
-                                                network: process.env.SOLANA_NETWORK || 'devnet'
-                                            }
-                                        })
-                                    });
-                                    const verifyData = await verifyRes.json();
-
-                                    if (verifyData.valid) {
-                                        const confirmMsg = CUSTOM_FACILITATOR_URL
-                                            ? `Private Verified: Check passed via ${VERIFIER_NAME} ✓`
-                                            : `Network Verified: Check passed via ${VERIFIER_NAME} ✓`;
-
-                                        send({ type: 'thinking', id: 'v_ok', stepType: 'confirmed', message: confirmMsg, agent: 'Research Agent' });
-                                        verifySuccess = true;
-                                        break; // Success!
-                                    } else {
-                                        failureReason = verifyData.invalidReason || 'Unknown Reason';
-                                        // Only retry if "not found"
-                                        if (!failureReason.toLowerCase().includes('not found')) {
-                                            break; // Fatal error (e.g. wrong amount)
-                                        }
-                                        console.warn(`[Agent Chat] Verification attempt ${attempt} failed: ${failureReason}`);
-                                    }
-                                } catch (e: any) {
-                                    console.warn('[Agent Chat] Verification network error:', e);
-                                    failureReason = e.message;
-                                    // Retry on network errors too
-                                }
-                            }
-
-                            if (!verifySuccess) {
-                                // FINAL FALLBACK: If Private Node can't see it (Devnet Lag), check LOCAL RPC
-                                if (failureReason.toLowerCase().includes('not found')) {
-                                    send({ type: 'thinking', id: 'v_fallback', stepType: 'thinking', message: `⚠️ Private Node Lag: Falling back to Local RPC verify...`, agent: 'Research Agent' });
-
-                                    // Local Verification Check
-                                    const tx = await getConnection().getTransaction(result.signature, { commitment: 'confirmed', maxSupportedTransactionVersion: 0 });
-                                    if (tx) {
-                                        send({ type: 'thinking', id: 'v_rpc_ok', stepType: 'confirmed', message: `RPC Verified: Transaction confirmed on-chain ✓`, agent: 'Research Agent' });
-                                    } else {
-                                        send({ type: 'thinking', id: 'v_fail', stepType: 'error', message: `Verification Failed: Tx truly lost.`, agent: 'Research Agent' });
-                                        send({ type: 'content', content: `❌ **Payment Failed:** Transaction dropped by network.`, isPremium: false });
-                                        close();
-                                        return;
-                                    }
-                                } else {
-                                    // Genuine Rejection (e.g. wrong amount)
-                                    send({ type: 'thinking', id: 'v_fail', stepType: 'error', message: `Verification Failed: ${failureReason}`, agent: 'Research Agent' });
-                                    send({ type: 'content', content: `❌ **Verification Denied:** ${failureReason}. Execution halted.`, isPremium: false });
-                                    close();
-                                    return;
-                                }
-                            }
-
-                            await new Promise(r => setTimeout(r, thoughtDelay));
-
-                            send({ type: 'thinking', id: 'sw', stepType: 'confirmed', message: 'Handover: Context switching to [Analysis Agent]...', agent: 'Research Agent' });
-                            await new Promise(r => setTimeout(r, thoughtDelay));
-
-                            send({ type: 'thinking', id: 'an1', stepType: 'thinking', message: 'Analysis Agent: Booting expert persona. Analyzing market context...', agent: 'Analysis Agent' });
-                            await new Promise(r => setTimeout(r, thoughtDelay));
-
-                            await generateAnalysisAgentResponse(message, send);
-                        } else {
-                            throw new Error(result.error);
-                        }
                     } catch (e: any) {
+                        console.error('Agent-to-Agent Fail:', e);
                         send({ type: 'thinking', id: 'err', stepType: 'error', message: `Payment Failed: ${e.message}` });
                         send({ type: 'content', content: `❌ Error: ${e.message}`, isPremium: false });
                     }
@@ -354,7 +259,7 @@ export async function POST(req: NextRequest) {
                 }
 
                 if (isPremium) {
-                    const d = 300;
+                    const d = 500;
                     send({ type: 'thinking', id: 't1', stepType: 'thinking', message: 'Thinking: Identifying intent...' });
                     await new Promise(r => setTimeout(r, d));
 
@@ -363,51 +268,63 @@ export async function POST(req: NextRequest) {
 
                     const walletStatus = await validateAgentWallet();
                     if (!walletStatus.configured || (walletStatus.balance && walletStatus.balance < 0.003)) {
-                        send({ type: 'thinking', id: 'err', stepType: 'error', message: 'Wallet Check: Failed.' });
+                        send({ type: 'thinking', id: 'err', stepType: 'error', message: 'Wallet Check: Failed (Low Balance).' });
                         send({ type: 'content', content: `❌ **Failed:** Check agent wallet.`, isPremium: false });
                         close();
                         return;
                     }
 
-                    send({ type: 'thinking', id: 'p1', stepType: 'paying', message: 'Action: Paying OpenAI Compute (0.002 SOL)...', amount: '0.002 SOL' });
+                    // --- NEW: The "Sexiest Way" (v3.5) ---
+                    // We use the createPayingAgent helper to handle the entire negotiation/payment loops automatically.
+
+                    // Dynamic URL resolution based on request host (solves IPv4/IPv6 loopback issues)
+                    const host = req.headers.get('host') || 'localhost:3000';
+                    const protocol = host.includes('localhost') || host.includes('127.0.0.1') || host.includes('[::1]') ? 'http' : 'https';
+                    const APP_URL = `${protocol}://${host}`;
+
+                    const ORACLE_URL = `${APP_URL}/api/agent-oracle`;
+                    console.log('[AgentChatDebug] Target ORACLE_URL:', ORACLE_URL);
+
+                    send({ type: 'thinking', id: 'p1', stepType: 'paying', message: `Action: Fetching premium data via createPayingAgent()...`, amount: 'Auto' });
 
                     try {
-                        const result = await executeAgentPayment({
-                            connection: getConnection(),
-                            agentKeypair: getAgentKeypair(),
-                            recipientAddress: getCreatorWallet(),
-                            amountLamports: BigInt(2_000_000),
-                            priorityFee: { enabled: true, microLamports: 5000 },
+                        // 1. Initialize Agent (One Liner)
+                        const keypair = getAgentKeypair();
+                        const privateKey = bs58.encode(keypair.secretKey);
+
+                        const agent = createPayingAgent(privateKey, {
+                            network: (process.env.NEXT_PUBLIC_SOLANA_NETWORK as any) || 'devnet',
+                            maxPaymentPerRequest: 100_000_000n, // 0.1 SOL safety cap
+                            rpcUrl: process.env.NEXT_PUBLIC_RPC_URL
                         });
 
-                        if (result.success && result.signature) {
-                            send({ type: 'thinking', id: 'cnf', stepType: 'confirmed', message: `Success: Payment verified on-chain.`, signature: result.signature });
+                        // 2. Fetch (Handles 402 -> Pay -> Retry automatically)
+                        send({ type: 'thinking', id: 'p2', stepType: 'paying', message: `Network: Negotiating 402 Payment...` });
 
-                            // ---------------------------------------------------------
-                            // SPLIT VERIFICATION STRATEGY (Agent-to-API)
-                            // Uses Standard PayAI Network (Managed) - Explicitly Logged
-                            // ---------------------------------------------------------
+                        const res = await agent.get(ORACLE_URL);
 
-                            const PAYAI_FACILITATOR_URL = process.env.PAYAI_FACILITATOR_URL || 'https://facilitator.payai.network';
-
-                            // Log the verification attempt
-                            send({ type: 'thinking', id: 'v_api', stepType: 'paying', message: `Network Verify: Validating via PayAI Platform...` });
-                            await new Promise(r => setTimeout(r, d));
-
-                            // We can optimistically proceed for speed, OR actually verify. 
-                            // In Split Architecture, we trust PayAI for this flow.
-                            // We won't block on the actual fetch call for latency in this demo, but we log the INTENT.
-                            // This matches the "Standard" flow user expectation.
-
-                            send({ type: 'thinking', id: 'v_api_ok', stepType: 'confirmed', message: `Network Verified: PayAI confirmed transaction.` });
-                            await new Promise(r => setTimeout(r, d));
-
-                            send({ type: 'thinking', id: 'gen', stepType: 'complete', message: 'Generation: Streaming response...' });
-                            await new Promise(r => setTimeout(r, d));
-                        } else {
-                            throw new Error(result.error);
+                        if (!res.ok) {
+                            throw new Error(`Oracle returned ${res.status}: ${res.statusText}`);
                         }
+
+                        const data = await res.json();
+
+                        // 3. Success
+                        send({ type: 'thinking', id: 'cnf', stepType: 'confirmed', message: `Success: Payment verified. Data retrieved!`, signature: 'Auto-Signed' });
+                        await new Promise(r => setTimeout(r, d));
+
+                        send({ type: 'thinking', id: 'gen', stepType: 'complete', message: 'Generation: Streaming response from Oracle...' });
+                        await new Promise(r => setTimeout(r, d));
+
+                        // Inject Oracle findings into context
+                        const oracleContext = `ORACLE DATA: ${JSON.stringify(data.data)}. Use this to answer the user validation request.`;
+                        await generateAIResponse(oracleContext + "\n\n" + message, isPremium, send);
+
+                        close();
+                        return;
+
                     } catch (e: any) {
+                        console.error('Agent Payment Error:', e);
                         send({ type: 'thinking', id: 'err', stepType: 'error', message: `Payment Error: ${e.message}` });
                         send({ type: 'content', content: `❌ Error: ${e.message}`, isPremium: false });
                         close();
