@@ -151,6 +151,9 @@ export const GET = withMicropay(handler, {
 Import only what you need:
 
 ```typescript
+// 🔥 x402Fetch - Drop-in fetch replacement (NEW!)
+import { createX402Fetch } from '@alleyboss/micropay-solana-x402-paywall/fetch';
+
 // Express Middleware
 import { x402Middleware } from '@alleyboss/micropay-solana-x402-paywall/express';
 
