@@ -12,21 +12,21 @@ export { x402ResourceServer };
  */
 function transformPayAIToX402(payaiPayload: PayAIPayload, defaultNetwork: string): any {
     const { scheme, networkId, authorization } = payaiPayload;
-    
+
     const x402Scheme = scheme === 'exact-svm' || scheme === 'exact-evm' ? 'exact' : scheme;
-    
+
     let network = defaultNetwork;
     if (networkId === 'solana') {
         network = 'solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp';
     } else if (networkId === 'solana-devnet') {
         network = 'solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1';
     }
-    
+
     let signature: string | undefined;
     if (scheme === 'exact-svm' && 'signatures' in authorization) {
         signature = authorization.signatures?.[0];
     }
-    
+
     return {
         scheme: x402Scheme,
         network,
@@ -75,29 +75,10 @@ export function createX402Middleware(config: X402Config) {
         ? 'solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp'
         : 'solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1';
 
-    return function withMicropay(handler: any, routeConfig?: any) {
+    return function withMicropay(handler: any, _routeConfig?: any) {
         // Build the payment spec for 402 responses
         const priceValue = config.price?.toString() || '0';
-        // x402 SDK uses price * 1M for amount in 402 response
-        const amountValue = (BigInt(priceValue) * BigInt(1_000_000)).toString();
 
-        const paymentSpec = {
-            scheme: 'exact',
-            payTo: config.walletAddress,
-            amount: amountValue,
-            network: networkId,
-            asset: '4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU', // Native SOL asset
-        };
-
-        const finalConfig = routeConfig || {
-            accepts: {
-                ...paymentSpec,
-                price: priceValue, // Include for x402 SDK 402 generation
-            }
-        };
-
-        // Create the x402 wrapped handler for 402 response generation
-        const wrappedHandler = originalWithX402(handler, finalConfig, server);
 
         return async (req: any, ctx: any) => {
             const authHeader = req.headers?.get?.('authorization') || req.headers?.authorization;
@@ -120,10 +101,10 @@ export function createX402Middleware(config: X402Config) {
                         const verifyPaymentSpec = {
                             scheme: payload.scheme || 'exact',
                             network: payload.network || networkId,
-                            amount: amountValue,
+                            amount: priceValue,
                             payTo: config.walletAddress,
                         };
-                        
+
                         let verifyResult;
                         try {
                             verifyResult = await facilitatorClient.verify(payload, verifyPaymentSpec as any);
@@ -148,37 +129,35 @@ export function createX402Middleware(config: X402Config) {
                 }
             }
 
-            // Fall through to x402 SDK for 402 generation
-            const compatibleReq = new Proxy(req, {
-                get(target, prop) {
-                    if (prop === 'url') {
-                        return target.nextUrl?.pathname || target.url;
-                    }
-                    if (prop === 'headers') {
-                        const headers = target.headers;
-                        return new Proxy(headers, {
-                            get(hTarget, hProp) {
-                                if (hProp === 'authorization' || hProp === 'Authorization') {
-                                    const val = hTarget.get('authorization');
-                                    return val;
-                                }
-                                if (typeof hProp === 'string' &&
-                                    !['get', 'set', 'has', 'delete', 'entries', 'keys', 'values', 'forEach', 'append'].includes(hProp) &&
-                                    typeof hTarget[hProp as keyof Headers] === 'undefined') {
-                                    return hTarget.get(hProp) || undefined;
-                                }
-                                const val = (hTarget as any)[hProp];
-                                return typeof val === 'function' ? val.bind(hTarget) : val;
-                            }
-                        });
-                    }
-                    const val = (target as any)[prop];
-                    return typeof val === 'function' ? val.bind(target) : val;
+            // Generate 402 response directly (bypass upstream 1M multiplier bug)
+            const paymentPayload = {
+                x402Version: 2,
+                error: 'Payment required',
+                resource: {
+                    url: req.nextUrl?.pathname || req.url,
+                    description: '',
+                    mimeType: ''
+                },
+                accepts: [{
+                    scheme: 'exact',
+                    network: networkId,
+                    amount: priceValue, // Use raw lamports, no multiplier
+                    asset: '4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU',
+                    payTo: config.walletAddress,
+                    maxTimeoutSeconds: 300,
+                    extra: { feePayer: '11111111111111111111111111111111' }
+                }]
+            };
+
+            const base64Payload = Buffer.from(JSON.stringify(paymentPayload)).toString('base64');
+
+            return new Response(JSON.stringify({}), {
+                status: 402,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'payment-required': base64Payload
                 }
             });
-
-            // Delegate to x402 SDK for remote verification or 402 generation
-            return await (wrappedHandler as any)(compatibleReq, ctx);
         };
     };
 }

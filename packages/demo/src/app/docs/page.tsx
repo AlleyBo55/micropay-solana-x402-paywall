@@ -267,7 +267,7 @@ export default function DocsPage() {
                         <span className="text-[15px] tracking-tight text-[#1D1D1F]">Micropay <span className="text-gray-400 font-normal">Docs</span></span>
                     </Link>
                     <div className="flex items-center gap-3 md:gap-4">
-                        <span className="hidden sm:inline-flex text-[11px] font-mono bg-gray-50 text-gray-500 px-2 py-1 rounded-md border border-gray-100">v3.3.14</span>
+                        <span className="hidden sm:inline-flex text-[11px] font-mono bg-gray-50 text-gray-500 px-2 py-1 rounded-md border border-gray-100">v3.5.1</span>
                         <Link href="/" className="hidden sm:inline-flex text-[13px] font-medium px-4 py-1.5 bg-[#1D1D1F] text-white rounded-full hover:bg-black transition-all shadow-sm active:scale-95">
                             Live Demo
                         </Link>
@@ -336,7 +336,7 @@ export default function DocsPage() {
                     <div className="mt-12 p-5 bg-white rounded-2xl border border-[#D2D2D7] relative overflow-hidden group">
                         <div className="absolute top-0 right-0 w-24 h-24 bg-blue-500/5 blur-3xl rounded-full -mr-10 -mt-10 group-hover:scale-150 transition-transform duration-1000" />
                         <p className="text-[11px] text-gray-400 font-bold uppercase tracking-widest mb-1.5">Bundle Size</p>
-                        <p className="text-3xl font-bold text-[#1D1D1F] tracking-tight">38KB</p>
+                        <p className="text-3xl font-bold text-[#1D1D1F] tracking-tight">~77KB</p>
                         <p className="text-[11px] text-gray-500 mt-1">Ready for Production</p>
                     </div>
                 </aside>
@@ -1058,9 +1058,165 @@ function PaymentButton() {
                                         <h4 className="font-bold text-[15px] md:text-[16px] text-[#1D1D1F]">{feature.title}</h4>
                                         <p className="text-[13px] md:text-[14px] text-gray-500 leading-relaxed font-medium">{feature.desc}</p>
                                     </div>
-                                ))}
+                                ))
+                                }
                             </div>
                         </div>
+
+                        <div className="bg-gradient-to-br from-blue-500 to-violet-600 rounded-[2rem] p-8 md:p-12 text-white mb-12 relative overflow-hidden">
+                            <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-white opacity-10 blur-[100px] rounded-full pointer-events-none -mr-20 -mt-20" />
+                            <div className="relative z-10">
+                                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/20 border border-white/20 text-white text-[11px] font-bold uppercase tracking-widest mb-6 backdrop-blur-md">
+                                    <SparklesIcon size={12} />
+                                    New in v3.5
+                                </div>
+                                <h3 className="text-3xl md:text-5xl font-bold mb-6 leading-tight">
+                                    Give Your Agents <br />
+                                    <span className="text-blue-200">Financial Autonomy.</span>
+                                </h3>
+                                <p className="text-lg md:text-xl text-blue-100 max-w-2xl leading-relaxed mb-8">
+                                    The <code className="bg-white/10 px-2 py-0.5 rounded text-white font-mono">createPayingAgent</code> helper is the sexiest way to equip your AI with a wallet. It handles balance checks, x402 negotiation, and transaction signing automatically.
+                                </p>
+                                <div className="flex flex-wrap gap-4">
+                                    <div className="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-lg backdrop-blur-md border border-white/10">
+                                        <CheckmarkCircle01Icon size={16} className="text-blue-300" />
+                                        <span className="font-medium">Zero Config</span>
+                                    </div>
+                                    <div className="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-lg backdrop-blur-md border border-white/10">
+                                        <CheckmarkCircle01Icon size={16} className="text-blue-300" />
+                                        <span className="font-medium">Any LLM Framework</span>
+                                    </div>
+                                    <div className="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-lg backdrop-blur-md border border-white/10">
+                                        <CheckmarkCircle01Icon size={16} className="text-blue-300" />
+                                        <span className="font-medium">Auto-Healing</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h3 className="text-xl font-bold text-[#1D1D1F] mb-6">Integration Guide</h3>
+                        <p className="text-gray-600 mb-6 leading-relaxed">
+                            Instead of manually constructing transactions, your agent simply "fetches" URLs. If the URL is behind a paywall (402 Payment Required), the agent automatically negotiates the price, signs the transaction, and retries the request with the payment proof attached.
+                        </p>
+
+                        <div className="space-y-8">
+                            {/* New: The Two-Sided Requirement Explanation */}
+                            <div className="bg-amber-50/50 border border-amber-100/50 rounded-2xl p-6 md:p-8">
+                                <h4 className="font-bold text-[#1D1D1F] mb-4 flex items-center gap-2">
+                                    <AlertCircleIcon size={20} className="text-amber-600" />
+                                    How it Works: The Client-Server Handshake
+                                </h4>
+                                <p className="text-sm md:text-[15px] text-gray-700 leading-relaxed mb-6">
+                                    It takes two to tango using the x402 protocol. Your agent is the <strong>Client</strong>, but the URL it fetches must be a <strong>x402-enabled Server</strong>.
+                                </p>
+                                <div className="grid md:grid-cols-2 gap-6">
+                                    <div className="bg-white p-4 rounded-xl border border-amber-100 shadow-sm">
+                                        <div className="font-bold text-[13px] text-gray-400 uppercase tracking-widest mb-2">The Server (API)</div>
+                                        <p className="text-sm text-gray-600 mb-2">Must throw <code className="bg-gray-100 px-1 rounded">402 Payment Required</code> when unpaid.</p>
+                                        <div className="text-xs font-mono bg-gray-50 p-2 rounded text-gray-500 space-y-1">
+                                            <div>GET /premium</div>
+                                            <div>&lt; 402 Payment Required</div>
+                                            <div className="text-amber-600">&lt; WWW-Authenticate: X402 ...</div>
+                                            <div className="text-gray-400 italic">// also accepts payment-required</div>
+                                        </div>
+                                    </div>
+                                    <div className="bg-white p-4 rounded-xl border border-amber-100 shadow-sm">
+                                        <div className="font-bold text-[13px] text-gray-400 uppercase tracking-widest mb-2">The Client (Agent)</div>
+                                        <p className="text-sm text-gray-600 mb-2">Catches the 402, pays on-chain, and retries.</p>
+                                        <div className="text-xs font-mono bg-gray-50 p-2 rounded text-gray-500">
+                                            &gt; Pays 0.001 SOL<br />
+                                            GET /premium<br />
+                                            &gt; Authorization: X402 ...
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <h4 className="font-bold text-[#1D1D1F] mb-4 flex items-center gap-2">
+                                    <div className="w-6 h-6 rounded bg-green-100 text-green-600 flex items-center justify-center text-xs">0</div>
+                                    Prerequisite: Protect your API (Next.js)
+                                </h4>
+                                <p className="text-sm text-gray-500 mb-4">
+                                    Currently, we provide a plug-and-play middleware for <strong>Next.js App Router</strong>.
+                                </p>
+
+                                <Callout type="note">
+                                    <strong>Other Languages:</strong> Libraries for Go, Express, Rust, and Python are on our roadmap.
+                                    For now, you can implement the server-side logic manually by checking for the <code>Authorization: X402 ...</code> header and verifying the signature.
+                                </Callout>
+
+                                <CodeBlock code={`// app/api/premium-data/route.ts
+import { createX402Middleware } from '@alleyboss/micropay-solana-x402-paywall/next';
+
+const withPayment = createX402Middleware({
+    walletAddress: process.env.CREATOR_WALLET_ADDRESS!,
+    price: '1000000', // 0.001 SOL
+    network: 'devnet'
+});
+
+// This handler ONLY runs if the client (Agent) has paid!
+export const GET = withPayment(async (req) => {
+    return Response.json({ secret: "This data was paid for on-chain!" });
+});`} />
+                            </div>
+                            <div>
+                                <h4 className="font-bold text-[#1D1D1F] mb-4 flex items-center gap-2">
+                                    <div className="w-6 h-6 rounded bg-blue-100 text-blue-600 flex items-center justify-center text-xs">1</div>
+                                    Basic Usage
+                                </h4>
+                                <CodeBlock code={`import { createPayingAgent } from '@alleyboss/micropay-solana-x402-paywall/agent';
+
+// 1. Initialize the agent
+const agent = createPayingAgent(process.env.SOLANA_PRIVATE_KEY!, {
+    network: 'devnet',
+    maxPaymentPerRequest: 100_000_000n // Safety cap: 0.1 SOL
+});
+
+// 2. Simply fetch premium content
+// The agent handles the 402 challenge-response loop automatically
+const response = await agent.get('https://api.example.com/premium-data');
+const data = await response.json();
+
+console.log('Premium Data:', data);`} />
+                            </div>
+
+                            <div>
+                                <h4 className="font-bold text-[#1D1D1F] mb-4 flex items-center gap-2">
+                                    <div className="w-6 h-6 rounded bg-purple-100 text-purple-600 flex items-center justify-center text-xs">2</div>
+                                    Checking Balance
+                                </h4>
+                                <CodeBlock code={`// Check if agent has enough funds before complex operations
+const { sol, lamports } = await agent.getBalance();
+
+if (sol < 0.05) {
+    console.warn('Agent wallet low on funds! Please top up.');
+}`} />
+                            </div>
+
+                            <div>
+                                <h4 className="font-bold text-[#1D1D1F] mb-4 flex items-center gap-2">
+                                    <div className="w-6 h-6 rounded bg-amber-100 text-amber-600 flex items-center justify-center text-xs">3</div>
+                                    Advanced Configuration
+                                </h4>
+                                <p className="text-sm text-gray-500 mb-4">Protect your agent from draining its wallet on malicious sites.</p>
+                                <CodeBlock code={`const agent = createPayingAgent(key, {
+    network: 'mainnet-beta',
+    rpcUrl: 'https://api.mainnet-beta.solana.com',
+    
+    // Security Constraints
+    maxPaymentPerRequest: 5_000_000n, // Max 0.005 SOL per call
+    allowedRecipients: ['H3...'],      // Only pay specific wallets
+    
+    // Performance
+    commitment: 'confirmed'
+});`} />
+                            </div>
+                        </div>
+
+                        <Callout type="tip">
+                            <strong>Agent Framework Compatible:</strong> This helper returns a standard <code>fetch</code>-compatible interface. You can pass <code>agent.fetch</code> directly to any library that accepts a custom fetcher (like OpenAI, LangChain, or Eliza) to seamlessly enable payments within those frameworks.
+                        </Callout>
                     </section>
 
                     {/* PayAI Format */}
@@ -1547,6 +1703,12 @@ tx.add(ComputeBudgetProgram.setComputeUnitPrice({
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
                             {[
+                                {
+                                    issue: 'Network Error: Fetch Failed',
+                                    solution: 'Node 18+ resolves localhost to IPv6 (::1). Use http://127.0.0.1:3000 instead of localhost in your APP_URL.',
+                                    icon: AlertCircleIcon,
+                                    tags: ['Node.js', 'Networking']
+                                },
                                 {
                                     issue: 'Payment Not Verifying',
                                     solution: 'Check CREATOR_WALLET_ADDRESS and lamport decimals. Use a better RPC provider if hits rate limits.',

@@ -16,6 +16,7 @@ import LockPasswordIcon from 'hugeicons-react/dist/esm/icons/lock_password_icon'
 import Copy01Icon from 'hugeicons-react/dist/esm/icons/copy_01_icon';
 import Tick01Icon from 'hugeicons-react/dist/esm/icons/tick_01_icon';
 import SparklesIcon from 'hugeicons-react/dist/esm/icons/sparkles_icon';
+import CheckmarkCircle01Icon from 'hugeicons-react/dist/esm/icons/checkmark_circle_01_icon';
 
 const LightningIcon = ZapIcon;
 
@@ -185,7 +186,114 @@ export async function POST(req) {
                     </div>
                 </section>
 
-                {/* Bento Grid Features - Apple Style */}
+                {/* 🚀 NEW: The Sexiest Integration Section (User Requested) */}
+                <section className="py-24 sm:py-32 relative overflow-hidden">
+                    <div className="absolute inset-0 bg-white" />
+                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[600px] bg-gradient-to-b from-blue-50/50 to-transparent rounded-full blur-[120px] pointer-events-none" />
+
+                    <div className="max-w-7xl mx-auto px-6 relative z-10">
+                        <div className="text-center mb-16 sm:mb-24">
+                            <motion.div
+                                initial={{ opacity: 0, y: 10 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-100 text-blue-600 text-[11px] font-bold uppercase tracking-widest mb-6"
+                            >
+                                <SparklesIcon size={12} />
+                                New in v3.5
+                            </motion.div>
+                            <h2 className="text-4xl sm:text-7xl font-bold tracking-tight text-[#1D1D1F] mb-6 leading-[1.05]">
+                                The Easiest Way to <br />
+                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-violet-600">Integrate Agent Payments.</span>
+                            </h2>
+                            <p className="text-xl text-gray-500 max-w-2xl mx-auto leading-relaxed mb-10">
+                                Forget complex transaction building. Give your AI agents a wallet and let them pay their own way with a single line of code.
+                            </p>
+                            <motion.div
+                                initial={{ opacity: 0, y: 10 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ delay: 0.1 }}
+                            >
+                                <Link
+                                    href="/agent-chat"
+                                    className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-blue-600 text-white font-bold hover:bg-blue-700 transition-colors shadow-lg hover:shadow-blue-500/25"
+                                >
+                                    See it in action on Agent Chat
+                                    <ArrowRight01Icon size={18} />
+                                </Link>
+                            </motion.div>
+                        </div>
+
+                        {/* The Code Demo - Apple/Vercel Aesthetic */}
+                        <div className="max-w-5xl mx-auto mb-6">
+                            <div className="relative group rounded-[2.5rem] bg-[#0A0A0A] border border-white/10 shadow-2xl overflow-hidden ring-1 ring-white/10">
+                                {/* Traffic Lights */}
+                                <div className="absolute top-6 left-6 flex gap-2 z-20">
+                                    <div className="w-3 h-3 rounded-full bg-[#FF5F56]" />
+                                    <div className="w-3 h-3 rounded-full bg-[#FFBD2E]" />
+                                    <div className="w-3 h-3 rounded-full bg-[#27C93F]" />
+                                </div>
+
+                                {/* Editor Header */}
+                                <div className="absolute top-0 inset-x-0 h-14 bg-white/[0.03] border-b border-white/[0.05] flex items-center justify-center">
+                                    <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-black/20 text-gray-400 text-xs font-mono border border-white/5">
+                                        <div className="w-2 h-2 rounded-full bg-blue-500" />
+                                        agent.ts
+                                    </div>
+                                </div>
+
+                                {/* Code Content */}
+                                <div className="p-8 sm:p-12 pt-20 sm:pt-24 font-mono text-sm sm:text-base leading-loose overflow-x-auto text-gray-300">
+                                    <div className="flex">
+                                        <div className="flex flex-col text-gray-700 select-none pr-6 text-right border-r border-white/5 mr-6 font-mono">
+                                            <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span>
+                                        </div>
+                                        <div className="flex-1">
+                                            <div><span className="text-purple-400">import</span> <span className="text-yellow-100">{`{`}</span> <span className="text-blue-400">createPayingAgent</span> <span className="text-yellow-100">{`}`}</span> <span className="text-purple-400">from</span> <span className="text-green-400">'@alleyboss/micropay-solana-x402-paywall/agent'</span>;</div>
+                                            <div className="h-6" />
+                                            <div><span className="text-gray-500">// 1. Initialize with your private key (One liner 🤯)</span></div>
+                                            <div className="relative group/line">
+                                                <div className="absolute -inset-x-4 -inset-y-1 bg-blue-500/10 opacity-0 group-hover/line:opacity-100 rounded transition-opacity" />
+                                                <span className="text-purple-400">const</span> <span className="text-blue-400">agent</span> = <span className="text-yellow-100">createPayingAgent</span>(process.env.<span className="text-blue-300">SOLANA_PRIVATE_KEY</span>!);
+                                            </div>
+                                            <div className="h-6" />
+                                            <div><span className="text-gray-500">// 2. Fetch premium data (Auto-pays 402 responses!)</span></div>
+                                            <div className="relative group/line">
+                                                <div className="absolute -inset-x-4 -inset-y-1 bg-green-500/10 opacity-0 group-hover/line:opacity-100 rounded transition-opacity" />
+                                                <span className="text-purple-400">const</span> <span className="text-blue-400">report</span> = <span className="text-purple-400">await</span> <span className="text-blue-400">agent</span>.<span className="text-yellow-100">get</span>(<span className="text-green-400">'https://api.market-maker.ai/premium'</span>);
+                                            </div>
+                                            <div className="h-6" />
+                                            <div>console.<span className="text-yellow-100">log</span>(<span className="text-green-400">"Paid & Downloaded:"</span>, <span className="text-purple-400">await</span> <span className="text-blue-400">report</span>.<span className="text-yellow-100">json</span>());</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Floating Badge */}
+                                <div className="absolute bottom-6 right-6 px-4 py-2 bg-green-500/10 border border-green-500/20 text-green-400 text-xs font-bold uppercase tracking-widest rounded-lg backdrop-blur-md flex items-center gap-2">
+                                    <CheckmarkCircle01Icon size={14} />
+                                    Works with any LLM
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="flex justify-center mb-16">
+                            <p className="text-gray-400 text-sm italic">
+                                * <span className="font-mono text-gray-500 text-xs">api.market-maker.ai</span> is a placeholder URL for demonstration.
+                            </p>
+                        </div>
+
+                        {/* Integration Logos */}
+                        <div className="mt-16 flex flex-wrap justify-center items-center gap-8 sm:gap-16 opacity-50 grayscale hover:grayscale-0 transition-all duration-500">
+                            {/* Keep it subtle */}
+                            <div className="text-sm font-bold tracking-widest uppercase">Compatible with:</div>
+                            <div className="flex items-center gap-2 font-bold"><div className="w-2 h-2 bg-black rounded-full" />LangChain</div>
+                            <div className="flex items-center gap-2 font-bold"><div className="w-2 h-2 bg-blue-600 rounded-full" />Autogen</div>
+                            <div className="flex items-center gap-2 font-bold"><div className="w-2 h-2 bg-orange-500 rounded-full" />Eliza</div>
+                            <div className="flex items-center gap-2 font-bold"><div className="w-2 h-2 bg-green-500 rounded-full" />OpenAI Swarm</div>
+                        </div>
+                    </div>
+                </section>
                 <section className="py-20 sm:py-32 bg-white rounded-[2rem] sm:rounded-[3rem] shadow-[0_-20px_40px_-20px_rgba(0,0,0,0.05)] mx-3 sm:mx-8">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6">
                         <div className="max-w-2xl mb-12 sm:mb-16 text-center sm:text-left">

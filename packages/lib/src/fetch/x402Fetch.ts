@@ -135,6 +135,33 @@ function parse402Response(response: Response): PaymentRequirements {
         }
     }
 
+    // Try payment-required header (upstream x402 compatibility)
+    const paymentRequired = response.headers.get('payment-required');
+    if (paymentRequired) {
+        try {
+            // It's base64 encoded json directly
+            const jsonStr = atob(paymentRequired.trim());
+            const parsed = JSON.parse(jsonStr);
+
+            // Support standard x402 structured format (accepts array)
+            const option = Array.isArray(parsed.accepts) && parsed.accepts.length > 0
+                ? parsed.accepts[0]
+                : parsed;
+
+            return {
+                payTo: option.payTo ?? option.recipient,
+                amount: String(option.amount),
+                asset: option.asset ?? 'SOL',
+                network: option.network ?? 'solana-mainnet',
+                description: parsed.description ?? option.description,
+                resource: parsed.resource ?? option.resource,
+                maxAge: parsed.maxAge ?? option.maxAge,
+            };
+        } catch {
+            throw invalid402ResponseError('Invalid payment-required header');
+        }
+    }
+
     throw invalid402ResponseError('No payment requirements found in 402 response');
 }
 
