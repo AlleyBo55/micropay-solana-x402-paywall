@@ -46,6 +46,9 @@ import {
     invalid402ResponseError,
     timeoutError,
     walletNotConnectedError,
+    amountExceedsLimitError,
+    recipientNotAllowedError,
+    rateLimitExceededError,
 } from './errors';
 
 // ============================================================================
@@ -54,7 +57,8 @@ import {
 
 const DEFAULT_TIMEOUT = 30_000; // 30 seconds
 const DEFAULT_MAX_RETRIES = 3;
-const CONFIRMATION_COMMITMENT = 'confirmed' as const;
+const DEFAULT_RATE_LIMIT_WINDOW = 60_000; // 1 minute
+const DEFAULT_RATE_LIMIT_MAX = 10;
 
 const RPC_ENDPOINTS: Record<SolanaNetwork, string> = {
     'mainnet-beta': 'https://api.mainnet-beta.solana.com',
@@ -212,14 +216,65 @@ export function createX402Fetch(config: X402FetchConfig): X402FetchFunction {
         priorityFee,
         maxRetries = DEFAULT_MAX_RETRIES,
         timeout = DEFAULT_TIMEOUT,
+        // Security options
+        maxPaymentPerRequest,
+        allowedRecipients,
+        // UX options
+        commitment = 'confirmed',
+        rateLimit,
     } = config;
 
     // Suppress unused variable warning
     void _facilitatorUrl;
 
+    // Rate limiter state
+    const paymentTimestamps: number[] = [];
+    const rateLimitMax = rateLimit?.maxPayments ?? DEFAULT_RATE_LIMIT_MAX;
+    const rateLimitWindow = rateLimit?.windowMs ?? DEFAULT_RATE_LIMIT_WINDOW;
+
+    /**
+     * Check rate limit before payment
+     */
+    function checkRateLimit(): void {
+        const now = Date.now();
+        // Remove timestamps outside the window
+        while (paymentTimestamps.length > 0 && paymentTimestamps[0] < now - rateLimitWindow) {
+            paymentTimestamps.shift();
+        }
+        if (paymentTimestamps.length >= rateLimitMax) {
+            throw rateLimitExceededError(rateLimitMax, rateLimitWindow);
+        }
+    }
+
+    /**
+     * Record a payment for rate limiting
+     */
+    function recordPayment(): void {
+        paymentTimestamps.push(Date.now());
+    }
+
+    /**
+     * Validate payment requirements against security config
+     */
+    function validateSecurityRequirements(requirements: PaymentRequirements): void {
+        const amountLamports = BigInt(requirements.amount);
+
+        // Check max payment limit
+        if (maxPaymentPerRequest !== undefined && amountLamports > maxPaymentPerRequest) {
+            throw amountExceedsLimitError(requirements, maxPaymentPerRequest);
+        }
+
+        // Check recipient whitelist
+        if (allowedRecipients !== undefined && allowedRecipients.length > 0) {
+            if (!allowedRecipients.includes(requirements.payTo)) {
+                throw recipientNotAllowedError(requirements, requirements.payTo);
+            }
+        }
+    }
+
     // Create connection if not provided
     const connection = providedConnection ?? new Connection(RPC_ENDPOINTS[network], {
-        commitment: CONFIRMATION_COMMITMENT,
+        commitment,
     });
 
     /**
@@ -299,7 +354,7 @@ export function createX402Fetch(config: X402FetchConfig): X402FetchFunction {
             signature,
             blockhash,
             lastValidBlockHeight,
-        }, CONFIRMATION_COMMITMENT);
+        }, commitment);
 
         return signature;
     }
@@ -349,6 +404,16 @@ export function createX402Fetch(config: X402FetchConfig): X402FetchFunction {
             throw invalid402ResponseError(error instanceof Error ? error.message : undefined);
         }
 
+        // =====================================================================
+        // Security Validations (Critical)
+        // =====================================================================
+
+        // Validate against security config (max amount, whitelist)
+        validateSecurityRequirements(requirements);
+
+        // Check rate limit before proceeding
+        checkRateLimit();
+
         // Call payment required hook
         if (onPaymentRequired) {
             const url = typeof input === 'string' ? input : input instanceof URL ? input.href : input.url;
@@ -367,6 +432,9 @@ export function createX402Fetch(config: X402FetchConfig): X402FetchFunction {
             });
 
             signature = await Promise.race([paymentPromise, timeoutPromise]);
+
+            // Record payment for rate limiting
+            recordPayment();
 
             // Call success hook
             if (onPaymentSuccess) {

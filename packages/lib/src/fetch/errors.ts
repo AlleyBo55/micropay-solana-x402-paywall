@@ -169,6 +169,47 @@ export function walletNotConnectedError(): X402PaymentError {
     );
 }
 
+/**
+ * Create error when payment amount exceeds configured limit
+ */
+export function amountExceedsLimitError(
+    requirements: PaymentRequirements,
+    limit: bigint
+): X402PaymentError {
+    return new X402PaymentError(
+        `Payment amount ${requirements.amount} exceeds limit of ${limit} lamports`,
+        ErrorCodes.AMOUNT_EXCEEDS_LIMIT,
+        requirements
+    );
+}
+
+/**
+ * Create error when recipient is not in whitelist
+ */
+export function recipientNotAllowedError(
+    requirements: PaymentRequirements,
+    recipient: string
+): X402PaymentError {
+    return new X402PaymentError(
+        `Recipient ${recipient} is not in the allowed recipients list`,
+        ErrorCodes.RECIPIENT_NOT_ALLOWED,
+        requirements
+    );
+}
+
+/**
+ * Create error when rate limit is exceeded
+ */
+export function rateLimitExceededError(
+    limit: number,
+    windowMs: number
+): X402PaymentError {
+    return new X402PaymentError(
+        `Rate limit exceeded: max ${limit} payments per ${windowMs / 1000}s`,
+        ErrorCodes.RATE_LIMIT_EXCEEDED
+    );
+}
+
 // ============================================================================
 // Type Guards
 // ============================================================================

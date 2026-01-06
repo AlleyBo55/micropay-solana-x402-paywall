@@ -109,6 +109,61 @@ export interface X402FetchConfig {
      * @default 30000 (30 seconds)
      */
     readonly timeout?: number;
+
+    // =========================================================================
+    // Security Options (Critical)
+    // =========================================================================
+
+    /**
+     * Maximum payment amount per request in lamports
+     * Prevents wallet drain from malicious 402 responses
+     * @default undefined (no limit - USE WITH CAUTION)
+     * @example 10_000_000n // Max 0.01 SOL per request
+     */
+    readonly maxPaymentPerRequest?: bigint;
+
+    /**
+     * Whitelist of allowed recipient addresses
+     * Payments to addresses not in this list will be rejected
+     * @default undefined (allow all - USE WITH CAUTION)
+     * @example ['7fPjN...', 'ABC123...']
+     */
+    readonly allowedRecipients?: readonly string[];
+
+    // =========================================================================
+    // UX Options (High Priority)
+    // =========================================================================
+
+    /**
+     * Solana commitment level for transaction confirmation
+     * - 'processed': Fastest (~100ms), optimistic, may revert
+     * - 'confirmed': Balanced (~400ms), supermajority confirmed
+     * - 'finalized': Slowest (~30s), irreversible
+     * @default 'confirmed'
+     */
+    readonly commitment?: 'processed' | 'confirmed' | 'finalized';
+
+    /**
+     * Rate limiting configuration to prevent infinite payment loops
+     */
+    readonly rateLimit?: RateLimitConfig;
+}
+
+/**
+ * Rate limiting configuration
+ */
+export interface RateLimitConfig {
+    /**
+     * Maximum number of payments allowed within the time window
+     * @default 10
+     */
+    readonly maxPayments: number;
+
+    /**
+     * Time window in milliseconds
+     * @default 60000 (1 minute)
+     */
+    readonly windowMs: number;
 }
 
 /**
@@ -212,6 +267,12 @@ export const X402ErrorCode = {
     TIMEOUT: 'TIMEOUT',
     /** Wallet not connected */
     WALLET_NOT_CONNECTED: 'WALLET_NOT_CONNECTED',
+    /** Payment amount exceeds maxPaymentPerRequest */
+    AMOUNT_EXCEEDS_LIMIT: 'AMOUNT_EXCEEDS_LIMIT',
+    /** Recipient address not in allowedRecipients whitelist */
+    RECIPIENT_NOT_ALLOWED: 'RECIPIENT_NOT_ALLOWED',
+    /** Rate limit exceeded */
+    RATE_LIMIT_EXCEEDED: 'RATE_LIMIT_EXCEEDED',
 } as const;
 
 export type X402ErrorCode = (typeof X402ErrorCode)[keyof typeof X402ErrorCode];

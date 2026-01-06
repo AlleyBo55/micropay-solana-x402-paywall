@@ -40,6 +40,10 @@ export {
     invalid402ResponseError,
     timeoutError,
     walletNotConnectedError,
+    // Security error factories (NEW in v3.4.1)
+    amountExceedsLimitError,
+    recipientNotAllowedError,
+    rateLimitExceededError,
 } from './errors';
 
 // Type exports
@@ -52,6 +56,7 @@ export type {
     WalletLike,
     SolanaNetwork,
     PriorityFeeConfig,
+    RateLimitConfig,
     PaymentRequiredHook,
     PaymentSuccessHook,
     PaymentErrorHook,

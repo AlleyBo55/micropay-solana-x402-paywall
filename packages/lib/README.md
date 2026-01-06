@@ -91,6 +91,38 @@ try {
     // Codes: USER_REJECTED, INSUFFICIENT_BALANCE, TRANSACTION_FAILED, etc.
   }
 }
+```
+
+### Security Configuration (v3.4.1)
+
+Protect your wallet from malicious 402 responses:
+
+```typescript
+const x402Fetch = createX402Fetch({
+  wallet,
+  network: 'mainnet-beta',
+
+  // 🔒 Critical: Maximum payment per request (prevents wallet drain)
+  maxPaymentPerRequest: BigInt(10_000_000), // Max 0.01 SOL
+
+  // 🔒 Critical: Whitelist of allowed recipients (prevents phishing)
+  allowedRecipients: ['7fPjN...', 'ABC123...'],
+
+  // ⚡ UX: Transaction speed (processed=fast, finalized=safe)
+  commitment: 'confirmed', // 'processed' | 'confirmed' | 'finalized'
+
+  // 🛡️ Rate limiting (prevents infinite loops)
+  rateLimit: {
+    maxPayments: 10,      // Max 10 payments
+    windowMs: 60_000,     // Per minute
+  },
+});
+```
+
+**Security Error Codes:**
+- `AMOUNT_EXCEEDS_LIMIT` — Payment blocked: amount exceeds `maxPaymentPerRequest`
+- `RECIPIENT_NOT_ALLOWED` — Payment blocked: recipient not in whitelist
+- `RATE_LIMIT_EXCEEDED` — Payment blocked: too many payments in time window
 
 ## 📦 Quick Example (Express.js)
 
