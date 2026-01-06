@@ -298,6 +298,25 @@ flowchart LR
     F --> G((Unlock Data))
 ```
 
+### ⚡ The Sexy Way (New in v3.5.1)
+
+```typescript
+import { createPayingAgent } from '@alleyboss/micropay-solana-x402-paywall/agent';
+
+// One liner - that's it!
+const agent = createPayingAgent(process.env.SOLANA_PRIVATE_KEY!);
+
+// Fetch with auto-payment
+const response = await agent.get('https://api.example.com/premium');
+const data = await response.json();
+
+// Check balance
+const { sol } = await agent.getBalance();
+console.log(`Agent has ${sol} SOL`);
+```
+
+### The Verbose Way (Full Control)
+
 ```typescript
 import { executeAgentPayment } from '@alleyboss/micropay-solana-x402-paywall/agent';
 import { Keypair, Connection } from '@solana/web3.js';

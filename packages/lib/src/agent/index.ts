@@ -23,3 +23,10 @@ export {
     type CreditValidation,
     type UseCreditResult,
 } from './credits';
+
+// Shaw-style agent helper - the sexiest one-liner API
+export {
+    createPayingAgent,
+    type PayingAgent,
+    type PayingAgentConfig,
+} from './payingAgent';
