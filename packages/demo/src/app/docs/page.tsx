@@ -1327,7 +1327,9 @@ if (sol < 0.05) {
                                 <p className="text-gray-500 text-sm md:text-base leading-relaxed font-medium mb-6">
                                     Micropay supports three distinct trust topologies. Default to the managed <strong>PayAI Network</strong>, run your own <strong>Private Facilitator</strong>, or go fully <strong>Self-Sovereign</strong> with direct RPC verification.
                                 </p>
-                                <CodeBlock code={`const withMicropay = createX402Middleware({
+                                <CodeBlock code={`import { createX402Middleware } from '@alleyboss/micropay-solana-x402-paywall/next';
+
+const withMicropay = createX402Middleware({
     walletAddress: 'YOUR_WALLET',
     price: '1000000',
     

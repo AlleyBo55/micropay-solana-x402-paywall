@@ -214,6 +214,8 @@ By default, the library uses the `x402.org` hosted facilitator for convenience. 
 
 ```typescript
 // app/api/articles/[id]/route.ts
+import { createX402Middleware } from '@alleyboss/micropay-solana-x402-paywall/next';
+
 const withMicropay = createX402Middleware({
     walletAddress: 'YOUR_WALLET',
     network: 'devnet',
@@ -240,6 +242,8 @@ const withMicropay = createX402Middleware({
 **Middleware Fix**: The `createX402Middleware` now generates 402 responses directly, fixing a bug where the upstream library multiplied payment amounts by 1M. Your configured `price` in lamports is now used exactly as specified.
 
 ```typescript
+import { createX402Middleware } from '@alleyboss/micropay-solana-x402-paywall/next';
+
 // price: '1000000' → 0.001 SOL (correct!)
 const withPayment = createX402Middleware({
     walletAddress: 'YOUR_WALLET',
@@ -282,6 +286,7 @@ const response = await fetch('/api/premium', {
 Use a public facilitator service like [x402.org](https://x402.org) or [PayAI Network](https://facilitator.payai.network) without running your own RPC node:
 
 ```typescript
+import { createX402Middleware } from '@alleyboss/micropay-solana-x402-paywall/next';
 import { RemoteSvmFacilitator } from '@alleyboss/micropay-solana-x402-paywall';
 
 // Use a public facilitator for verification

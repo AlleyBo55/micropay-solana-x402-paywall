@@ -10,13 +10,15 @@ import { getAgentKeypair, getConnection, validateAgentWallet } from '@/lib/agent
 import { getCreatorWallet } from '@/lib/config';
 import { AGENTS } from '@/config/agents';
 
-// Initialize OpenAI client
+// Initialize Qwen client (Singapore region via DashScope)
 // SAFETY: API Key is strict server-side environment variable. Never exposed to client.
-const openai = process.env.OPENAI_API_KEY
-    ? new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
-    : null;
+const QWEN_API_KEY = 'sk-c3ce7e822628425a938b26d29c1b8084';
+const qwen = new OpenAI({
+    apiKey: QWEN_API_KEY,
+    baseURL: 'https://dashscope-intl.aliyuncs.com/compatible-mode/v1'
+});
 
-console.log('[Agent Chat] OpenAI configured:', !!openai);
+console.log('[Agent Chat] Qwen configured:', !!qwen);
 
 // Rate Limiting (Simple In-Memory)
 const RATE_LIMIT_WINDOW = 10 * 60 * 1000; // 10 minutes
@@ -44,7 +46,7 @@ function checkRateLimit(ip: string): boolean {
     return true;
 }
 
-// Strict Topic Filtering (Save OpenAI Costs)
+// Strict Topic Filtering (Save API Costs)
 const ALLOWED_TOPICS = [
     'x402', 'solana', 'crypto', 'payment', 'blockchain', 'agent', 'analysis',
     'bitcoin', 'btc', 'eth', 'price', 'market', 'token', 'wallet', 'demo',
@@ -53,16 +55,7 @@ const ALLOWED_TOPICS = [
 ];
 
 async function generateAIResponse(message: string, isPremium: boolean, send: (v: any) => void) {
-    if (!openai) {
-        // Fallback for demo without API Key
-        await new Promise(r => setTimeout(r, 800));
-        send({
-            type: 'content',
-            content: "I'm in demo mode (no OpenAI key). I can simulate agent payments!",
-            isPremium: false
-        });
-        return;
-    }
+    // Qwen is always configured with hardcoded key
 
     const systemPrompt = `You are a specialized AI Agent demonstrating the x402 payment protocol on Solana.
     Context:
@@ -77,8 +70,8 @@ async function generateAIResponse(message: string, isPremium: boolean, send: (v:
     `;
 
     try {
-        const stream = await openai.chat.completions.create({
-            model: 'gpt-4o-mini',
+        const stream = await qwen.chat.completions.create({
+            model: 'qwen-turbo',
             messages: [
                 { role: 'system', content: systemPrompt },
                 { role: 'user', content: message }
@@ -95,22 +88,13 @@ async function generateAIResponse(message: string, isPremium: boolean, send: (v:
             }
         }
     } catch (e: any) {
-        console.error('OpenAI Error:', e);
-        send({ type: 'content', content: "I'm having trouble connecting to my brain (OpenAI). Try again?", isPremium: false });
+        console.error('Qwen Error:', e);
+        send({ type: 'content', content: "I'm having trouble connecting to my brain (Qwen). Try again?", isPremium: false });
     }
 }
 
 async function generateAnalysisAgentResponse(message: string, send: (v: any) => void) {
-    if (!openai) {
-        await new Promise(r => setTimeout(r, 1000));
-        send({
-            type: 'content',
-            content: `**Analysis Report (Demo)**\n\nI have analyzed the request: "${message}"\n\n**Findings:**\n- Market Sentiment: Bullish 🟢\n- On-Chain Volume: High 📊\n- Recommendation: **Accumulate**\n\n*Payment verified on-chain via x402.*`,
-            isPremium: true,
-            agentName: 'Analysis Agent'
-        });
-        return;
-    }
+    // Qwen is always configured
 
     const systemPrompt = `You are an Expert Analysis Agent that has just been PAID 0.001 SOL to perform a deep dive.
     Act like a high-end financial consultant or senior crypto researcher.
@@ -120,8 +104,8 @@ async function generateAnalysisAgentResponse(message: string, send: (v: any) => 
     `;
 
     try {
-        const stream = await openai.chat.completions.create({
-            model: 'gpt-4o', // Use smarter model for premium
+        const stream = await qwen.chat.completions.create({
+            model: 'qwen-plus', // Use smarter model for premium
             messages: [
                 { role: 'system', content: systemPrompt },
                 { role: 'user', content: message }
